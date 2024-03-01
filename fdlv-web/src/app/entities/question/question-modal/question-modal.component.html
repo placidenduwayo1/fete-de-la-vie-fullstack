@@ -1,0 +1,72 @@
+<p-dialog
+
+[style]="{ 'width': 'auto', 
+ 'min-width': '60rem',
+'max-width': '60rem',
+'height': '100%',
+'margin': '5em' }"
+
+
+   class="custom-dialog" header="" [(visible)]="displayModal" [modal]="true" [draggable]="false">
+   <p-toast></p-toast>
+    <ng-template pTemplate="header">
+        <div class="custom-dialog-header">
+            <h2>{{title}} une question</h2>
+            <!-- Contenu de l'en-tête personnalisé -->
+        </div>
+    </ng-template>
+    <form #createQuestionForm="ngForm" (ngSubmit)="save()">
+
+        <div *ngIf="data.id" class="form-row">
+            <div class="form-group">
+                <label for="id">ID :</label>
+
+                <input type="text" pInputText id="id" name="id" #id="ngModel" ngModel
+                    [(ngModel)]="data.id" required readonly class="readonly-input" />
+            </div>
+        </div>
+
+        <div *ngIf="data.order" class="form-row">
+            <div class="form-group">
+                <label for="id">Ordre :</label>
+
+                <input type="number" pInputText id="order" name="order" #id="ngModel" ngModel
+                    [(ngModel)]="data.order" readonly required class="readonly-input" />
+            </div>
+                </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Titre de la question :</label>
+
+                <input type="text" pInputText id="create_label" name="create_label" #label="ngModel" ngModel
+                    [(ngModel)]="data.label" required />
+
+                <small class="form-text text-danger" *ngIf="label.errors?.['required']"> Le nom est requis.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Type de questionnaire :</label>
+                <p-selectButton [options]="typeQuestionnaires" name="type" #type="ngModel" [(ngModel)]="data.type" optionLabel="label" optionValue="value"
+                ></p-selectButton>
+
+                <small class="form-text text-danger" *ngIf="type.errors?.['required']"> Le type de question est obligatoire.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group button-container ">
+            <button class="element-with-margin custom-button save-button " type="submit" pButton label="Sauvegarder"
+                [disabled]="createQuestionForm.invalid || nbReponsesCorrectesIncoherent()|| presenceReponseVide()"></button>
+            <button class="element-with-margin custom-button cancel-button " type="button" pButton
+                (click)="close() " label="Retour "></button>
+        </div>
+        <div *ngIf="nbReponsesCorrectesIncoherent()"> <small class="form-text text-danger">Nombre de reponses correctes incohérent.</small></div>
+        <div *ngIf="presenceReponseVide()"><small class="form-text text-danger">Une réponse ne peut pas être vide.</small></div>
+    </form>
+
+    <app-answer-list ></app-answer-list>
+</p-dialog>

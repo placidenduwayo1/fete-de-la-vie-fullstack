@@ -1,0 +1,100 @@
+<p-card>
+    <section class="hautpage">
+        <div class="form-row">
+            <div class="col-10 mx-auto">
+                <div class="flex flew-row justify-content-between">
+                    <h2 *ngIf="!id">Créer une question de fin de parcours</h2>
+                    <h2 *ngIf="id">Modifier une question de fin de parcours</h2>
+                    <div class="flex justify-content-end align-items-center">
+                        <p-button icon="pi pi-save" label="Sauvegarder" id="save-entity" (click)="save()"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+                        </p-button>
+                        <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+                            (click)="eraseModification()">
+
+                        </p-button>
+                        <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="btn btn-secondary ml-1"
+                            (click)="onCancelCreation()">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-row">
+        <div class="col-9 mx-auto">
+            <div class="card">
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                    <div class="formgrid grid">
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_qfp_texte">Texte
+                                <span
+                                    class="font-bold text-xs text-red-500">*</span>
+                            </label>
+                            <input maxlength="255" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="texte" id="field_qfp_texte" formControlName="texte" />
+                            <div
+                                *ngIf="editForm.get('texte')!.invalid && (editForm.get('texte')!.dirty || editForm.get('texte')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('texte')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+                        <div class="form-group field col-12 md:col-3">
+                            <label class="form-control-label" for="field_qfp_texte">Numéro de Question<span
+                                class="font-bold text-xs text-red-500">*</span></label>
+                            <input type="number"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="numQuestion" id="field_qfp_num_question" formControlName="numQuestion" />
+                            <div *ngIf="editForm.get('numQuestion')!.invalid && (editForm.get('numQuestion')!.dirty || editForm.get('numQuestion')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('numQuestion')?.errors?.['required']"> {{ required
+                                    }} </small> </div>
+                        </div>
+
+                        <div class="field col-3">
+                            <label class="form-control-label" for="field_type_question">Type question
+                              <span
+                                class="font-bold text-xs text-red-500">*</span>
+                            </label>
+                            <select
+                              class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                              style="appearance: auto" name="typeQuestion" formControlName="typeQuestion" id="field_type_question">
+                              <option *ngFor="let tq of typeQuestions" value="{{ tq.enumName }}">{{ tq.enumName }}</option>
+                            </select>
+                            <div
+                              *ngIf="editForm.get('typeQuestion')!.invalid && (editForm.get('typeQuestion')!.dirty || editForm.get('typeQuestion')!.touched)">
+                              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('typeQuestion')?.errors?.['required']"> {{
+                                required }} </small>
+                            </div>
+                          </div>
+
+                        <div class="form-group field col-12">
+                            <label class="form-control-label" for="field_qfp_texte">Question<span
+                                class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="question" id="field_qfp_question" formControlName="question" />
+                            <div *ngIf="editForm.get('question')!.invalid && (editForm.get('question')!.dirty || editForm.get('question')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('question')?.errors?.['required']"> {{ required
+                                    }} </small> </div>
+                        </div>
+
+
+                        <div class="field col-12 pb-2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="questionActive"
+                                    formControlName="questionActive" id="field_qfp_question_active" />
+                                <label class="form-check-label" for="field_qfp_question_active"> Question active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</p-card>

@@ -1,0 +1,306 @@
+<p-card header="Gestion Structure" class="flex justify-content-center mt-3" [style]="{width: '1700px'}">
+  <p-messages key="save-sucess" /><p-messages key="save-rejected" />
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '20vw'}"></p-confirmDialog>
+  <ng-template pTemplate="header">
+    <div class="card-container my-5 mx-3">
+      <p-button label="Retour" (click)="onRetour()" icon="pi pi-arrow-left" styleClass="p-button-raised p-button-sm"
+        class="mr-2"></p-button>
+      <p-button (click)="modifMode ? onUpdate(structure) : onSave()" [disabled]="isInvalidIdentiteStructure()"
+        label="Sauvegarder" icon="pi pi-save" styleClass="p-button-success p-button-raised p-button-sm"
+        class="mr-2"></p-button>
+      <p-button label="Effacer les modifications" icon="pi pi-eraser"
+        styleClass="p-button-warning p-button-raised p-button-sm" (onClick)="onResetModification()"></p-button>
+    </div>
+  </ng-template>
+  <form name="structureForm" [formGroup]="structureForm" (ngSubmit)="onSave()">
+    <div class="flex flex-wrap gap-2 mb-3 mt-3">
+      <p-button [icon]="activeIndex === 0 ? 'pi pi-minus' : 'pi pi-plus'" (click)="activeIndex = 0"
+        styleClass="p-button-text" label="Données Structure"></p-button>
+    </div>
+    <p-accordion [activeIndex]="activeIndex">
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center">
+            <i class="pi pi-user mr-2"></i>
+            <span class="vertical-align-middle">
+              Données structure
+              <ng-container *ngIf="isInvalidIdentiteStructure(); else identiteValid">
+                <p-tag class="m-2" severity="danger" value="X"></p-tag>
+              </ng-container>
+              <ng-template #identiteValid>
+                <p-tag class="m-2" severity="success" value="✓"></p-tag>
+              </ng-template>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+
+          <div class="formgrid grid mt-0">
+            <!-- id -->
+            <div class="field col-1">
+              <label for="id">Id</label>
+              <input [readOnly]="true" type="text" [class]="inputTextStyle1" formControlName="id" />
+            </div>
+            <!-- code -->
+            <div class="field col-2">
+              <label for="code">Code <span [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText formControlName="code" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('code').touched 
+                && structureForm.get('code').errors?.['required']">
+                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+              </div>
+              <div *ngIf="structureForm.get('code').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin1}} {{charMin}} </span>
+              </div>
+            </div>
+            <!-- description -->
+            <div class="field col">
+              <label for="libelle">Nom de la structure <span [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText formControlName="libelle" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('libelle').touched &&
+                structureForm.get('libelle').errors?.['required']">
+                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+              </div>
+              <div *ngIf="structureForm.get('libelle').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin0}} {{charMin}} </span>
+              </div>
+            </div>
+            <!-- Ref -->
+            <div class="field col-3">
+              <label for="reference">Référence</label>
+              <input [readOnly]="true" type="text" formControlName="reference" [class]="inputTextStyle1">
+            </div>
+          </div>
+
+          <div class="formgrid grid mt-2">
+            <!-- Adresse -->
+            <div class="field col">
+              <label for="adresse01">Adresse</label>
+              <input pInputText formControlName="adresse01" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('adresse01').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+            </div>
+            <!-- Code postal -->
+            <div class="field col">
+              <label for="cp">Code postal <span [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText [class]="inputTextStyle1" formControlName="cp" [pattern]="zipCodePattern"
+                [maxlength]="nbrCharMax1">
+              <div *ngIf="structureForm.get('cp').touched &&
+                 structureForm.get('cp').errors?.['required']">
+                <span [style]="warnColorStyle">{{fiedRequired}}</span>
+              </div>
+              <div *ngIf="structureForm.get('cp').errors?.['minlength']">
+                <span [style]="warnColorStyle">{{nbrCharMin2}} {{charMin}}</span>
+              </div>
+              <div *ngIf="structureForm.get('cp').errors?.['maxlength']">
+                <span [style]="warnColorStyle">{{nbrCharMax1}} {{charMax}} </span>
+              </div>
+              <div *ngIf="structureForm.get('cp').errors?.['pattern']">
+                <span [style]="warnColorStyle">{{zibCodeInvalid}} </span>
+              </div>
+            </div>
+            <!-- Ville -->
+            <div class="field col">
+              <label for="commune">Ville <span [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText formControlName="commune" [class]="inputTextStyle1" />
+              <div *ngIf="structureForm.get('commune').touched && 
+                structureForm.get('commune').errors?.['required']">
+                <span [style]="warnColorStyle">{{fiedRequired}}</span>
+              </div>
+              <div *ngIf="structureForm.get('commune').errors?.['minlength']">
+                <span [style]="warnColorStyle">{{nbrCharMin1}} {{charMin}}</span>
+              </div>
+            </div>
+            <!-- Complement d'adresse -->
+            <div class="field col">
+              <label for="adresse02">Complément Adresse</label>
+              <input pInputText formControlName="adresse02" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('adresse02').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="formgrid grid mt-3">
+            <!-- Niv Responsabilité -->
+            <div class="field col-4">
+              <label for="niveauResponsabilite">Niveau Résponsabilité</label>
+              <p-dropdown [showClear]="true" [filter]="true" filterBy="label" formControlName="niveauResponsabilite"
+                [styleClass]="inputTextStyle2" placeholder="Sélectionner un Niveau"
+                [options]="niveauResponsabilites$ | async " [(ngModel)]="selectedResponsabilitie" dataKey="id"
+                optionLabel="libelle"/>
+
+              <div *ngIf="structureForm.get('niveauResponsabilite').touched && 
+                  structureForm.get('niveauResponsabilite').errors?.['required']">
+                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+              </div>
+            </div>
+            <!-- Contact -->
+            <div class="field col-3">
+              <label for="contact">Contact</label>
+              <p-dropdown [filter]="true" filterBy="name" name="contact" formControlName="contact" [showClear]="true"
+                [styleClass]="inputTextStyle2" placeholder="Sélectionner un contact" [options]="contacts$ | async"
+                dataKey="id" optionLabel="name" [(ngModel)]="selectedContact">
+              </p-dropdown>
+              <div *ngIf="structureForm.get('contact').touched && 
+                structureForm.get('contact').errors?.['required']">
+                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+              </div>
+
+            </div>
+            <!-- Tel Accueil -->
+            <div class="field col-2">
+              <label for="telAccueilStructure">Tel Accueil <span [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText formControlName="telAccueilStructure" [pattern]="telPattern" [maxlength]="nbrCharMax2"
+                [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('telAccueilStructure').touched && 
+                  structureForm.get('telAccueilStructure').errors?.['required']">
+                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+              </div>
+              <div *ngIf="structureForm.get('telAccueilStructure').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}}</span>
+              </div>
+              <div *ngIf="structureForm.get('telAccueilStructure').errors?.['maxlength']">
+                <span [style]="warnColorStyle">{{nbrCharMax2}} {{charMax}} </span>
+              </div>
+              <div *ngIf="structureForm.get('telAccueilStructure').errors?.['pattern']">
+                <span [style]="warnColorStyle">{{telInvalid}} </span>
+              </div>
+            </div>
+            <!-- Email Contact / Accueil -->
+            <div class="field col-3">
+              <label for="emailAccueilStructure">Email Contact / Accueil <span
+                  [style]="warnColorStyle">{{asterix}}</span></label>
+              <input pInputText formControlName="emailAccueilStructure" [pattern]="emailPattern"
+                [class]="inputTextStyle1" placeholder="xxxxxx@xxxxx.xxxx">
+              <div *ngIf="structureForm.get('emailAccueilStructure').touched && 
+                  structureForm.get('emailAccueilStructure').errors?.['required']">
+                <span [style]="warnColorStyle">{{fiedRequired}} </span>
+              </div>
+              <div *ngIf="structureForm.get('emailAccueilStructure').errors?.['pattern']">
+                <span [style]="warnColorStyle"> {{emailInvalid}}</span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="formgrid grid">
+            <!-- Logo url -->
+            <div class="field crad col-4" [style]="containerStyle">
+              <label for="logoDescription">Logo description</label>
+              <input pInputText formControlName="logoDescription" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('logoDescription').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+              <p-toast></p-toast>
+              <!-- Logo description -->
+              <label for="logoUrl">fichier <b>image</b></label>
+              <div *ngIf="structureForm.get('logoUrl').value">
+                {{ structureForm.get('logoUrl').value }}
+              </div>
+              <p-fileUpload #logoUrl id="logoUrl" accept="image/*" [maxFileSize]="acceptedFileSize"
+                [showUploadButton]="false" [previewWidth]="250" [multiple]="false"
+                [uploadStyleClass]="'p-button-success'" [auto]="true" [cancelStyleClass]="'p-button-danger'"
+                [removeStyleClass]="'p-button-warning'" [chooseLabel]="'Choisir fichier'" [uploadLabel]="'Enregistrer'"
+                [cancelLabel]="'Annuler'" [fileLimit]="1" [invalidFileSizeMessageSummary]="invalidFileSize"
+                invalidFileSizeMessageDetail="" [invalidFileTypeMessageSummary]="invalidFileType"
+                invalidFileTypeMessageDetail="" (onSelect)="onLogoSelect()"
+                [disabled]="!structureForm.get('code').value || !structureForm.get('libelle').value">
+                <ng-template pTemplate="content">
+                  <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">
+                      {{ file.name }} - {{ file.size }} bytes
+                    </li>
+                  </ul>
+                </ng-template>
+              </p-fileUpload>
+              <div *ngIf="modifMode && structureForm.value.logoUrl">
+                <img [src]="structureForm.value.logoUrl" [width]="width" [height]="height">
+              </div>
+            </div>
+            <div class="field card col-4" [style]="containerStyle">
+              <!-- Charte description (FDLV) -->
+              <label for="charteDescription">Charte FDLV</label>
+              <input pInputText formControlName="charteDescription" [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('charteDescription').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+              <!-- Charte url -->
+              <p-toast></p-toast>
+              <label for="charteUrl"> fichier <b>pdf</b> ou <b>image</b> (FDLV)</label>
+              <div *ngIf="structureForm.get('charteUrl').value">
+                {{ structureForm.get('charteUrl').value }}
+              </div>
+              <p-fileUpload #charteUrl accept=".pdf,image/*" [maxFileSize]="acceptedFileSize" [showUploadButton]="false"
+                [previewWidth]="250" [multiple]="false" [auto]="true" [uploadStyleClass]="'p-button-success'"
+                [cancelStyleClass]="'p-button-danger'" [removeStyleClass]="'p-button-warning'"
+                [chooseLabel]="'Choisir fichier'" [uploadLabel]="'Enregistrer'" [cancelLabel]="'Annuler'"
+                [fileLimit]="1" [invalidFileSizeMessageSummary]="invalidFileSize" invalidFileSizeMessageDetail=""
+                [invalidFileTypeMessageSummary]="invalidFileType" invalidFileTypeMessageDetail=""
+                (onSelect)="onCharteSelect()"
+                [disabled]="!structureForm.get('code').value || !structureForm.get('libelle').value">
+                <ng-template pTemplate="content">
+                  <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">
+                      {{ file.name }} - {{ file.size }} bytes
+                    </li>
+                  </ul>
+                </ng-template>
+              </p-fileUpload>
+              <div *ngIf="modifMode && structureForm.value.charteUrl">
+                <img [src]="structureForm.value.charteUrl" [width]="width" [height]="height">
+              </div>
+            </div>
+
+            <!-- Convention description -->
+            <div class="field col-4 card" [style]="containerStyle">
+              <label for="conventionDescription">Convention FDLV</label>
+              <input pInputText name="conventionDescription" formControlName="conventionDescription"
+                [class]="inputTextStyle1">
+              <div *ngIf="structureForm.get('conventionDescription').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+              <!-- Convention url -->
+
+              <label for="conventionUrl">fichier <b>pdf</b></label>
+              <div *ngIf="structureForm.get('conventionUrl').value">
+                {{ structureForm.get('conventionUrl').value }}
+              </div>
+              <p-fileUpload #conventionUrl accept=".pdf" [maxFileSize]="acceptedFileSize" [showUploadButton]="false"
+                [previewWidth]="250" [multiple]="false" [auto]="true" [uploadStyleClass]="'p-button-success'"
+                [cancelStyleClass]="'p-button-danger'" [removeStyleClass]="'p-button-warning'"
+                [chooseLabel]="'Choisir fichier'" [uploadLabel]="'Enregistrer'" [cancelLabel]="'Annuler'"
+                [fileLimit]="1" [invalidFileSizeMessageSummary]="invalidFileSize" invalidFileSizeMessageDetail=""
+                [invalidFileTypeMessageSummary]="invalidFileType" invalidFileTypeMessageDetail=""
+                (onSelect)="onConventionSelect()"
+                [disabled]="!structureForm.get('code').value || !structureForm.get('libelle').value">
+                <ng-template pTemplate="content">
+                  <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">
+                      {{ file.name }} - {{ file.size }} bytes
+                    </li>
+                  </ul>
+                </ng-template>
+              </p-fileUpload>
+            </div>
+          </div>
+
+          <div class="formgrid grid m-0">
+            <!-- commentaire -->
+            <div class="field col">
+              <label for="commentaire" class="block mb-2">Commentaire</label>
+              <input pInputText [class]="inputTextStyle1" formControlName="commentaire">
+              <div *ngIf="structureForm.get('commentaire').errors?.['minlength']">
+                <span [style]="warnColorStyle"> {{nbrCharMin3}} {{charMin}} </span>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-accordionTab>
+
+    </p-accordion>
+  </form>
+</p-card>

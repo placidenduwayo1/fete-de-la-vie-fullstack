@@ -1,0 +1,77 @@
+export const EventDetailMock = [
+  {
+    id: 1,
+    label: `LES GESTES QUI SAUVENT`,
+    description: `Bienvenue dans le parcours premiers secours. Pour tous les âges, vous pouvez parcourir seul ou à plusieurs, en groupe ou en famille. Au programme, un défi et des quizz et d’autres surprises.`,
+    theme: {
+      id: 1,
+      label: `Secourisme`,
+      events: null
+    },
+    address: `impasse du Triest`,
+    zipCode: `59290`,
+    city: `Wasquehal`,
+    cityLogoUrl: `https://www.gomydefi.live/logos/logo-ville-wasquehal.jpg`,
+    startAt: `2021-11-25`,
+    endAt: `2022-12-31`,
+    labelFinParcours: null,
+    finParcoursPdf: null,
+    otherEvent: false,
+    validatedEvent: true,
+    fixOrder: true,
+    usefulInformation: `Vous pourrez vous rendre sur le parking du Skate Parc et visionner la vidéo d'introduction. Puis passez d'étape en étape pour faire votre parcours.`,
+    eventTeaserUrl: null,
+    codeParcours: `59290`,
+    evtDemo: false,
+    numParcours: null,
+    evtFcoFusId: 62,
+    evtFcoDatePropose: null,
+    evtFcoDateValide: null,
+    evtFcoId: null,
+    stages: []
+  },
+  {
+    id: 2,
+    label: `NATURE`,
+    description: `Bienvenue dans ce parcours nature. Pour tous les âges, vous pouvez le parcourir seul ou à plusieurs, en groupe ou en famille. Au programme, des défis respiration, odeurs, bruits de la nature et d'autres surprises.`,
+    theme: {
+      id: 2,
+      label: `Bien-être`,
+      events: null
+    },
+    address: `124 Rue d'Aire-sur-la-Lys`,
+    zipCode: `59190`,
+    city: `Hazebrouck`,
+    cityLogoUrl: `https://www.gomydefi.live/logos/Logo-ville-hazebrouck.png`,
+    startAt: `2021-07-01`,
+    endAt: `2022-08-31`,
+    labelFinParcours: null,
+    finParcoursPdf: null,
+    otherEvent: false,
+    validatedEvent: true,
+    fixOrder: true,
+    usefulInformation: null,
+    eventTeaserUrl: null,
+    codeParcours: null,
+    evtDemo: false,
+    numParcours: null,
+    evtFcoFusId: 62,
+    evtFcoDatePropose: null,
+    evtFcoDateValide: null,
+    evtFcoId: null,
+    stages: [
+      {
+        id: 7,
+        label: `intro coupée barrière`,
+        sequence: 2,
+        latitude: 50.674117,
+        longitude: 3.123953,
+        videoDescription: `Parcours Nature Intro (0:33)`,
+        videoImageUrl: `https://www.gomydefi.live/fdlv/medias_fdlv/videos/PARCOURS_NATURE/Parcours_nature_intro.png`,
+        videoUrl: `https://www.gomydefi.live/fdlv/medias_fdlv/videos/PARCOURS_NATURE/Parcours_nature_intro.mp4`,
+        typeMedia: `.mp4`,
+        quizz: null,
+      }
+    ]
+  }
+];

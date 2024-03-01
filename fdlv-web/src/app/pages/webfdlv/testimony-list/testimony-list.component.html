@@ -1,0 +1,73 @@
+<p-card header="Liste des Témoignages" class="m-3">
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
+  <p-table #idT [value]="testimonies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche témoignage {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'ordreAffichage', 'auteur', 'commentaire', 'dateDebut', 'dateFin']">
+    <ng-template pTemplate="caption" [scrollable]="true" scrollHeight="70vh">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh" (click)="loadAll()"></p-button>
+          <p-button (onClick)="createTestimony()" label="Créer un témoignage" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="search" (input)="idT.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="ordreAffichage"><span>Ordre affichage</span></th>
+        <th pSortableColumn="dateDebut"><span>Date de début d'affichage</span></th>
+        <th pSortableColumn="dateFin"><span>Date de fin d'affichage</span></th>
+        <th pSortableColumn="auteur"><span>Auteur</span></th>
+        <th pSortableColumn="commentaire"><span>Commentaire</span></th>
+        <th pSortableColumn="col"><span>Publié</span></th>
+        <th></th><th></th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-testimony>
+      <tr>
+        <td>{{ testimony.id }}</td>
+        <td>{{ testimony.ordreAffichage }}</td>
+        <td>{{ testimony.dateDebut| date : 'dd/MM/yyyy'  }}</td>
+        <td>{{ testimony.dateFin | date : 'dd/MM/yyyy' }}</td>
+        <td>{{ testimony.auteur }}</td>
+        <td>{{ testimony.commentaire }}</td>
+        <td>
+          <div *ngIf="testimony.publie; else elseBlockDot" class="mx-auto align-items-center">
+            <span class="dotGreen"></span><span style="visibility: hidden" class="masked">On</span>
+          </div>
+          <ng-template #elseBlockDot><span class="dotGrey"></span><span style="visibility: hidden"
+              class="masked">Off</span></ng-template>
+        </td>
+        <td class="text-right">
+            <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+              (click)="editTestimony(testimony)"></p-button>
+              </td><td>
+            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+              (click)="openConfirmationDialog(testimony.id)"></p-button>
+          
+        </td>
+      </tr>
+
+
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+    </ng-template>
+  </p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'ce témoignage'" [showConfirmationDialog]="showConfirmationDialog"
+      (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

@@ -1,0 +1,69 @@
+<p-card header="Liste des Médias La Fête de la Vie" class="m-3" >
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
+  <p-table #idV [value]="fdlvVideos" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche vidéo {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'numOrdre', 'userLogin', 'theme?.label', 'description']"
+    [scrollable]="true" scrollHeight="70vh">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh"></p-button>
+          <p-button (onClick)="create()" label="Ajouter un média" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+        <input class="search p-input-icon-left ml-auto" pInputText type="search" (input)="idV.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche" 
+            [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)" />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="flvFusId">Organisateur<p-sortIcon field="flvFusId"></p-sortIcon></th>
+        <th pSortableColumn="numOrdre">Ordre affichage<p-sortIcon field="numOrdre"></p-sortIcon></th>
+        <th >Theme</th>
+        <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+        <th pSortableColumn="publie">Publié<p-sortIcon field="publie"></p-sortIcon></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-video>
+     
+      <tr>
+        <td>{{ video.id }}</td>
+          <td>{{ video.flvFusId + ' ' + video.userLogin }}</td>
+          <td>{{ video.numOrdre }}</td>
+          <td>{{ video.theme?.label }}</td>
+          <td>{{ video.description }}</td>
+          <td>
+            <div *ngIf="video.active; else elseBlockDot" class="mx-auto align-items-center">
+              <span class="dotGreen"></span><span style="visibility: hidden" class="masked">On</span>
+            </div>
+            <ng-template #elseBlockDot><span class="dotGrey"></span><span style="visibility: hidden" class="masked">Off</span></ng-template>
+          </td>
+        
+        <td class="text-right">
+            <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+              (click)="edit(video)"></p-button>
+        </td><td>
+            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+              (click)="openConfirmationDialog(video.id)"></p-button>
+        </td>
+      </tr>
+
+
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+    </ng-template>
+  </p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'ce cette vidéo'" [showConfirmationDialog]="showConfirmationDialog"
+      (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

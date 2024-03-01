@@ -1,0 +1,27 @@
+:host ::ng-deep .p-inputtext {
+  color: black;
+  border: 2px solid black;
+  border-radius: 10px;
+  width:100%
+}
+
+:host ::ng-deep .p-inputtext:focus:enabled,
+:host ::ng-deep .p-inputtext:hover
+{
+  box-shadow: none;
+  border: 2px solid green;
+}
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+
+}
+
+
+
+.text-danger{
+  color: red;
+}

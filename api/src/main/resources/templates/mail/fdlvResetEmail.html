@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <div>
+        <img src="https://www.gomydefi.live/logos/Fetedelavie_Logo_bleu.png" width="100" alt="" class="d-inline-block align-top">
+    </div>
+    <div>
+    <p th:text="|Bonjour ${user.prenom} ${user.nom},|"></p>
+        <p>
+            Vous recevez ce mail car vous (ou une autre personne) avez demandé une réinitialisation de votre mot de passe.
+        </p>
+        <p>
+            Merci de cliquer sur le lien suivant ou le copier dans votre navigateur afin de continuer le processus de réinitialisation
+            <a th:with="url=(@{|${fdlvUrl}/reset-password/${user.resetKey}|})" th:href="${url}" th:text="${url}"></a>
+        </p>
+        <p>
+            Si vous n'êtes pas à l'origine de cette demande, merci d'ignorer ce mail, votre mot de passe restera inchangé
+        </p>
+        <p>Mail généré automatiquement par l’application FDLV / GMD. Merci de ne pas répondre à ce mail. </p>
+        <p>
+            Cordialement,<br>
+            Service Support FDLV
+        </p>
+        <div>
+            <img src="https://www.gomydefi.live/logos/logo_GoMyDefi%2001.png" width="100" alt="" class="d-inline-block align-top">
+        </div>
+    </div>
+</html>

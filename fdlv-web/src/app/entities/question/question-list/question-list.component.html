@@ -1,0 +1,25 @@
+<p-button label="Créer une question" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"
+    (click)="openCreateForm()"></p-button>
+
+<p-orderList (onReorder)="onOrderChange()" header="Ordre des questions" #questionsOrderList [value]="dataList"
+    [dragdrop]="true" [listStyle]="{ height: '25rem' }">
+    <ng-template pTemplate="body" let-rowData>
+
+        <p-panel>
+            <ng-template pTemplate="header"> <p-badge severity="warning" value="{{rowData.order}}">{{rowData.order}}</p-badge> <span class=" font-semibold text-xl">{{ rowData.label
+                    }}</span></ng-template>
+            <span>
+                <p-button icon="pi pi-pencil" styleClass="custom-button  p-button-rounded p-button-info"
+                    (click)="openEditForm(rowData.order, rowData.id)">
+                </p-button>
+                <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                    (click)="openConfirmationDialog(getIdOrGuid(rowData))"></p-button>
+            </span>
+        </p-panel>
+    </ng-template>
+</p-orderList>
+
+<app-question-modal (addQuestion)="addQuestion($event)" (saveQuestion)="saveQuestion($event)"></app-question-modal>
+
+<app-dialog-delete [elementLabel]="'cette question'" [showConfirmationDialog]="showConfirmationDialog"
+    (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idOrGuidToDelete)"></app-dialog-delete>

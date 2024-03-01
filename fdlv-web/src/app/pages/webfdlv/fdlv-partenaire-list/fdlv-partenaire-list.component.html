@@ -1,0 +1,63 @@
+<p-card header="Liste des Partenaires" class="m-3">
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
+  <p-table #idP [value]="partenaires" [paginator]="true" [rows]="10" 
+  [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+   currentPageReportTemplate=" Affiche partenaire {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'num_ordre', 'priorite','image', 'module']"
+    [scrollable]="true" scrollHeight="70vh">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh" (click)="loadAll()" [disabled]="isLoading"></p-button>
+          <p-button (onClick)="create()" label="Créer un partenaire" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+          <input type="search" class="p-input-icon-left  ml-auto" pInputText 
+           (input)="idP.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Recherche"
+          [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)" />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="num_ordre">Ordre<p-sortIcon field="num_ordre"></p-sortIcon></th>
+          <th pSortableColumn="image">Image<p-sortIcon field="image"></p-sortIcon></th>
+          <th pSortableColumn="priorite">Priorité<p-sortIcon field="priorite"></p-sortIcon></th>
+          <th pSortableColumn="module">Module<p-sortIcon field="module"></p-sortIcon></th>
+          <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-partenaire>
+      <tr>
+      <td>{{ partenaire.id }} </td>
+      <td>{{ partenaire.num_ordre }}</td>
+      <td>{{ partenaire.image }}</td>
+      <td>{{ partenaire.priorite?.ihmName }}</td>
+      <td>{{ partenaire.module?.ihmName }}</td>
+      <td class="text-right">
+        <div class="btn-group">
+        
+              <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+                (click)="edit(partenaire)"></p-button>
+              <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                (click)="openConfirmationDialog(partenaire.id)"></p-button>
+   
+        </div>
+      </td>
+    </tr>
+
+    </ng-template>
+
+
+</p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'ce partenaire'" [showConfirmationDialog]="showConfirmationDialog"
+    (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

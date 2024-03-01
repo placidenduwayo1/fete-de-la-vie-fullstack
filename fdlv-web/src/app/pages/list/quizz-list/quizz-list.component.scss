@@ -1,0 +1,10 @@
+/*:host ::ng-deep .p-button{
+    font-size:10px;  //your font size here
+  }*/
+
+
+  :host ::ng-deep .p-orderlist .p-orderlist-list .p-orderlist-item.p-highlight {
+    color: #1d4ed8;
+    //background: #EFF6FF; 
+    background: #b7bbf4; 
+}

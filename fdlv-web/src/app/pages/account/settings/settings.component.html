@@ -1,0 +1,65 @@
+<div class="card-container">
+<p-card>
+
+<form #EditAccountForm="ngForm" (ngSubmit)="EditAccountForm.value">
+
+  <h1>Paramètres Utilisateur Pour [{{Account.login}}]</h1>
+  <div class="form-group">
+    <label for="firstName">Prénom:</label>
+    <br>
+    <input type="text"
+           pInputText   id="firstName"  name="firstName" #firstName="ngModel"  [(ngModel)]="Account.firstName" ngModel required />
+           <small class="form-text text-danger" *ngIf="firstName.errors?.['required']"> Votre prénom est requis. </small>
+
+           <small class="form-text text-danger" *ngIf="firstName.errors?.['minlength']">
+             Votre prénom doit comporter au moins 1 caractère.
+           </small>
+
+           <small class="form-text text-danger" *ngIf="firstName.errors?.['maxlength']">
+             Votre prénom ne peut pas dépasser 50 caractères.
+           </small>
+  </div>
+  <div class="form-group">
+    <label for="lastName">Nom:</label>
+    <br>
+    <input type="text"
+           pInputText   id="lastName"  name="lastName" #lastName="ngModel"  [(ngModel)]="Account.lastName" ngModel required />
+           <small class="form-text text-danger" *ngIf="lastName.errors?.['required']"> Votre prénom est requis. </small>
+
+           <small class="form-text text-danger" *ngIf="lastName.errors?.['minlength']">
+             Votre prénom doit comporter au moins 1 caractère.
+           </small>
+
+           <small class="form-text text-danger" *ngIf="lastName.errors?.['maxlength']">
+             Votre prénom ne peut pas dépasser 50 caractères.
+           </small>
+  
+          </div>
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <br>
+    <input type="email"
+           pInputText id="email"   name="email" #email="ngModel" ngModel  [(ngModel)]="Account.email"  required email/>
+           <small class="form-text text-danger" *ngIf="email.errors?.['required']"> Votre email est requis. </small>
+
+           <small class="form-text text-danger" *ngIf="email.errors?.['email']"> Votre email est invalide. </small>
+
+           <small class="form-text text-danger" *ngIf="email.errors?.['minlength']">
+             Votre e-mail doit comporter au moins 5 caractères.
+           </small>
+
+           <small class="form-text text-danger" *ngIf="email.errors?.['maxlength']">
+             Votre e-mail ne peut pas dépasser 100 caractères.
+           </small>
+  
+          </div>
+  <br>
+  <div class="form-group">
+    <button  type="submit" pButton (click)="updateAccount()">Sauvegarder</button>
+
+
+  </div>
+
+</form>
+</p-card>
+</div>

@@ -1,0 +1,82 @@
+<p-card header="Liste des Étapes" class="m-3">
+  <p-table #idS [value]="stages" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" paginatorPosition="bottom"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche étapes {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'sequence', 'label','latitude', 'longitude', 'quizz', 'challenge']"
+    [scrollable]="true" scrollHeight="80vh">
+    <ng-template pTemplate="caption">
+      <div class="grid">
+        <div>
+            <p-button label="Rafraîchir la liste" (click)="loadAll()" class="mr-2" styleClass="p-button-raised p-button-text">
+              <span *ngIf="isLoading"><p-progressSpinner styleClass="w-2rem h-1rem" ></p-progressSpinner></span>
+            </p-button>
+          <p-button (onClick)="create()" label="Créer une étape" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+        <input type="search" pInputText  class="ml-auto"
+          (input)="idS.filterGlobal($any($event.target).value, 'contains')" placeholder="Recherche" />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="label">Titre<p-sortIcon field="label"></p-sortIcon></th>
+        <th pSortableColumn="sequence">Ordre<p-sortIcon field="sequence"></p-sortIcon></th>
+        <th pSortableColumn="latitude">Latitude<p-sortIcon field="latitude"></p-sortIcon></th>
+        <th pSortableColumn="longitude">Longitude<p-sortIcon field="longitude"></p-sortIcon></th>
+        <th pSortableColumn="event">Evénement<p-sortIcon field="event"></p-sortIcon></th>
+        <th pSortableColumn="quizz">Quizz<p-sortIcon field="quizz"></p-sortIcon></th>
+        <th pSortableColumn="stage_defi_video">Défi<p-sortIcon field="stage_defi_video"></p-sortIcon></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-stage>
+      <tr>
+        <td>
+          {{ stage.id }}
+        </td>
+        <td>{{ stage.label }}</td>
+        <td>{{ stage.sequence }}</td>
+        <td>{{ this.stageService.decimalToMinuteSeconde(stage.latitude) }}</td>
+        <td>{{ this.stageService.decimalToMinuteSeconde(stage.longitude) }}</td>
+        <td style="word-wrap: break-word" >
+          <div *ngIf="stage.event">
+            <button pButton type="button" label="{{ stage.event?.label }}" class="p-button-link"
+              (click)="viewEvent(stage.event)"></button>
+          </div>
+        </td>
+        <td>
+          <div *ngIf="stage.quizz">
+            <button pButton type="button" label="{{ stage.quizz?.label }}" class="p-button-link"
+              (click)="viewQuizz(stage.quizz)"></button>
+          </div>
+        </td>
+        <td style="word-wrap: break-word">
+          {{ stage.stage_defi_video}}
+        </td>
+        <td class="text-right">
+          <div class="btn-group">
+        <td class="text-right">
+            <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+              (click)="edit(stage)"></p-button>
+        </td>
+        <td>
+            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+              (click)="openConfirmationDialog(stage.id)"></p-button>
+        </td>
+        </div>
+        </td>
+      </tr>
+
+    </ng-template>
+
+
+  </p-table>
+
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'cette étape'" [showConfirmationDialog]="showConfirmationDialog"
+    (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

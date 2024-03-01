@@ -1,0 +1,37 @@
+package com.fdlv.gmd.api.dto.fdlv;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class DisplayableEventVideoDTO implements Serializable {
+
+    private static final long serialVersionUID = -2175310439579332929L;
+
+    private Long id;
+    private Integer ordreAffichage;
+    private String urlVideo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getOrdreAffichage() {
+        return ordreAffichage;
+    }
+
+    public void setOrdreAffichage(Integer ordreAffichage) {
+        this.ordreAffichage = ordreAffichage;
+    }
+
+    public String getUrlVideo() {
+        return urlVideo;
+    }
+
+    public void setUrlVideo(String urlVideo) {
+        this.urlVideo = urlVideo;
+    }
+}

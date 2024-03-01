@@ -1,0 +1,72 @@
+<p-card header="Liste des Infos" class="m-3">
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
+  <p-table #idI [value]="infosPageWeb" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche information {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'ordreAffichage?', 'pageWeb','rubriquePageWeb',  'titre',  'commentaire',
+    'dateDebut',  'dateFin', 'module']"
+    [scrollable]="true" scrollHeight="70vh">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh"></p-button>
+          <p-button (onClick)="create()" label="Créer une information" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+          <input class="p-input-icon-left ml-auto" pInputText type="search" (input)="idI.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)"/>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="ordreAffichage">Ordre affichage<p-sortIcon field="ordreAffichage"></p-sortIcon></th>
+          <th pSortableColumn="pageWeb">PAGE WEB<p-sortIcon field="pageWeb"></p-sortIcon></th>
+          <th pSortableColumn="rubriquePageWeb">RUBRIQUE<p-sortIcon field="rubriquePageWeb"></p-sortIcon></th>
+          <th pSortableColumn="titre">TITRE<p-sortIcon field="titre"></p-sortIcon></th>
+          <th pSortableColumn="commentaire">Commentaire<p-sortIcon field="commentaire"></p-sortIcon></th>
+          <th pSortableColumn="dateDebut">Date de début d'affichage<p-sortIcon field="dateDebut"></p-sortIcon></th>
+          <th pSortableColumn="dateFin">Date de fin d'affichage<p-sortIcon field="dateFin"></p-sortIcon></th>
+          <th pSortableColumn="publie">Publié<p-sortIcon field="publie"></p-sortIcon></th>
+          <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-info>
+      <tr>
+          <td>{{info.id}}</td>
+          <td>{{info.ordreAffichage}}</td>
+          <td>{{info.pageWeb}}</td>
+          <td>{{info.rubriquePageWeb}}</td>
+          <td>{{info.titre}}</td>
+          <td>{{info.commentaire}}</td>
+          <td>{{info.dateDebut?.toString() | date: 'dd/MM/yyyy'}}</td>
+          <td>{{info.dateFin?.toString() | date: 'dd/MM/yyyy'}}</td>
+          <td>
+            <div *ngIf="info.publie; else elseBlockDot" class="mx-auto align-items-center">
+              <span class="dotGreen"></span><span style="visibility: hidden" class="masked">On</span>
+            </div>
+            <ng-template #elseBlockDot><span class="dotGrey"></span><span style="visibility: hidden" class="masked">Off</span></ng-template>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <td class="text-right">
+                  <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+                    (click)="edit(info)"></p-button>
+                    </td><td>
+                  <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                    (click)="openConfirmationDialog(info.id)"></p-button>
+                 </td> 
+            </div>
+          </td>
+      </tr>
+    </ng-template>
+</p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'cette information'" [showConfirmationDialog]="showConfirmationDialog"
+    (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

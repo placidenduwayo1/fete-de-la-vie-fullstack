@@ -1,0 +1,108 @@
+image: docker:latest
+services:
+  - name: docker:dind
+
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+build-app:
+  image: node:18-alpine
+  stage: build
+  script:
+    - npm link @angular/cli@16.1.0
+    - npm install
+    - ng build
+  except:
+    - release
+    - master
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull
+
+.run-unit-tests:
+  image: node:18-alpine
+  stage: test
+  script:
+    - npm link @angular/cli@16.1.0
+    - ng test
+  when: always
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull
+
+.run-e2e-tests:
+  image: node:18-alpine
+  stage: test
+  script:
+    - npm link @angular/cli@16.1.0
+    - ng e2e
+  when: always
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull
+
+.lint:
+  image: node:18-alpine
+  stage: test
+  script:
+    - npm link @angular/cli@16.1.0
+    - ng lint
+  when: always
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull
+
+.build-docker-image: &build-docker-image
+  stage: package
+  before_script:
+    - apk add --update git
+  script:
+    - echo "GITLAB_URL $GITLAB_URL"
+    - echo "CI_PROJECT_PATH $CI_PROJECT_PATH"
+    - echo "CI_SERVER_HOST $CI_SERVER_HOST"
+    - echo "GITLAB_USER_EMAIL $GITLAB_USER_EMAIL"
+    - echo "CI_COMMIT_REF_NAME $CI_COMMIT_REF_NAME"
+    - echo "CI_JOB_TOKEN $CI_JOB_TOKEN"
+    - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
+    - echo "POSTFIX $POSTFIX"
+    - echo "CI_COMMIT_SHORT_SHA" $CI_COMMIT_SHORT_SHA
+    - chmod +x ./build-docker-image.sh; sh ./build-docker-image.sh "gitlab.com" $CI_PROJECT_PATH $CI_SERVER_HOST $GITLAB_USER_EMAIL $CI_COMMIT_REF_NAME $CI_JOB_TOKEN $CI_REGISTRY_IMAGE $POSTFIX $CI_COMMIT_SHORT_SHA
+  only:
+    - release
+    - master
+
+docker-build-integ:
+  variables:
+    POSTFIX: integration
+  <<: *build-docker-image
+  only:
+    - CI-CD
+    - release
+  when: on_success
+
+docker-build-prod:
+  variables:
+    POSTFIX: production
+  <<: *build-docker-image
+  only:
+    - master
+  when: on_success

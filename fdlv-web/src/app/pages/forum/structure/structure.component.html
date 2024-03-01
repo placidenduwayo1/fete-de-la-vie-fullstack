@@ -1,0 +1,79 @@
+<p-card header="La liste des structures" class="flex justify-content-center mt-3" [style]="{width: '1850px'}">
+  <p-messages key="success-delete"/> <p-messages key="rejected"/>
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '20vw'}"></p-confirmDialog>
+  <p-table [resizableColumns]="false" #dt1 [value]="structure$ | async" [paginator]="true" [rows]="10"
+    styleClass="p-datatable-striped" [showCurrentPageReport]="true" paginatorPosition="bottom"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche structure {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]" [globalFilterFields]="['id', 'code', 'libelle', 'reference', 'niveauResponsabilite', 
+    'contact.id', 'contact.name','contact.lastName', 'cp','commune','adresse01', 'adresse02']"
+    (onPage)="onPageChange($event)" [first]="first">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh" (onClick)="onRefresh()"/>
+
+          <p-button (onClick)="createStructure()" label="Créer une structure"
+            styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle" class="mr-2"/>
+
+          <p-button (onClick)="onAffichierInterventionsStructure()" label="Liste les interventions"
+            styleClass="p-button-raised p-button-text" icon="pi pi-list"/>
+        </div>
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Recherche" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="code">Code <p-sortIcon field="code"></p-sortIcon></th>
+        <th pSortableColumn="libelle">Structure <p-sortIcon field="libelle"></p-sortIcon> </th>
+        <th pSortableColumn="reference">Référence <p-sortIcon field="reference"></p-sortIcon> </th>
+        <th pSortableColumn="niveauResponsabilite">Niveau de responsabilité <p-sortIcon
+            field="niveauResponsabilite"></p-sortIcon> </th>
+        <th pSortableColumn="cp">CP <p-sortIcon field="cp"></p-sortIcon> </th>
+        <th pSortableColumn="commune">Commune <p-sortIcon field="cp"></p-sortIcon> </th>
+        <th pSortableColumn="contact">Contact <p-sortIcon field="contact"></p-sortIcon> </th>
+
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-structure>
+      <tr>
+        <td>{{ structure.id }}</td>
+        <td>{{ structure.code }}</td>
+        <td style="max-width:400px">{{ structure.libelle }} {{structure.charteDescription}}</td>
+        <td>{{ structure.reference }}</td>
+        <td style="max-width:350px"><span *ngIf="structure.niveauResponsabilite; else elseBlock">{{ structure.niveauResponsabilite.id}}
+          {{ structure.niveauResponsabilite.responsibilityLevel}} {{ structure.niveauResponsabilite.libelle}}</span></td>
+        <td style="max-width:50px"> {{ structure.cp }}</td>
+        <td style="max-width:50px"> {{ structure.commune }}</td>
+        <td> <span *ngIf="structure.contact; else elseBlock"> {{ structure.contact.id }} {{ structure.contact.name }}
+           {{ structure.contact.lastName }}</span></td>
+        <td class="text-right">
+          <div class="btn-group">
+            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-sm p-button-info"
+              (click)="EditStructure(structure)" class="mr-1" [pTooltip]="toolTip2" [tooltipPosition]="toolTipPos"/>
+
+              <p-button icon="pi pi-plus-circle" styleClass="p-button-rounded p-button-sm p-button-success"  
+              (click)="onAddInterventionStructure(structure)" class="mr-1" [pTooltip]="toolTip1" [tooltipPosition]="toolTipPos"/>
+
+              <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-sm p-button-text"  
+              (click)="onPrintInterventionForStructure(structure)" class="mr-1" [pTooltip]="toolTip4" [tooltipPosition]="toolTipPos"/>
+
+            <p-button icon="pi pi pi-times" styleClass="p-button-rounded p-button-sm p-button-danger"
+              (click)="onConfirmDelete($event, structure.id)" [pTooltip]="toolTip3" [tooltipPosition]="toolTipPos"/>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+    </ng-template>
+    <ng-template #elseBlock><span [style]="warnColorStyle">VIDE</span> </ng-template>
+  </p-table>
+</p-card>

@@ -1,0 +1,566 @@
+.form-group {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.element-with-margin {
+    margin-right: 10px;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.element-with-margin {
+    margin-right: 10px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-color: black;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.custom-button {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.custom-button2 {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: left;
+    align-items: normal;
+    margin: 10px 0px;
+    border-radius: 5px;
+}
+
+
+/* Redimensionnement du p-dialog */
+
+.ui-resizable {
+    position: relative;
+}
+
+.toggle-switch {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    /* Ajustez la largeur du bouton selon vos besoins */
+    height: 40px;
+    /* Ajustez la hauteur du bouton selon vos besoins */
+}
+
+.toggle-switch input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-switch label .toggle-text-on,
+.toggle-switch label .toggle-text-off {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 50%;
+    line-height: 1;
+}
+
+
+/* styles.css */
+
+.custom-toggle-button .ui-button-text {
+    font-weight: bold;
+    /* Ajoutez des styles de texte personnalisés */
+}
+
+.ui-resizable-se {
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+
+.readonly-input {
+    background-color: #f0f0f0;
+    /* Couleur de fond grise */
+    color: #333;
+    /* Couleur de texte sombre */
+    cursor: not-allowed;
+    /* Curseur en forme de cercle barré (indiquant que le champ est en lecture seule) */
+}
+
+
+/* Bouton Save en vert clair */
+
+.save-button {
+    background-color: #0aeb0a;
+    color: white;
+    transition: background-color 0.3s;
+    /* Animation de transition pour une transition en douceur */
+}
+
+
+/* Bouton Cancel en rouge clair */
+
+.cancel-button {
+    background-color: #f53e3e;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+
+/* Au survol du bouton Save, changez la couleur en vert foncé */
+
+.save-button:hover {
+    background-color: #2ca72c;
+}
+
+
+/* Au survol du bouton Cancel, changez la couleur en rouge foncé */
+
+.cancel-button:hover {
+    background-color: #bb0f0f;
+}
+
+.p-dialog .p-dialog-header {
+    border-bottom: 0 none;
+    background: #8d0c2a;
+    color: #e8eef3;
+    padding: 1.5rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #dee5eb;
+    border: 0 none;
+    background: transparent;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-right: 0.5rem;
+}
+
+
+/* styles.css */
+
+.custom-dialog-header {
+    border-bottom: 0 none;
+    color: #196a8a;
+    padding: 0.1rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    margin-top: -1rem;
+}
+
+.custom-dialog-header .p-dialog-header-icon {
+    width: 2rem;
+    height: 1.5rem;
+    margin-top: -1rem;
+    color: #dee5eb;
+    border: 0 none;
+    background: transparent;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-right: 0.5rem;
+}
+
+.button-spacing {
+    margin-right: 10px;
+    /* Ajustez la valeur de la marge selon vos besoins */
+}
+
+.custom-td {
+    text-align: center;
+}
+
+.confirmation-dialog {
+    width: 20rem;
+    height: 15rem;
+}
+
+.confirmation-dialog-header {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.confirmation-dialog-content {
+    padding: 1rem;
+}
+
+.confirmation-dialog-buttons {
+    text-align: center;
+}
+
+.confirmation-dialog-button {
+    margin: 0.5rem;
+}
+
+.confirmation-dialog-button.valider {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.confirmation-dialog-button.annuler {
+    background-color: #ccc;
+    color: #000;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.centered-row th {
+    white-space: nowrap;
+    text-align: center;
+}
+
+.centered-row div {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+th.text-center {
+    text-align: center;
+}
+
+.centered-row {
+    text-align: center !important;
+    align-items: center;
+}
+
+.circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    align-items: center;
+    margin-right: 5px;
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+    /* Couleur rouge */
+}
+
+.custom-button {
+    height: 15px;
+    width: 15px;
+    padding: 0;
+    font-size: 10px;
+}
+
+.header-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+:host ::ng-deep .p-inputtext:focus:enabled,
+:host ::ng-deep .p-inputtext:hover {
+    box-shadow: none;
+    border: 2px solid green;
+}
+
+.element-with-margin {
+    margin-right: 10px;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+    text-align: center;
+}
+
+.search-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+}
+
+.input-container input[type="text"] {
+    padding-left: 25px;
+}
+
+.input-container i.pi-search {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.genericButton {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+}
+
+.btnDeleteEdit {
+    height: 40px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.custom-button {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.custom-button2 {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: left;
+    align-items: normal;
+    margin: 10px 0px;
+    border-radius: 5px;
+}
+
+
+/* Redimensionnement du p-dialog */
+
+.ui-resizable {
+    position: relative;
+}
+
+.toggle-switch {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    /* Ajustez la largeur du bouton selon vos besoins */
+    height: 40px;
+    /* Ajustez la hauteur du bouton selon vos besoins */
+}
+
+.toggle-switch input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-switch label .toggle-text-on,
+.toggle-switch label .toggle-text-off {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 50%;
+    line-height: 1;
+}
+
+
+/* styles.css */
+
+.custom-toggle-button .ui-button-text {
+    font-weight: bold;
+    /* Ajoutez des styles de texte personnalisés */
+}
+
+.ui-resizable-se {
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+
+.custom-dialog {
+    background-color: #007bff;
+    /* Couleur de fond bleue */
+    color: white;
+    /* Couleur de texte blanche */
+    font-weight: bold;
+    /* Texte en gras */
+    padding: 10px;
+    /* Espacement interne */
+    width: 100%;
+    /* Largeur maximale */
+    text-align: left;
+    /* Alignement du texte au centre */
+}
+
+.readonly-input {
+    background-color: #f0f0f0;
+    /* Couleur de fond grise */
+    color: #333;
+    /* Couleur de texte sombre */
+    cursor: not-allowed;
+    /* Curseur en forme de cercle barré (indiquant que le champ est en lecture seule) */
+}
+
+
+/* Bouton Save en vert clair */
+
+.save-button {
+    background-color: #0aeb0a;
+    color: white;
+    transition: background-color 0.3s;
+    /* Animation de transition pour une transition en douceur */
+}
+
+
+/* Bouton Cancel en rouge clair */
+
+.cancel-button {
+    background-color: #f53e3e;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+
+/* Au survol du bouton Save, changez la couleur en vert foncé */
+
+.save-button:hover {
+    background-color: #2ca72c;
+}
+
+
+/* Au survol du bouton Cancel, changez la couleur en rouge foncé */
+
+.cancel-button:hover {
+    background-color: #bb0f0f;
+}
+
+.p-dialog .p-dialog-header {
+    border-bottom: 0 none;
+    background: #8d0c2a;
+    color: #e8eef3;
+    padding: 1.5rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #dee5eb;
+    border: 0 none;
+    background: transparent;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-right: 0.5rem;
+}
+
+
+/* styles.css */
+
+.custom-dialog-header {
+    border-bottom: 0 none;
+    color: #196a8a;
+    padding: 0.1rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    margin-top: -1rem;
+}
+
+.custom-dialog-header .p-dialog-header-icon {
+    width: 2rem;
+    height: 1.5rem;
+    margin-top: -1rem;
+    color: #dee5eb;
+    border: 0 none;
+    background: transparent;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-right: 0.5rem;
+}
+
+.custom-button {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border-radius: 5px;
+    padding: 0;
+    font-size: 17px;
+}
+
+.button-spacing {
+    margin-right: 10px;
+    /* Ajustez la valeur de la marge selon vos besoins */
+}

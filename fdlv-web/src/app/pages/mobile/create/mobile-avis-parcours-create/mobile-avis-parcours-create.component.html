@@ -1,0 +1,99 @@
+<p-card header='Consultation d’un avis utilisateur' class="flex justify-content-center mt-3 ">
+  <ng-template pTemplate="header">
+    <div class="card-container my-5 mx-3">
+      <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="btn btn-secondary ml-1"
+        (click)="onCancelCreation()">
+      </p-button>
+    </div>
+  </ng-template>
+
+  <div class="form-row">
+    <div class="col-12 mx-auto">
+      <div class="card">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+          <div class="formgrid grid">
+            <div class="form-group field col-12 md:col-4">
+              <label class="form-control-label" for="field_apa_qfp_id">Identifiant de question<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input type="number"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="questionFinParcoursId" id="field_apa_qfp_id" formControlName="questionFinParcoursId" />
+              <div *ngIf="
+                        editForm.get('questionFinParcoursId')!.invalid &&
+                        (editForm.get('questionFinParcoursId')!.dirty || editForm.get('questionFinParcoursId')!.touched)
+                      ">
+                <small class="font-bold text-xs text-red-500"
+                  *ngIf="editForm.get('questionFinParcoursId')?.errors?.['required']">
+                  {{ required }}
+                </small>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-4">
+              <label class="form-control-label" for="field_apa_mus_id_user">Identifiant Utilisateur Mobile<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input type="number"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="mobileUserId" id="field_apa_mus_id_user" formControlName="mobileUserId" />
+              <div *ngIf="
+                        editForm.get('mobileUserId')!.invalid && (editForm.get('mobileUserId')!.dirty || editForm.get('mobileUserId')!.touched)
+                      ">
+                <small class="font-bold text-xs text-red-500"
+                  *ngIf="editForm.get('mobileUserId')?.errors?.['required']"> {{ required }} </small>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-4">
+              <label class="form-control-label" for="field_apa_event_id">Identifiant Utilisateur Mobile<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input type="number"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="eventId" id="field_apa_event_id" formControlName="eventId" />
+              <div
+                *ngIf="editForm.get('eventId')!.invalid && (editForm.get('eventId')!.dirty || editForm.get('eventId')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('eventId')?.errors?.['required']"> {{
+                  required }} </small>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-6">
+              <label class="form-control-label" for="field_apa_texte">Question<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input maxlength="50" type="text"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="question" id="field_apa_question" formControlName="question" />
+              <div
+                *ngIf="editForm.get('question')!.invalid && (editForm.get('question')!.dirty || editForm.get('question')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('question')?.errors?.['required']"> {{
+                  required }} </small>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-6">
+              <label class="form-control-label" for="field_apa_avis">Avis<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input maxlength="10" type="text"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="avis" id="field_apa_avis" formControlName="avis" />
+              <div
+                *ngIf="editForm.get('avis')!.invalid && (editForm.get('avis')!.dirty || editForm.get('avis')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('avis')?.errors?.['required']"> {{
+                  required }} </small>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-6">
+              <label class="form-control-label" for="field_apa_datetime">Date<span
+                  class="font-bold text-xs text-red-500">*</span></label>
+              <input maxlength="20" type="text" [disabled]="true" 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                name="date" id="field_apa_datetime" formControlName="date" />
+              <div
+                *ngIf="editForm.get('date')!.invalid && (editForm.get('date')!.dirty || editForm.get('date')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('date')?.errors?.['required']"> {{
+                  required }} </small>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</p-card>

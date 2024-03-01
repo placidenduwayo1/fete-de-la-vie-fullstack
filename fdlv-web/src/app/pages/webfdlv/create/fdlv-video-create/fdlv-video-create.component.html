@@ -1,0 +1,241 @@
+<p-card>
+  <section class="hautpage">
+    <div class="formgrid grid">
+      <div class="col-9 mx-auto">
+        <div class="flex flew-row justify-content-between">
+          <h2 *ngIf="!id">Ajouter un Média</h2>
+          <h2 *ngIf="id">Modifier un Média</h2>
+          <div class="flex justify-content-end align-items-center">
+            <p-button (click)="dataUpdateVideoQuizz(); save()" id="save-entity"
+              [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1" icon="pi pi-save"
+              label="Sauvegarder">
+            </p-button>
+            <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+              (click)="eraseModification()">
+            </p-button>
+            <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="btn btn-secondary ml-1"
+              (click)="previousState()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <div class="col-8 mx-auto">
+      <form name="editForm" role="form" novalidate [formGroup]="editForm">
+        <div class="formgrid grid">
+          <div class="form-group field col-12 md:col-4">
+            <label class="form-control-label" for="field_flv_num_ordre">Ordre d'affichage<span
+              class="font-bold text-xs text-red-500">*</span></label>
+            <input type="number" 
+            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="numOrdre" id="field_flv_num_ordre"
+              formControlName="numOrdre" />
+            <div
+              *ngIf="editForm.get('numOrdre')!.invalid && (editForm.get('numOrdre')!.dirty || editForm.get('numOrdre')!.touched)">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('numOrdre')?.errors?.['required']"> {{ required
+                }} </small>
+            </div>
+          </div>
+
+          <div class="form-group field col-12 md:col-4">
+            <label class="form-control-label" for="field_flv_theme">Thème du média<span
+              class="font-bold text-xs text-red-500">*</span></label>
+            <div class="select-group">
+              <select class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+              name="theme" id="field_flv_theme" formControlName="theme">
+                <option selected [value]="null">Sélectionnez un thème ...</option>
+                <option *ngFor="let theme of themeList"
+                  [value]="theme.id === editForm.get('theme')!.value?.id ? editForm.get('theme')!.value : theme.id">
+                  {{ theme.label }}
+                </option>
+              </select>
+            </div>
+            <div
+              *ngIf="editForm.get('theme')!.invalid && (editForm.get('theme')!.dirty || editForm.get('theme')!.touched)">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('theme')?.errors?.['required']"> {{ required }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group field col-12 md:col-4">
+            <label class="form-control-label" for="field_flv_fus_id">Utilisateur<span
+              class="font-bold text-xs text-red-500">*</span></label>
+            <select class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+            id="field_flv_fus_id" name="fdlvUser" formControlName="flvFusId">
+              <option *ngFor="let fdlvUser of fdlvUsers" [value]="fdlvUser.id">{{ fdlvUser.login }}</option>
+            </select>
+            <div
+              *ngIf="editForm.get('flvFusId')!.invalid && (editForm.get('flvFusId')!.dirty || editForm.get('flvFusId')!.touched)">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('flvFusId')?.errors?.['required']"> Champs
+                Obligatoire ! </small>
+            </div>
+          </div>
+
+
+            <div class="form-group field col-12 md:col-3">
+              <label class="form-control-label" for="field_flv_type_media">Type du média<span
+                class="font-bold text-xs text-red-500">*</span></label>
+              <div class="select-group">
+                <select class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                 name="typeMedia" id="field_flv_type_media" formControlName="typeMedia"
+                 (change)="onChange($event)"
+                  >
+                  <option *ngFor="let typeMedia of typeOfMedias" [value]="typeMedia">{{ typeMedia }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group field col-12 md:col-9">
+              <label class="form-control-label" for="field_flv_url_video">Lien du média<span
+                class="font-bold text-xs text-red-500">*</span></label> <br />
+              <!--input type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="urlVideo" formControlName="urlVideo"
+                id="field_flv_url_video" (change)="verifyMediaExtension()" /-->
+                
+                <div class="custom-file">
+                  <input type="file"
+                  [accept]="editForm.get('typeMedia')?.value ?? '.mp3,.mp4,.jpg,.jpeg,.png,.pdf'"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    id="field_flv_url_video" name="urlVideo" (change)="handleFileInput($event.target!, 'urlVideo')" 
+                    />
+                    <label class="custom-file-label" for="field_image">
+                      {{ urlVideo }}
+                    </label>
+                  </div>
+                <!--input type="file"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                  name="urlVideo"
+                  formControlName="urlVideo" id="field_flv_url_video" (change)="handleFileInput($event.target!)" /-->
+      
+              <div *ngIf="
+                      editForm.get('urlVideo')!.invalid &&
+                      (editForm.get('urlVideo')!.dirty || editForm.get('urlVideo')!.touched || editForm.get('urlVideo')!.touched)
+                    ">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('urlVideo')?.errors?.['required']"> {{ required
+                  }} </small>
+              </div>
+                  <div *ngIf="incorrect">
+                <small class="font-bold text-xs text-red-500" > {{ errorExtension }} </small>
+                
+              </div>
+            </div>
+
+          <div class="form-group field col-12 ">
+            <label class="form-control-label" for="field_flv_url_image">Lien image de la miniature<span
+              class="font-bold text-xs text-red-500">*</span></label><br />
+            <!--input type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="urlImage" formControlName="urlImage"
+              id="field_flv_url_image" /-->
+              <div class="custom-file">
+                <input type="file"
+                accept="image/*"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                  id="field_flv_url_image" name="urlImage" (change)="handleFileInput($event.target!, 'urlImage')" />
+                  <label class="custom-file-label" for="field_flv_url_image">
+                    {{ urlImg }}
+                  </label>
+              </div>
+            <div
+              *ngIf="editForm.get('urlImage')!.invalid && (editForm.get('urlImage')!.dirty || editForm.get('urlImage')!.touched)">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('urlImage')?.errors?.['required']"> {{ required
+                }} </small>
+            </div>
+          </div>
+            <div class="form-group field col-12 md:col-4">
+              <label class="form-control-label" for="field_flv_description">Description du média<span
+                class="font-bold text-xs text-red-500">*</span></label>
+              <input type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="description" id="field_flv_description"
+                formControlName="description" />
+            </div>
+
+            <div class="form-group field col-12 md:col-8">
+              <label class="form-control-label" for="field_flv_nom_video">Nom du média<span
+                class="font-bold text-xs text-red-500">*</span></label> <br />
+              <input type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="nomVideo" formControlName="nomVideo"
+                id="field_flv_nom_video" />
+              <div
+                *ngIf="editForm.get('nomVideo')!.invalid && (editForm.get('nomVideo')!.dirty || editForm.get('nomVideo')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('nomVideo')?.errors?.['required']"> {{ required
+                  }} </small>
+              </div>
+            </div>
+         
+
+          <!-- Affichage de la liste des quizz associés à la video  -->
+          <div class="field col-12 ">
+          <p-table [value]="selectedQuizzLinkedToID" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Liste des quizz associée</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-quizz>
+              <tr>
+                <td>
+                  <span class="px-4">{{ quizz.id }} - {{ quizz.label }}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+          <br />
+          <!-- Affichage de la liste des quizz  -->
+          <p-dialog header="Sélectionnez le quizz" [(visible)]="displayBasic" [style]="{ width: '50vw' }"
+            [baseZIndex]="10000">
+            <p-pickList [source]="items" [target]="selectedQuizzLinkedToID" sourceHeader="Quizz disponibles"
+              targetHeader="Quizz lié au média" filterBy="label" sourceFilterPlaceholder="Recherche par titre"
+              targetFilterPlaceholder="Recherche par titre" #pl>
+              <ng-template let-items pTemplate="item">
+                <div>
+                  <div style="font-size: 14px; float: left">{{ items.id }} - {{ items.label }}</div>
+                </div>
+              </ng-template>
+            </p-pickList>
+            <br />
+            <p-button icon="pi pi-angle-left" (click)="displayBasic = false" label="Ok"></p-button>
+          </p-dialog>
+          <div class="field col-12">
+          <p-button type="button" (click)="showBasicDialog()" icon="pi pi-window-maximize"
+            label="Ajouter quizz"></p-button>
+          </div>
+          <br />
+          <br />
+          <div class="field col-12 ">
+          <label class="form-group ">
+            Voulez vous publier ce média ?
+            <input type="checkbox" id="field_flv_active" formControlName="active" [value]="editForm.get('active')" />
+          </label>
+        </div>
+        </div>
+      </form>
+    </div>
+
+  <div class="grid">
+    <label>Aperçu : </label>
+    <label>{{ editForm.get(['description'])!.value }}</label>
+    <div class="formgrid grid ">
+      <div class=" md:col-5 "
+        *ngIf="editForm.get(['typeMedia'])!.value == '.mp4' || editForm.get(['typeMedia'])!.value == '.mp3'">
+        <video class="border" controls [src]="editForm.get(['urlVideo'])!.value"
+          style="max-height: 50%; max-width: 100%"></video>
+      </div>
+      <div class="md:col-5 mx-auto" *ngIf="
+              editForm.get(['typeMedia'])!.value == '.jpg' ||
+              editForm.get(['typeMedia'])!.value == '.jpeg' ||
+              editForm.get(['typeMedia'])!.value == '.png'
+            ">
+        <img [src]="editForm.get(['urlVideo'])!.value" style="max-height: 30%; max-width: 100%" />
+      </div>
+      <div class="col" *ngIf="editForm.get(['typeMedia'])!.value == '.pdf'">
+        <iframe class="w-100 mh-50" [src]="editForm.get(['urlVideo'])!.value "></iframe>
+        <!--iframe class="w-100 mh-50" [src]="editForm.get(['urlVideo'])!.value | safe"></iframe-->
+      </div>
+      <div class="col">
+        <img class="border" [src]="editForm.get(['urlImage'])!.value" style="max-height: 30%; max-width: 200%" />
+      </div>
+    </div>
+  </div>
+</p-card>

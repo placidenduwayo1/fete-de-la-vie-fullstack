@@ -1,0 +1,127 @@
+<p-card header="Liste des Rôle Structures" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+    <p-toast></p-toast>
+    <p-table #myTab [value]="data" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche rôle structure {first} à {last}"
+        [rowsPerPageOptions]="[10, 20, 50]" (onPage)="onPageChange($event)" [first]="first"  [globalFilterFields]="['froId', 'froCode', 'froRole']">
+
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <div>
+                    <p-button (click)="reloadPage()" label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text" icon="pi pi-refresh"></p-button>
+                    <p-button (click)="openAddForm()" label="Créer un rôle structure" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="searchValue" (input)="onSearchInputChange($event)" placeholder="Recherche" />
+        </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="froId">
+                    <div>
+                        <span>Id</span>
+                        <p-sortIcon field="froId" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+
+                <th class="centered-row" pSortableColumn="froCode">
+                    <div>
+                        <span>Code rôle Structure</span>
+                        <p-sortIcon field="froCode"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="froRole">
+                    <div>
+                        <span>Rôle Structure</span>
+                        <p-sortIcon field="froRole"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-datauser>
+            <!-- {{datauser|json}} -->
+                <tr>
+                    <td class="centered-row">{{ datauser.froId }}</td>
+                    <td class="centered-row">{{ datauser.froCode }}</td>
+                    <td class="centered-row">{{ datauser.froRole }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <p-button icon="pi pi-pencil" styleClass="custom-button p-button-rounded p-button-info" (click)="openEditForm(datauser)"></p-button>
+                            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger" (click)="openConfirmationDialog(datauser)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+        </ng-template>
+    </p-table>
+    <p-dialog class="custom-dialog" header="Créer un rôle structure" [(visible)]="displayAddForm" [modal]="true">
+        <form #AddRoleStructureForm="ngForm" (ngSubmit)="AddRoleStructureForm.value">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="codeRoleStructure">Code rôle Structure:</label>
+                    <input type="text" pInputText id="codeRoleStructure" name="froCode" #codeRoleStructure="ngModel" ngModel required/>
+                </div>
+                <div class="form-group">
+                    <label for="roleStructure">Rôle Structure:</label>
+                    <input type="text" pInputText id="roleStructure" name="froRole" #roleStructure="ngModel" ngModel required/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <p-message *ngIf="errormessage" severity="error" text="{{title}}"></p-message>
+                </div>
+            </div>
+            <div class="form-group button-container">
+                <button class="element-with-margin custom-button save-button" type="submit" pButton (click)="saveForm(AddRoleStructureForm.value)" label="Save"></button>
+                <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeForm()" label="Cancel"></button>
+            </div>
+        </form>
+    </p-dialog>
+    
+    <p-dialog class="custom-dialog" header="Modifier un rôle structure" [(visible)]="displayEditForm" [modal]="true">
+        <form #UpdateRoleStructureForm="ngForm" (ngSubmit)="editForm(UpdateRoleStructureForm.value)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="froId">ID</label>
+                    <input type="text" pInputText id="froId" name="froId" #id="ngModel" [(ngModel)]="datauser.id " ngModel readonly class="readonly-input" />
+                </div>
+                <div class="form-group">
+                    <label for="codeRoleStructure">Code rôle structure</label>
+                    <input type="text" pInputText id="froCode" name="froCode" #codeRoleStructure="ngModel" [(ngModel)]="datauser.codeRoleStructure" ngModel required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="roleStructure">Rôle structure:</label>
+                    <input type="text" pInputText id="froRole" name="froRole" #roleStructure="ngModel" [(ngModel)]="datauser.roleStructure" ngModel required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <p-message *ngIf="errormessage" severity="error" text="{{title}}"></p-message>
+                </div>
+            </div>
+            <div class="form-group button-container">
+                <button class="element-with-margin custom-button save-button" type="submit" pButton label="Save"></button>
+                <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeEditForm()" label="Cancel"></button>
+            </div>
+        </form>
+    </p-dialog>
+    
+    <p-dialog class="custom-dialog" [(visible)]="displayDeleteForm" [modal]="true" [resizable]="true">
+        <ng-template pTemplate="header">
+            <h2>Confirmation</h2>
+        </ng-template>
+        <ng-template pTemplate="body">
+            <div>Voulez-vous vraiment supprimer ce rôle structure ?</div>
+            <div class="form-group button-container">
+                <button pButton type="button" class="button" class="element-with-margin custom-button save-button" label="Valider" (click)="deleteRoleStructure()"></button>
+                <button pButton type="button" class="button" class="element-with-margin custom-button cancel-button" label="Annuler" (click)="closeConfirmationDialog()"></button>
+            </div>
+            <div class="form-group">
+                <p-message *ngIf="errormessage" severity="error" text="{{title}}">{{title}}</p-message>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+</p-card>

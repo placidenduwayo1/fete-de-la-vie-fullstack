@@ -1,0 +1,56 @@
+<p-card header="Liste des Utilisateurs Mobile" class="m-3">
+  <p-table #idUM [value]="mobileUsers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche utilisateurs mobiles {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+     [globalFilterFields]="['id', 'pseudo','sexe', 'trancheAge']"
+     [scrollable]="true" scrollHeight="70vh">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh" (click)="loadAll()"></p-button>
+          <p-button (onClick)="create()" label="Créer un utilisateur mobile" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+        </div>
+        <input class="p-input-icon-left  ml-auto" type="search" pInputText
+          (input)="idUM.filterGlobal($any($event.target).value, 'contains')" 
+          placeholder="Recherche" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)"/>
+      </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">Identifiant<p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="pseudo">Pseudo<p-sortIcon field="pseudo"></p-sortIcon></th>
+        <th pSortableColumn="sexe">Sexe<p-sortIcon field="sexe"></p-sortIcon></th>
+        <th pSortableColumn="trancheAge">Tranche d'age<p-sortIcon field="trancheAge"></p-sortIcon></th>
+        <th pSortableColumn="dateFermeture">Date compte fermé<p-sortIcon field="dateFermeture"></p-sortIcon></th>
+        <th></th> <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.pseudo }}</td>
+        <td>{{ user.sexe?.ihmName }}</td>
+        <td>{{ user.trancheAge?.ihmName }}</td>
+        <td>{{ user.dateFermeture?.toString() | date: 'dd/MM/yyyy' }}</td>
+
+        <td class="text-right">
+            <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+              (click)="edit(user)"></p-button>
+            </td>
+              <td class="text-right" style="width: 1px;">
+            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+              (click)="openConfirmationDialog(user.id)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+  <app-dialog-delete [elementLabel]="'cet utilisateur mobile'" [showConfirmationDialog]="showConfirmationDialog"
+    (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

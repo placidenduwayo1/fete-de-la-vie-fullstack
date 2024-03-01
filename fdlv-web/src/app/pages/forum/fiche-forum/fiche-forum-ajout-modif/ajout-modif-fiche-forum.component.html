@@ -1,0 +1,207 @@
+<p-card class="flex justify-content-center mt-3" [style]="{width: '1450px'}">
+
+<section class="hautpage">
+  <div class="formgrid grid">
+    <div class="col-12 mx-auto">
+      <div class="flex flew-row justify-content-between">
+        <h2 *ngIf="!modifMode"><b>Créer un nouveau forum</b></h2>
+        <h2 *ngIf="modifMode"><b>Modifier forum {{ForumForm.get('numForum').value}}</b></h2>
+        <div class="card-container my-5 mx-3">
+          <p-button id="save-entity" icon="pi pi-save" class="btn btn-secondary ml-1"
+          (click)="modifMode ? editForm(ForumForm.value) : saveForm(ForumForm.value)" label="Sauvegarder">
+          </p-button>
+          <p-button type="button" class="btn btn-secondary ml-1" (click)="eraseModification()"
+            label="Effacer les modifications">
+          </p-button>
+          <p-button type="button" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary ml-1" label="Retour"
+          (click)="closeForm()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <form [formGroup]="ForumForm" (ngSubmit)="(ForumForm.value)">
+    <div class="formgrid grid m-0">
+      <div class="field col-1" style="display: flex;flex-direction :column">
+        <label for="ID">ID</label>
+        <input type="text" pInputText formControlName="id" readonly class="readonly-input"/>
+      </div>
+      <div class="field col-1" style="display: flex;flex-direction :column">
+        <label for="numForum">N° Forum*</label>
+        <input type="text" pInputText id="numForum" pKeyFilter="num" formControlName="numForum" />
+        <div *ngIf="ForumForm.get('numForum').hasError('numForumError') || ForumForm.get('numForum').hasError('pattern')" class="error-message">
+          Ce champ est obligatoire et doit contenir uniquement 5 chiffres.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="libelle">Libellé*</label>
+        <input type="text" pInputText id="libelle" formControlName="libelle" />
+        <div *ngIf="ForumForm.get('libelle').hasError('libelleForumError')" class="error-message">
+          Ce champ est obligatoire et doit contenir au moins 5 charactères.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="reference">Référence</label>
+        <input type="text" pInputText id="reference" formControlName="reference" readonly class="readonly-input"/>
+      </div>
+      <div class="field col-2" style="display: flex;flex-direction :column">
+        <label for="typeForum">Type Forum*</label>
+        <p-dropdown formControlName="typeForum" [options]="typeForumOptions" 
+        optionLabel="label" optionValue="value" [style]="{ width: '100%' }"></p-dropdown>
+      </div>
+      <div [style.display]="modifMode ? 'flex' : 'none'" style="flex-direction: column;padding-left:1%;padding-right: 2%;">
+        <label for="isValid" style="padding-bottom:25%;">Valide</label>
+        <p-inputSwitch id="setFormValid" formControlName="setFormValid"></p-inputSwitch>
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-4" style="display: flex;flex-direction :column">
+        <label for="sloganForum">Slogan</label>
+        <textarea pInputTextarea id="sloganForum" formControlName="sloganForum"
+          class="form-control custom-textarea"></textarea>
+      </div>
+      <div class="field col-4" style="display: flex;flex-direction :column">
+        <label for="descriptionConvention">Description</label>
+        <textarea pInputTextarea id="descriptionConvention" formControlName="descriptionConvention"
+          class="form-control custom-textarea"></textarea>
+      </div>
+      <div class="field col-4" style="display: flex;flex-direction :column">
+        <label for="commentaire">Commentaire</label>
+        <textarea pInputTextarea id="commentaire" formControlName="commentaire"
+          class="form-control custom-textarea"></textarea>
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateDebutReservation">Date Début Réservation</label>
+        <p-calendar id="dateDebutReservation" formControlName="dateDebutReservation" dateFormat="dd/mm/yy"
+          [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateDebutReservation').hasError('dateDebutReservationError')" class="error-message">
+          La date de début de réservation doit être postérieure à la date d'aujourd'hui.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateDebutEvenement">Date Début Evènement*</label>
+        <p-calendar id="dateDebutEvenement" formControlName="dateDebutEvenement" dateFormat="dd/mm/yy"
+          hourFormat="24" [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateDebutEvenement').hasError('dateDebutEvenementError')" class="error-message">
+          La date de début de l'évènement est obligatoire et doit être postérieure à la date d'aujourd'hui.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateOuverture">Date Ouverture</label>
+        <p-calendar id="dateOuverture" formControlName="dateOuverture" dateFormat="dd/mm/yy"
+          [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateOuverture').hasError('dateOuvertureError')" class="error-message">
+          La date d'ouverture doit être postérieure à la date d'aujourd'hui.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="heureOuverture">Heure Ouverture</label>
+        <p-calendar id="heureOuverture" formControlName="heureOuverture" hourFormat="HH:mm" [showIcon]="true"
+          [style]="style" [showOnFocus]="true" [timeOnly]="true">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('heureOuverture').hasError('heureOuvertureError')" class="error-message">
+          L'heure d'ouverture doit être remplit</div>
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateFinReservation">Date Fin Réservation</label>
+        <p-calendar id="dateFinReservation" formControlName="dateFinReservation" dateFormat="dd/mm/yy"
+          [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateFinReservation').hasError('dateFinReservationError')" class="error-message">
+          La date de fin de réservation doit être postérieure à la date debut de réservation.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateFinEvenement">Date Fin Evènement</label>
+        <p-calendar id="dateFinEvenement" formControlName="dateFinEvenement" dateFormat="dd/mm/yy"
+          [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateFinEvenement').hasError('dateFinEvenementError')" class="error-message">
+          La date de fin de l'évènement doit être postérieure à la date de début de l'évènement.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="dateFermeture">Date Fermeture</label>
+        <p-calendar id="dateFermeture" formControlName="dateFermeture" dateFormat="dd/mm/yy"
+          [showTime]="false" [showIcon]="true" [style]="style">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('dateFermeture').hasError('dateFermetureError')" class="error-message">
+          La date de fermeture doit être postérieure à la date d'ouverture d'évènement.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="heureFermeture">Heure Fermeture</label>
+        <p-calendar id="heureFermeture" formControlName="heureFermeture" hourFormat="HH:mm" [showIcon]="true"
+          [style]="style" [showOnFocus]="true" [timeOnly]="true">
+          <i class="pi pi-calendar icon-style"></i>
+        </p-calendar>
+        <div *ngIf="ForumForm.get('heureFermeture').hasError('heureFermetureError')" class="error-message">
+          L'heure ouverture et fermeture doivent être renseignés.</div>
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="adresseForum">Adresse Forum</label>
+        <input type="text" pInputText id="adresseForum" formControlName="adresseForum" />
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="complementAdresseForum">Complément Adresse </label>
+        <input type="text" pInputText id="complementAdresseForum" formControlName="complementAdresseForum" />
+      </div>
+      <div class="field col-1" style="display: flex;flex-direction :column">
+        <label for="codePostal">Code Postal*</label>
+        <input type="text" pInputText id="codePostal" formControlName="codePostal" (change)="validateCodePostale()"/>
+        <div *ngIf="ForumForm.get('codePostal').hasError('codePostalError')" class="error-message">
+           Le code postal est invalide.</div>
+      </div>
+      <div class="field col-2" style="display: flex;flex-direction :column">
+        <label for="commune">Commune</label>
+        <input type="text" pInputText id="commune" formControlName="commune" />
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="lieuForum">Lieu du Forum</label>
+        <input type="text" pInputText id="lieuForum" formControlName="lieuForum" />
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-4">
+        <label for="conventionUrl">Convention du forum :  
+          <span *ngIf='!ForumForm.get("conventionUrl")?.value'>Aucun document</span>
+          <a *ngIf='ForumForm.get("conventionUrl")?.value' [href]='ForumForm.get("conventionUrl").value'>Voir le document</a>
+        </label>
+        <div class="card" style="padding: 10px;">
+          <img class="img-fluid" [src]='ForumForm.get("conventionUrl")?.value'/>
+        </div>
+        <input id="conventionUrl" type="file" (change)="previewDocument($event.target, 'conventionUrl')" label="Télécharger Convention"/>
+      </div>
+      <div class="field col-4">
+        <label for="planForumUrl">Plan du forum : 
+          <span *ngIf='!ForumForm.get("planForumUrl")?.value'>Aucun document</span>
+          <a *ngIf='ForumForm.get("planForumUrl")?.value' [href]='ForumForm.get("planForumUrl")?.value'>Voir le document</a>
+        </label>
+        <div class="card" style="padding: 10px;">
+          <img class="img-fluid" [src]='ForumForm.get("planForumUrl")?.value'/>
+        </div>
+        <input id="planForumUrl" type="file" (change)="previewDocument($event.target, 'planForumUrl')" label="Télécharger Plan Forum"/>
+      </div>
+      <div class="field col-4">
+        <label for="planSalle">Plan salle :
+          <span *ngIf='!ForumForm.get("planSalle")?.value'>Aucun document</span>
+          <a *ngIf='ForumForm.get("planSalle")?.value' [href]='ForumForm.get("planSalle")?.value'>Voir le document</a>
+        </label>
+        <div class="card" style="padding: 10px;">
+          <img class="img-fluid" [src]='ForumForm.get("planSalle")?.value'/>
+        </div>
+        <input id="salleUrl" type="file" (change)="previewDocument($event.target, 'planSalle')" label="Télécharger Plan Salle"/>
+      </div>
+    </div>
+  </form>
+</p-card>

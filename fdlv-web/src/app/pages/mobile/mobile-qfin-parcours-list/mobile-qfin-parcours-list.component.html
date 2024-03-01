@@ -1,0 +1,60 @@
+    <p-card header="Liste des Questions de Fin de Parcours" class="m-3">
+        <p-table #idPA [value]="mobileQuestions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+          paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche utilisateurs mobiles {first} à {last}"
+          [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+           [globalFilterFields]="['id', 'numQuestion','texte', 'question','typeQuestion']">
+          <ng-template pTemplate="caption"
+          [scrollable]="true" scrollHeight="70vh">
+            <div class="flex">
+              <div>
+                <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+                  icon="pi pi-refresh"></p-button>
+                <p-button (onClick)="create()" label="Créer une question" styleClass="p-button-raised p-button-text"
+                  icon="pi pi-plus-circle"></p-button>
+              </div>
+              <input class="p-input-icon-left  ml-auto" type="search" pInputText
+                (input)="idPA.filterGlobal($any($event.target).value, 'contains')" 
+                placeholder="Recherche" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)"/>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">Identifiant<p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="texte">Texte<p-sortIcon field="texte"></p-sortIcon></th>
+                <th pSortableColumn="numQuestion">Numéro de question<p-sortIcon field="numQuestion"></p-sortIcon></th>
+                <th pSortableColumn="question">Question<p-sortIcon field="question"></p-sortIcon></th>
+                <th pSortableColumn="typeQuestion">Type question<p-sortIcon field="typeQuestion"></p-sortIcon></th>
+                <th pSortableColumn="questionActive">Question active<p-sortIcon field="questionActive"></p-sortIcon></th>
+                <th scope="col"></th> <th scope="col"></th>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="body" let-question>
+            <tr>
+                <td>{{ question.id }}</td>
+                <td>{{ question.texte }}</td>
+                <td>{{ question.numQuestion }}</td>
+                <td>{{ question.question }}</td>
+                <td>{{ question.typeQuestion }}</td>
+                <td>{{ question.questionActive }}</td>
+      
+                <td class="text-right">
+                      <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info"
+                        (click)="edit(question)"></p-button>
+                </td>
+                <td>
+                      <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                        (click)="openConfirmationDialog(question.id)"></p-button>
+                 
+                  </td>
+              </tr>
+
+          </ng-template>
+        </p-table>
+</p-card>
+<!--confirmation suppression -->
+<div *ngIf="showConfirmationDialog">
+    <app-dialog-delete [elementLabel]="'cette question de fin de parcours'" [showConfirmationDialog]="showConfirmationDialog"
+      (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

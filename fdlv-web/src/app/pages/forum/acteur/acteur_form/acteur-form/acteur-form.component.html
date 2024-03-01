@@ -1,0 +1,580 @@
+<p-card header="Gestion utilisateur d'un Forum" class="flex justify-content-center mt-3" [style]="{width: '1450px'}">
+    <p-messages></p-messages>
+    <ng-template pTemplate="header">
+        <div class="card-container my-5 mx-3 ">
+            <p-button label="Retour" (click)="onRetour()" icon="pi pi-arrow-left"
+                styleClass="p-button-raised p-button-sm" class="mr-2"></p-button>
+            <p-button (click)="modifMode ? onUpdateActeur(acteur) : onSaveActeur()"
+                [disabled]="isInvalidIdentiteActeur() || isInvalidRoleActeur() || isInvalidInterventionActeur()"
+                label="Sauvegarder" icon="pi pi-save" styleClass="p-button-success p-button-raised p-button-sm"
+                class="mr-2"></p-button>
+            <p-button label="Effacer les modifications" icon="pi pi-eraser"
+                styleClass="p-button-warning p-button-raised p-button-sm"></p-button>
+            <p-button styleClass="p-button-raised p-button-sm" [style.margin.px]="100" label="{{ actifInactifText }}"
+                (onClick)="toggleActifInactif()">
+            </p-button>
+        </div>
+    </ng-template>
+        <div class="flex flex-wrap gap-2 mb-3 mt-3">
+            <p-button [icon]="activeIndex === 0 ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggleAccordion(0)"
+                styleClass="p-button-text" label="Identité acteur forum"></p-button>
+            <p-button [icon]="activeIndex === 1 ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggleAccordion(1)"
+                styleClass="p-button-text ml-2" label="Structure rôle acteur"></p-button>
+            <p-button [icon]="activeIndex === 2 ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggleAccordion(2)"
+                styleClass="p-button-text ml-2" label="Information intervention acteur"></p-button>
+        </div>
+        <p-accordion [activeIndex]="activeIndex">
+            <form name="acteurForm" [formGroup]="acteurForm" (ngSubmit)="onSaveActeur()">
+            <p-accordionTab>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center">
+                        <i class="pi pi-user mr-2"></i>
+                        <span class="vertical-align-middle">Identité acteur forum
+                            <ng-container *ngIf="isInvalidIdentiteActeur(); else identiteValid">
+                                <p-tag class="m-2" severity="danger" value="X"></p-tag>
+                            </ng-container>
+                            <ng-template #identiteValid>
+                                <p-tag class="m-2" severity="success" value="✓"></p-tag>
+                            </ng-template>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <div class="formgrid grid m-0">
+                        <!-- id -->
+                        <div class="field col-4">
+                            <label for="id">Id</label>
+                            <input id="id" type="text"
+                                class="text-base text-color surface-overla p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="id" formControlName="id" />
+                        </div>
+                        <!-- login -->
+                        <div class="field col-4">
+                            <label for="login">Login</label>
+                            <input id="login" pInputText name="login" formControlName="login" [ngClass]="acteurForm.get('login')!.invalid?
+                            'border-red-500 surface-overlay p-2 appearance-none w-full' :
+                             'surface-overlay p-2 appearance-none w-full'" />
+                        </div>
+                        <div *ngIf="acteurForm.get('login')?.hasError('required') && acteurForm.get('login')?.touched"
+                            class="font-bold text-xs text-red-500">
+                            <p>Le login est obligatoire!</p>
+                        </div>
+                        <!-- Référence -->
+                        <div class="field col-4">
+                            <label for="reference">Référence</label>
+                            <input #ref id="reference" pInputText [value]="reference" disabled="true" readonly="true"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary h-3rem w-full"
+                                name="reference" />
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- name -->
+                        <div class="field col-4">
+                            <label for="name">Prénom <span class="font-bold text-xs text-red-500">*</span></label>
+                            <input [ngClass]="acteurForm.get('name')!.invalid?
+                                    'border-red-500 surface-overlay p-2 appearance-none w-full' :
+                                     'surface-overlay p-2 appearance-none w-full'" id="name" type="text" pInputText
+                                name="name" formControlName="name" />
+                            <div *ngIf="acteurForm.get('name')?.hasError('required') && acteurForm.get('name')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le prénom est obligatoire!</p>
+                            </div>
+                            <div *ngIf="acteurForm.get('name')?.hasError('minlength') && acteurForm.get('name')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le prénom doit avoir plus de 3 caractères.</p>
+                            </div>
+                        </div>
+                        <!-- lastName -->
+                        <div class="field col-4">
+                            <label for="lastName">Nom <span class="font-bold text-xs text-red-500">*</span></label>
+                            <input [ngClass]="acteurForm.get('lastName')!.invalid?
+                                    'border-red-500 surface-overlay p-2 appearance-none w-full' :
+                                    'surface-overlay p-2 appearance-none w-full'" id="lastName" type="text" pInputText
+                                name="lastName" formControlName="lastName" />
+                            <div *ngIf="acteurForm.get('lastName')?.hasError('required') && acteurForm.get('lastName')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le nom est obligatoire!</p>
+                            </div>
+                            <div *ngIf="acteurForm.get('lastName')?.hasError('minlength') && acteurForm.get('lastName')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le nom doit avoir plus de 3 caractères.</p>
+                            </div>
+                        </div>
+                        <!-- mot de passe  -->
+                        <div class="field col-4">
+                            <label for="passwordHash" class="block mb-2">Mot de passe <span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <p-password id="passwordHash"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                [class]="acteurForm.get('passwordHash')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                [toggleMask]="true" weakLabel="Faible" mediumLabel="Moyen" strongLabel="Fort"
+                                promptLabel="Entrez un mot de passe sécurisé" name="passwordHash"
+                                formControlName="passwordHash"></p-password>
+                            <div *ngIf="acteurForm.get('passwordHash')?.hasError('required') && acteurForm.get('passwordHash')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le mot de passe est obligatoire!</p>
+                            </div>
+                            <div *ngIf="acteurForm.get('passwordHash')?.hasError('maxlength') && acteurForm.get('passwordHash')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le mot de passe ne doit pas dépasser 100 caractères!</p>
+                            </div>
+                            <div *ngIf="acteurForm.get('passwordHash')?.hasError('minlength') && acteurForm.get('passwordHash')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le mot de passe est trop petit. Saisir au minimum 8 caractères!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- email -->
+                        <div class="field col-4">
+                            <label for="email">Email <span class="font-bold text-xs text-red-500">*</span></label>
+                            <input [ngClass]="acteurForm.get('email')!.invalid?
+                                                'border-red-500 surface-overlay p-2 appearance-none w-full' :
+                                                'surface-overlay p-2 appearance-none w-full'" type="text" id="email"
+                                pInputText name="email" formControlName="email" placeholder="xxxxxx@xxxxx.xxxx" />
+                            <div *ngIf="acteurForm.get('email')?.hasError('required') && acteurForm.get('email')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>L' email est obligatoire!</p>
+                            </div>
+                            <div *ngIf="(acteurForm.get('email')?.hasError('email') || acteurForm.get('email')?.hasError('email')) && acteurForm.get('email')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>L' email est invalide!</p>
+                            </div>
+                        </div>
+                        <!-- tel portable -->
+                        <div class="field col-4">
+                            <label for="numTelPortable" class="block mb-2">Téléphone Portable <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-inputMask [showClear]="true"
+                                [class]="acteurForm.get('numTelPortable')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                styleClass="text-base text-color surface-overlay p-2 appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay p-2 appearance-none outline-none focus:border-primary w-full"
+                                mask="99 99-99-99-99" id="numTelPortable" name="numTelPortable"
+                                formControlName="numTelPortable">
+                            </p-inputMask>
+                            <div *ngIf="acteurForm.get('numTelPortable')?.hasError('required') && acteurForm.get('numTelPortable')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le téléphone portable est obligatoire!</p>
+                            </div>
+                            <div *ngIf="(acteurForm.get('numTelPortable')?.hasError('minlength') || acteurForm.get('numTelPortable')?.hasError('maxlength')) && acteurForm.get('numTelPortable')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le numéro de téléphone est invalide!</p>
+                            </div>
+                        </div>
+                        <!-- tel bureau -->
+                        <div class="field col-4">
+                            <label for="numTelBureau" class="block mb-2">Téléphone Service</label>
+                            <p-inputMask [showClear]="true"
+                                styleClass="text-base text-color surface-overlay p-2 appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay p-2 appearance-none outline-none focus:border-primary w-full"
+                                mask="99 99-99-99-99" id="numTelBureau" name="numTelBureau"
+                                formControlName="numTelBureau">
+                            </p-inputMask>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- droit création de compte -->
+                        <div class="field col-3">
+                            <label for="creerUsers" class="block mb-3">Droit création compte?</label>
+                            <p-selectButton id="creerUsers" name="creerUsers" formControlName="creerUsers"
+                                [options]="ouiNons">
+                            </p-selectButton>
+                        </div>
+                        <!-- acteur FDLV -->
+                        <div class="field col-3">
+                            <label for="acteurFDLV" class="block mb-3">Acteur FDLV?</label>
+                            <p-selectButton id="acteurFDLV" name="acteurFDLV" formControlName="acteurFDLV"
+                                [options]="ouiNons">
+                            </p-selectButton>
+                        </div>
+                        <!-- responsable -->
+                        <div class="field col-3">
+                            <label for="responsable" class="block mb-3">Responsable?</label>
+                            <p-selectButton id="responsable" name="responsable" formControlName="responsable"
+                                [options]="ouiNons">
+                            </p-selectButton>
+                        </div>
+                        <!-- Bénévole -->
+                        <div class="field col-3">
+                            <label for="benevole" class="block mb-3">Bénévole?</label>
+                            <p-selectButton id="benevole" name="benevole" formControlName="benevole"
+                                [options]="ouiNons">
+                            </p-selectButton>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- compte crée par  -->
+                        <div class="field col-3">
+                            <label for="createdByActor">Compte crée par</label>
+                            <input id="createdByActor" [readOnly]="true" pInputText
+                                [value]="(userConnected$ | async)?.login"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary h-3rem w-full" />
+                        </div>
+                        <!-- Date de début -->
+                        <div class="field col-3">
+                            <label class="block mb-3">Date début de validité <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-calendar (onClose)="onDateDebutChange()" dateFormat="dd/mm/yy" [readonlyInput]="true"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                name="dateDebutValidite" formControlName="dateDebutValidite"
+                                [showIcon]="true"></p-calendar>
+                        </div>
+                        <!-- Date d'expiration -->
+                        <div class="field col-3">
+                            <label class="block mb-3">Date fin de validité <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span> </label>
+                            <p-calendar (onClose)="onDateFinChange()" dateFormat="dd/mm/yy" [showIcon]="true"
+                                [showOnFocus]="false" [readonlyInput]="true"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                name="dateFinValidite" formControlName="dateFinValidite"></p-calendar>
+                            <div *ngIf="acteurForm.get('dateFinValidite').hasError('invalidDateRange')">
+                                <p class="font-bold text-xs text-red-500">
+                                    {{ acteurForm.get('dateFinValidite').getError('invalidDateRange') }}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- photo -->
+                        <div class="field col-4 card">
+                            <p-toast></p-toast>
+                            <label for="photo">Photo</label>
+                            <p-fileUpload #photo id="photo" accept="image/*" [maxFileSize]="1000000"
+                                [showUploadButton]="false" [previewWidth]="250" [multiple]="false"
+                                [uploadStyleClass]="'p-button-success'" [cancelStyleClass]="'p-button-danger'"
+                                [removeStyleClass]="'p-button-warning'" [chooseLabel]="'Choisir image'"
+                                [uploadLabel]="'Enregistrer'" [cancelLabel]="'Annuler'" [fileLimit]="1">
+                                <ng-template pTemplate="content">
+                                    <ul *ngIf="uploadedFiles.length">
+                                        <li *ngFor="let file of uploadedFiles">
+                                            {{ file.name }} - {{ file.size }} bytes
+                                        </li>
+                                       
+                                    </ul>
+                                    <ul *ngIf="acteurForm.get('photoUrl').value">
+                                        Image URL: {{ acteurForm.get('photoUrl').value }}
+                                    </ul>
+                                </ng-template>
+                            </p-fileUpload>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-accordionTab>
+            <p-accordionTab>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center">
+                        <i class="pi pi-briefcase mr-2"></i>
+                        <span class="vertical-align-middle">Structure acteur
+                            <ng-container *ngIf="isInvalidRoleActeur(); else rolevalid">
+                                <p-tag class="m-2" severity="danger" value="X"></p-tag>
+                            </ng-container>
+                            <ng-template #rolevalid>
+                                <p-tag class="m-2" severity="success" value="✓"></p-tag>
+                            </ng-template>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <div class="formgrid grid m-0">
+                        <!-- Correspondant -->
+                        <div class="field col-3">
+                            <label for="correspondant" class="block mb-3">Correspondant FDLV?</label>
+                            <p-selectButton id="correspondant" name="correspondant" formControlName="correspondant"
+                                [options]="ouiNons">
+                            </p-selectButton>
+                        </div>
+                    </div>
+
+                    <div class="formgrid grid m-0">
+                        <!-- responsableActor -->
+                        <div class="field col-6">
+                            <label for="responsableActor" class="block mb-2">Nom de son responsable <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span> </label>
+                            <p-dropdown [showClear]="true" [filter]="true" filterBy="lastName,name"
+                                name="responsableActor" formControlName="responsableActor"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="responsableActor" placeholder="Sélectionner un responsable" optionLabel="name"
+                                [class]="acteurForm.get('responsableActor')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                [options]="responsables$ | async" name="responsables">
+                                <ng-template pTemplate="selectedItem">
+                                    <div>
+                                        {{acteurForm.get('responsableActor').value.name}} -
+                                        {{acteurForm.get('responsableActor').value.lastName}}
+                                    </div>
+                                </ng-template>
+                                <ng-template let-responsable pTemplate="item">
+                                    <div class="option-item">
+                                        <span>{{ responsable.name }} - {{ responsable.lastName }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                            <div *ngIf="acteurForm.get('responsableActor')?.invalid && acteurForm.get('responsableActor')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le nom du responsable est obligatoire!</p>
+                            </div>
+                        </div>
+                        <!-- Rôle acteur -->
+                        <div class="field col-6">
+                            <label for="forumRoleActeur" class="block mb-2">Rôle acteur <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-dropdown [showClear]="true"
+                                [class]="acteurForm.get('forumRoleActeur')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="forumRoleActeur" optionLabel="roleActeur" placeholder="Sélectionner un rôle acteur"
+                                [options]="roleActeurs$ | async" name="forumRoleActeur"
+                                formControlName="forumRoleActeur"></p-dropdown>
+                            <div *ngIf="acteurForm.get('forumRoleActeur')?.invalid && acteurForm.get('forumRoleActeur')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le rôle de l'acteur est obligatoire!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- Structure -->
+                        <div class="field col-6">
+                            <label for="structureId" class="block mb-2">Structure <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-dropdown [showClear]="true"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                [class]="acteurForm.get('structureId')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                id="structureId" optionLabel="libelle" placeholder="Sélectionner une structure"
+                                [options]="structures$ | async" name="structureId"
+                                formControlName="structureId"></p-dropdown>
+                            <div *ngIf="acteurForm.get('structureId')?.invalid && acteurForm.get('structureId')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>La structure est obligatoire!</p>
+                            </div>
+                        </div>
+                        <!-- service -->
+                        <div class="field col-6">
+                            <label for="service">Service</label>
+                            <input id="service" pInputText name="service" formControlName="service"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary h-3rem w-full" />
+                        </div>
+
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- commentaire -->
+                        <div class="field col-6">
+                            <label for="commentaire" class="block mb-2">Commentaire :</label>
+                            <textarea
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                rows="2" cols="57" pInputTextarea [autoResize]="true" id="commentaire"
+                                name="commentaire" formControlName="commentaire"></textarea>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-accordionTab>
+            </form>
+            <form name="interventionForm" [formGroup]="interventionForm" (ngSubmit)="onSaveIntervention(interventionForm.value)">
+            <p-accordionTab>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center">
+                        <i class="pi pi-calendar mr-2"></i>
+                        <span class="vertical-align-middle">Information intervention acteur
+                            <ng-container *ngIf="isInvalidInterventionActeur(); else interventionActeur">
+                                <p-tag class="m-2" severity="danger" value="X"></p-tag>
+                            </ng-container>
+                            <ng-template #interventionActeur>
+                                <p-tag class="m-2" severity="success" value="✓"></p-tag>
+                            </ng-template>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content" >
+                    <div class="invalid-acteur-message" *ngIf="isInvalidIdentiteActeur()">
+                        <p>L'acteur est vide.</p>
+                    </div>
+                    <div *ngIf="!isInvalidIdentiteActeur()">
+                    <div class="formgrid grid m-0">
+                         <!-- intervention -->
+                         <div class="field col-4">
+                            <label for="interventionActeurs" class="block mb-2">Ref Intervention <span class="font-bold text-xs text-red-500">{{
+                                    asterix }}</span> </label>
+                            <p-dropdown [showClear]="true"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="interventionActeurs" optionLabel="libelle" (onChange)="onInterventionChange($event)"
+                                [placeholder]="selectedIntervention?.finDescription ? selectedIntervention?.finDescription : 'intervention Acteurs'"  [options]="interventionActeurs$ | async" name="interventionActeurs"
+                                formControlName="finId">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- Forum -->
+                        <div class="field col-4">
+                            <label for="forum" class="block mb-2">Forum <span class="font-bold text-xs text-red-500">{{
+                                    asterix }}</span> </label>
+                            <p-dropdown [showClear]="true"
+                                [class]="interventionForm.get('forum')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="forum" optionLabel="libelle" (onChange)="onForumInterventionChange($event)"
+                                placeholder="Sélectionner un forum" [options]="forums$ | async" name="forum"
+                                formControlName="forum">
+                            </p-dropdown>
+                            <div *ngIf="interventionForm.get('forum')?.invalid && interventionForm.get('forum')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le forum est obligatoire!</p>
+                            </div>
+                        </div>
+                        <!-- Référence -->
+                        <div class="field col-4">
+                            <label for="reference">Référence</label>
+                            <input id="reference" pInputText [value]="reference" disabled="true" readonly="true"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary h-3rem w-full"
+                                name="reference" />
+                        </div>
+                         <!-- Rôle acteur -->
+                         <div class="field col-4">
+                            <label for="roleActeur" class="block mb-2">Rôle acteur <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-dropdown [showClear]="true"
+                                [class]="interventionForm.get('roleActeur')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="roleActeur" optionLabel="roleActeur" placeholder="Sélectionner un rôle acteur"
+                                [options]="roleActeurs$ | async" name="roleActeur"
+                                formControlName="roleActeur"></p-dropdown>
+                            <div *ngIf="interventionForm.get('roleActeur')?.invalid && interventionForm.get('roleActeur')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>Le rôle de l'acteur est obligatoire!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                         <!-- Structure -->
+                         <div class="field col-4">
+                            <label for="structure" class="block mb-2">Structure <span
+                                    class="font-bold text-xs text-red-500">{{ asterix }}</span></label>
+                            <p-dropdown [showClear]="true"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                [class]="interventionForm.get('structure')!.invalid? 'ng-invalid ng-dirty' : '' "
+                                id="structure" optionLabel="libelle" placeholder="Sélectionner une structure"
+                                [options]="structures$ | async" name="structure"
+                                formControlName="structure"></p-dropdown>
+                            <div *ngIf="interventionForm.get('structure')?.invalid && interventionForm.get('structure')?.touched"
+                                class="font-bold text-xs text-red-500">
+                                <p>La structure est obligatoire!</p>
+                            </div>
+                        </div>
+                        <!-- finDescription -->
+                        <div class="field col-6">
+                            <label for="Description" class="block mb-2">Description :</label>
+                            <textarea
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                rows="2" cols="57" pInputTextarea [autoResize]="true" id="Description"
+                                name="Description" formControlName="finDescription"></textarea>
+                        </div>
+                    </div>
+                    <div class="formgrid grid m-0">
+                        <!-- datedebutintervention -->
+                        <div class="field col-4">
+                            <label for="dateDebutIntervention" class="block mb-2">Date de début</label>
+                            <p-calendar
+                                dateFormat="dd/mm/yy"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="dateDebutIntervention" [showIcon]="true" name="dateDebutIntervention"
+                                formControlName="finDateDebut"></p-calendar>
+                        </div>
+                        <!-- datefin -->
+                        <div class="field col-4">
+                            <label for="dateFinIntervention" class="block mb-2">Date de Fin</label>
+                            <p-calendar
+                                dateFormat="dd/mm/yy"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="dateFinIntervention" [showIcon]="true" name="dateFinIntervention"
+                                formControlName="finDateFin"></p-calendar>
+                        </div>
+                        <!-- datesignature -->
+                        <div class="field col-4">
+                            <label for="datesignature" class="block mb-2">Date signature charte FDLV</label>
+                            <p-calendar
+                                dateFormat="dd/mm/yy"
+                                styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                inputStyleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                id="datesignature" [showIcon]="true" name="dateSignatureCharte"
+                                formControlName="finCharteAssoSigneDate"></p-calendar>
+                        </div>
+                    </div>
+                    <!-- module -->
+                    <div class="formgrid grid m-0">
+                        <div class="field col-4">
+                            <p-button (click)="showDialog()" icon="pi pi-external-link" label="Modules"></p-button>
+                        </div>
+                        <div class="card flex justify-content-center">
+                            <div class="card flex justify-content-center">
+                                <p-dialog header="Habilitation Modules" [(visible)]="visible" [modal]="true"
+                                    [draggable]="false" [resizable]="false">
+                                    <div class="card flex flex-column">
+                                        <div class="flex flex-row-reverse flex-wrap my-2 mr-8">
+                                            <p-button label="Annuler" (click)="onAnnulerChoixModule()"
+                                                styleClass="p-button-raised p-button-text p-button-danger"
+                                                icon="pi pi-arrow-circle-right"></p-button>
+                                            <p-button label="Valider" (click)="onValiderChoixModule()" class="mr-1"
+                                                styleClass="p-button-raised p-button-text p-button-success"
+                                                icon="pi pi-check-circle"></p-button>
+                                        </div>
+                                        <p-pickList [source]="modules" [target]="modulesTarget"
+                                            sourceHeader="Disponible" targetHeader="Sélectionné" [dragdrop]="false"
+                                            [responsive]="true" [sourceStyle]="{ height: '20rem', width: '20rem' }"
+                                            [targetStyle]="{ height: '20rem', width: '20rem' }" filterBy="module"
+                                            sourceFilterPlaceholder="Recherche par module"
+                                            targetFilterPlaceholder="Recherche par module" breakpoint="1400px">
+                                            <ng-template let-module pTemplate="item">
+                                                <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                                    <div class="flex-1 shadow-2 p-3 flex flex-column gap-2">
+                                                        <span class="font-bold">{{
+                                                            module.codeModule
+                                                            }}</span>
+                                                        <div class="flex align-products-center gap-2">
+                                                            <i class="pi pi-tag text-sm"></i>
+                                                            <span>{{ module.module }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="font-bold text-900">{{
+                                                        module.id
+                                                        }}</span>
+                                                </div>
+                                            </ng-template>
+                                        </p-pickList>
+                                    </div>
+                                </p-dialog>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formgrid grid mt-5">
+                        <div class="field col-6">
+                            <p-timeline [value]="modulesTimeline" [align]="'alternate'">
+                                <ng-template pTemplate="content" let-module>
+                                    <p-card [header]="module.id" [subheader]="module.codeModule">
+                                        {{ module.module }}
+                                    </p-card>
+                                </ng-template>
+                            </p-timeline>
+                        </div>
+                    </div>
+                </div>
+            <p-button (click)="modifMode ? onUpdateIntervention(interventionForm.value,acteurForm.value) : onSaveIntervention(interventionForm.value)"
+                label="Sauvegarder" icon="pi pi-save" styleClass="p-button-success p-button-raised p-button-sm"
+                class="mr-2"></p-button>
+            <p-button label="Effacer les modifications" icon="pi pi-eraser"
+                styleClass="p-button-warning p-button-raised p-button-sm"></p-button>
+                </ng-template>
+            </p-accordionTab>
+         </form>
+        </p-accordion>
+   
+</p-card>

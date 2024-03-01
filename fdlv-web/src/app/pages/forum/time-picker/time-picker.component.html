@@ -1,0 +1,12 @@
+<div class="time-picker">
+    <select [(ngModel)]="selectedHour" (ngModelChange)="updateTime()">
+    <option *ngFor="let hour of hours" [value]="hour">{{ hour }}</option>
+  </select> :
+    <select [(ngModel)]="selectedMinute" (ngModelChange)="updateTime()">
+    <option *ngFor="let minute of minutes" [value]="minute">{{ minute }}</option>
+  </select> :
+    <select [(ngModel)]="selectedSecond" (ngModelChange)="updateTime()">
+    <option *ngFor="let second of seconds" [value]="second">{{ second }}</option>
+  </select>
+    <button (click)="updateTime()">OK</button>
+</div>

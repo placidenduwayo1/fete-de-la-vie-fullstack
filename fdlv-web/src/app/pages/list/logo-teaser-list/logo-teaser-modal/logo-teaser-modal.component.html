@@ -1,0 +1,155 @@
+<p-dialog [style]="{
+    'width': 'auto',
+    'min-width': '35rem',
+    'max-width': '40rem',
+    'height': '100%',
+    'margin': '5em'
+  }" class="custom-dialog" header="" [(visible)]="displayModal" [modal]="true">
+  <p-toast></p-toast>
+    <ng-template pTemplate="header">
+        <div class="custom-dialog-header">
+            <h2>{{title}} un Référentiel</h2>
+            <!-- Contenu de l'en-tête personnalisé -->
+        </div>
+    </ng-template>
+    <form #createLogoTeaserForm="ngForm" (ngSubmit)="save()">
+
+        <div class="form-group button-container text-right">
+            <button class="element-with-margin custom-button save-button " type="submit" pButton label="Sauvegarder"
+                [disabled]="createLogoTeaserForm.invalid"></button>
+            <button class="element-with-margin custom-button cancel-button " type="button" pButton (click)="close() "
+                label="Retour "></button>
+        </div>
+
+        <div *ngIf="data.id" class="form-row">
+            <div class="form-group">
+                <label for="id">ID :</label>
+
+                <input type="text" pInputText id="id" name="id" #id_edit="ngModel" ngModel [(ngModel)]="data.id"
+                    required readonly class="readonly-input" />
+
+                <small class="form-text text-danger" *ngIf="id_edit.errors?.['required']"> ID requis.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Code postal :</label>
+
+                <input type="text" pInputText id="create_CP" name="create_zipCode" #CP="ngModel" ngModel
+                    [(ngModel)]="data.zipCode" required maxlength="6" />
+
+                <small class="form-text text-danger" *ngIf="CP.errors?.['required']"> Le code postal est requis.
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Utilisateur :</label>
+
+                <select
+                    class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                    id="create_field_fdlv_user" name="create_fdlvUser" #user="ngModel" [(ngModel)]="data.rltFusId"
+                    required>
+                    <option *ngFor="let fdlvUser of fdlvUsers" [value]="fdlvUser.id">{{ fdlvUser.login }}</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="user.errors?.['required']"> L'utilisateur est requis.
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Ville :</label>
+
+                <input type="text" pInputText id="create_city" name="create_city" #city="ngModel" ngModel
+                    [(ngModel)]="data.city" required />
+
+                <small class="form-text text-danger" *ngIf="city.errors?.['required']"> Le champs ville est
+                    requis.
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Type :</label>
+                <select
+                    class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                    id="create_field_rlt_type_media" name="create_typeMedia" #type="ngModel" ngModel
+                    [(ngModel)]="data.typeMedia" required>
+                    <option></option>
+                    <option>Logo</option>
+                    <option>Teaser</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="type.errors?.['required']"> Le type est requis.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Nom :</label>
+
+                <input type="text" pInputText id="create_label" name="create_label" #label="ngModel" ngModel
+                    [(ngModel)]="data.label" required />
+
+                <small class="form-text text-danger" *ngIf="label.errors?.['required']"> Le nom est requis.
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <!--div class="form-group">
+                <p-fileUpload #fileUpload (onSelect)="handleFileInput($event)" chooseLabel="Nouveau fichier"
+                    accept="image/*,.mp4" required
+                     mode="basic"
+                                [maxFileSize]="1000000"
+                                [showUploadButton]="false" [previewWidth]="100" 
+                               ></p-fileUpload>
+            </div-->
+            <div class="custom-file">
+                <input type="file"
+                accept="image/*,.mp4"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                  id="field_image" name="image" (change)="handleFileInputA($event.target!)" />
+             
+              </div>
+             
+        </div>
+
+        <!--div *ngIf="urlOnUserComputer"   class="form-row">
+            <div class="form-group">
+                <label>Aperçu : </label>
+                <app-display-media [file]="fileToUpload" [url]="urlOnUserComputer" ></app-display-media>
+                </div>
+        </div-->
+
+
+        <div class="form-row" *ngIf="data.url">
+            <div class="form-group">
+                <label for="CP">Url :</label>
+
+                <input type="text" pInputText id="create_url" name="create_url" #url="ngModel" ngModel
+                    [(ngModel)]="data.url" [disabled]="true" />
+
+            </div>
+        </div>
+
+        <div *ngIf="data.url" class="card">
+
+            <label>Fichier : </label>
+            <div class="picture flex mt-3 m-auto">
+                <app-display-media [url]="data.url"></app-display-media>
+               </div>
+        </div>
+
+       
+    </form>
+</p-dialog>

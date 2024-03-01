@@ -1,0 +1,498 @@
+<p-card>
+    <section class="hautpage">
+        <div class="form-row">
+            <div class="col-9 mx-auto">
+                <div class="flex flew-row justify-content-between">
+                    <h2 *ngIf="!id">Créer un Parcours</h2>
+                    <h2 *ngIf="id">Modifier un Parcours</h2>
+                    <div class="flex justify-content-end align-items-center">
+                        <p-button icon="pi pi-save" label="Sauvegarder" (click)="save()" id="save-entity"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary btnStyle ml-1">
+                        </p-button>
+                        <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+                            (click)="eraseModification()">
+                        </p-button>
+                        <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save"
+                            class="btn btn-secondary btnStyle ml-1" (click)="previousState()">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-row">
+        <div class="col-9 mx-auto">
+            <div class="card">
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                    <!--gmd-alert-error></gmd-alert-error-->
+                    <div class="form-group" [hidden]="!id">
+                        <label class="form-control-label" for="field_label">ID</label>
+                        <input [readonly]="true" type="text"
+                            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                            name="label" id="field_label" formControlName="id" />
+                    </div>
+                    <div class="grid">
+                        <div class="field col-12 md:col-9">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_label">
+                                    <h4>Titre du parcours <span class="font-bold text-xs text-red-500">*</span></h4>
+                                </label>
+                                <div class="input-group">
+                                    <input maxlength="45" type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="label" id="field_label" formControlName="label" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text notice"> Maximum 45 car.</span>
+                                    </div>
+                                </div>
+                                <div
+                                    *ngIf="editForm.get('label')!.invalid && (editForm.get('label')!.dirty || editForm.get('label')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('label')?.errors?.['required']"> {{ required }} </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field col-12 md:col-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_numParcours">
+                                    <h4>Numéro de Parcours</h4>
+                                </label>
+                                <input type="number" placeholder="exemple : 12"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="numParcours" id="field_numParcours" formControlName="numParcours" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_description">
+                            <h4>Description <span class="font-bold text-xs text-red-500">*</span></h4>
+                        </label>
+                        <div class="input-group">
+                            <textarea
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="description" 
+                                rows="3" id="field_description" formControlName="description"> </textarea>
+                        </div>
+                        <div
+                                    *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('description')?.errors?.['required']"> {{ required }} </small>
+                                </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="col col-lg-8">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_description">
+                                    <h4>Thème <span class="font-bold text-xs text-red-500">*</span></h4>
+                                </label>
+                                <select
+                                    class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                    id="field_theme" name="theme" formControlName="theme">
+                                    <option [value]="null"></option>
+                                    <option
+                                        [value]="themeOption.id === editForm.get('theme')!.value?.id ? editForm.get('theme')!.value : themeOption.id"
+                                        *ngFor="let themeOption of themesSharedCollection">
+                                        {{ themeOption.label }}
+                                    </option>
+                                </select>
+                                <div
+                                *ngIf="editForm.get('theme')!.invalid && (editForm.get('theme')!.dirty || editForm.get('theme')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('theme')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="col col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_codeParcours">
+                                    <h4>Code de l'évent</h4>
+                                </label>
+                                <input type="text" placeholder="exemple : 1234"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="codeParcours" id="field_codeParcours" formControlName="codeParcours" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_address">
+                                    <h4>Adresse <span class="font-bold text-xs text-red-500">*</span></h4>
+                                </label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="address" id="field_address" formControlName="address" />
+                                <div
+                                    *ngIf="editForm.get('address')!.invalid && (editForm.get('address')!.dirty || editForm.get('address')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('address')?.errors?.['required']"> {{ required }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_zipCode">
+                                    <h4>Code Postal <span class="font-bold text-xs text-red-500">*</span></h4>
+                                </label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="zipCode" id="field_zipCode" formControlName="zipCode" />
+                                <div
+                                    *ngIf="editForm.get('zipCode')!.invalid && (editForm.get('zipCode')!.dirty || editForm.get('zipCode')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('zipCode')?.errors?.['required']"> {{ required }} </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_city">
+                                    <h4>Ville <span class="font-bold text-xs text-red-500">*</span></h4>
+                                </label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="city" id="field_city" formControlName="city" />
+                                <div
+                                    *ngIf="editForm.get('city')!.invalid && (editForm.get('city')!.dirty || editForm.get('city')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('city')?.errors?.['required']"> {{ required }} </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="col col-lg-4">
+                            <div class="form-group">
+                                <div class="form-group col-md-6">
+                                    Url Logo:
+                                    <input checked type="checkbox" name="cityUrlBool" style="width: 30px"
+                                        (click)="changeBoolCityUrl()" />
+                                </div>
+
+                                <label class="form-control-label" for="field_cityLogoUrl">
+                                    <h4>Logo de la ville</h4>
+                                </label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="cityLogoUrl" id="field_eventLogoUrl" formControlName="cityLogoUrl"
+                                    *ngIf="cityUrlBool" />
+
+                                <p-dropdown [options]="logos" formControlName="cityLogoUrl" optionLabel="url"
+                                    styleClass="form-control" [showClear]="true" optionValue="url"
+                                    placeholder="Sélectionner un logo" *ngIf="!cityUrlBool"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col col-lg-4">
+                            <div class="form-group">
+                                <div class="form-group col-md-6">
+                                    Url Teaser:
+                                    <input checked type="checkbox" name="cityUrlBool" style="width: 30px"
+                                        (click)="changeBoolTeaserUrl()" />
+                                </div>
+                                <label class="form-control-label" for="field_eventTeaserUrl">
+                                    <h4>Teaser de la ville</h4>
+                                </label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="eventTeaserUrl" id="field_eventTeaserUrl" formControlName="eventTeaserUrl"
+                                    *ngIf="eventUrlBool" />
+
+                                <p-dropdown [options]="teasers" formControlName="eventTeaserUrl" optionLabel="url"
+                                    styleClass="form-control" [showClear]="true" optionValue="url"
+                                    placeholder="Sélectionner un teaser" *ngIf="!eventUrlBool"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_usefulInformation">
+                            <h4>Information pratique</h4>
+                        </label>
+                        <div class="input-group">
+                            <textarea
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="usefulInformation" id="field_usefulInformation"
+                                formControlName="usefulInformation"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="field col-12 md:col-3">
+                            <label class="form-control-label" for="field_startAt">
+                                <h4>Date de début <span class="font-bold text-xs text-red-500">*</span></h4>
+                            </label>
+                            <div class="input-group">
+                                <p-calendar dateFormat="dd/mm/yy"
+                                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                    name="startAt" formControlName="startAt" id="field_startAt"
+                                    [showIcon]="true"></p-calendar>
+
+                            </div>
+                            <div
+                                *ngIf="editForm.get('startAt')!.invalid && (editForm.get('startAt')!.dirty || editForm.get('startAt')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('startAt')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+                        <div class="col field col-12 md:col-3">
+                            <label class="form-control-label" for="field_endAt">
+                                <h4>Date de fin <span class="font-bold text-xs text-red-500">*</span></h4>
+                            </label>
+                            <div class="input-group">
+                                <p-calendar dateFormat="dd/mm/yy"
+                                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                    name="endAt" formControlName="endAt" id="field_endAt"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <div
+                                *ngIf="editForm.get('endAt')!.invalid && (editForm.get('endAt')!.dirty || editForm.get('endAt')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('endAt')?.errors?.['required']"> {{ required }} </small>
+                                <small class="font-bold text-xs text-red-500" *ngIf="editForm.hasError('fromToDate')">
+                                    La date de fin doit être supérieur à la date de début
+                                </small>
+                            </div>
+                            <div>
+                                <small class="font-bold text-xs text-red-500" *ngIf="editForm.hasError('fromToDate')">
+                                    La date de fin doit être supérieur à la date de début
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="field col-12 md:col-4">
+                            <label class="form-control-label" for="field_labelFinParcours">
+                                <h4>Titre document fin de parcours</h4>
+                            </label>
+                            <input type="text"
+                            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                            name="labelFinParcours" id="field_labelFinParcours" formControlName="labelFinParcours" />
+                         </div>
+                        <div class="field col-12 md:col-8">
+                            <label class="form-control-label" for="field_finParcoursPdf">
+                                <h4>Lien PDF à afficher en fin du parcours</h4>
+                            </label>
+                            <input type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="finParcoursPdf" formControlName="finParcoursPdf" #field_finParcoursPdf />
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="form-row justify-content-between">
+                        <div class="grid">
+                            <div class="field col-12 md:col-3">
+                                Autres parcours GoMyDefi ?
+                                <input type="checkbox" formControlName="otherEvent" [checked]="eventStageNotExist"
+                                    (click)="showSeletedSteps()" />
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                Parcours Démo ?
+                                <input type="checkbox" formControlName="evtDemo" [checked]="editForm.get('evtDemo')"
+                                    (click)="showSeletedSteps()" />
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                Étapes ?
+                                <div class="row">
+                                    <div class="step-radio">
+                                        <input type="radio" id="fix" name="fixOrder" formControlName="fixOrder"
+                                            [value]="true" [checked]="editForm.get('fixOrder')" />
+                                        <label for="fix">Fixes</label>
+                                    </div>
+                                    <div class="step-radio">
+                                        <input type="radio" id="random" name="fixOrder" formControlName="fixOrder"
+                                            [value]="false" [checked]="editForm.get('fixOrder')" />
+                                        <label for="random">Aléatoires</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                Statut : {{ statutEvent }}
+                                <div class="row">
+                                    <p-button (click)="displayChoice = true">Publier l'événement ?</p-button>
+                                </div>
+                            </div>
+
+                            <p-dialog header="Publication de l'événement" [(visible)]="displayChoice"
+                                [style]="{ width: '30vw' }" [baseZIndex]="10000" [closable]="true">
+                                <div *ngIf="!isAdmin">
+                                    <div class="alert alert-primary" role="alert">
+                                        Publier l'événement
+                                        <input type="checkbox" name="validatedEvent" formControlName="validatedEvent"
+                                            [checked]="editForm.get('validatedEvent')" />
+                                    </div>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                        role="alert">
+                                        <i class="pi pi-exclamation-circle"></i>
+                                        La publication de cet événement archivera le parcours dans l'espace de
+                                        <span style="font-weight: bold; color: rgb(206, 132, 36)">{{ evtUserFirstName }}
+                                            {{ evtUserLastName }}</span>.
+                                    </div>
+                                </div>
+                                <div *ngIf="isAdmin">
+                                    <div class="alert alert-primary" role="alert">
+                                        Publier l'événement
+                                        <input type="checkbox" name="validatedEvent" formControlName="validatedEvent"
+                                            [checked]="editForm.get('validatedEvent')" />
+                                    </div>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                        role="alert">
+                                        <i class="pi pi-exclamation-circle"></i>
+                                        Cet événement ne sera pas archivé car il a été créé par un
+                                        <span style="font-weight: bold; color: rgb(206, 132, 36)">administrateur</span>.
+                                    </div>
+                                </div>
+                                <ng-template pTemplate="footer">
+                                    <button pButton label="Oui"
+                                        class="p-button-outlined p-button-success"
+                                        (click)="ChoiceValue(true)"></button>
+                                    <button pButton label="Non" class="p-button-outlined"
+                                        (click)="ChoiceValue(false)"></button>
+                                    <button pButton label="Fermer"
+                                        class="p-button-outlined p-button-danger"
+                                        (click)="displayChoice = false"></button>
+                                </ng-template>
+                            </p-dialog>
+                        </div>
+
+                        <div class="field col-12 md:col-3" style="margin-top: -0.6em">
+                            Choix des étapes
+                            <p-button (click)="showBasicDialog()" icon="pi pi-external-link"></p-button>
+                        </div>
+                    </div>
+
+                    <!-- Affichage des informations sur l'organisateur de l'event -->
+                    <div [hidden]="!id">
+                        <h4>Parcours proposé par l'organisateur :</h4>
+                        <br />
+                        <div class="grid">
+                            <div class="col-sm" [hidden]="eventCreatedDateNull !== true">
+                                <input [disabled]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtUserFirstName" id="evtUserFirstName" value="Administrateur" />
+                            </div>
+                            <div class="col-sm" [hidden]="evtUserFirstName == null">
+                                <h4>Login</h4>
+                                <input [disabled]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtUserFirstName" id="evtUserFirstName" value="{{ evtUserLogin }}" />
+                            </div>
+                            <div class="col-sm" [hidden]="evtUserFirstName == null">
+                                <h4>Prénom</h4>
+                                <input [disabled]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtUserFirstName" id="evtUserFirstName" value="{{ evtUserFirstName }}" />
+                            </div>
+                            <div class="col-sm" [hidden]="evtUserLastName == null">
+                                <h4>Nom</h4>
+                                <input [disabled]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtUserLastName" id="evtUserLastName" value="{{ evtUserLastName }}" />
+                            </div>
+                        </div>
+                        <div class="grid">
+                            <div class="col-sm-6" [hidden]="eventCreatedDateNull == true">
+                                <h4>Soumis le</h4>
+                                <input [readonly]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtFcoDatePropose" id="evtFcoDatePropose"
+                                    formControlName="evtFcoDatePropose" />
+                            </div>
+                            <div class="col-sm-6" [hidden]="eventCreatedDateNull == true">
+                                <h4>Validé le</h4>
+                                <input [readonly]="true" type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="evtFcoDateValide" id="evtFcoDateValide" formControlName="evtFcoDateValide" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="field col-12 md:col-7">
+                            <!-- Timeline -->
+                            <ul class="timeline">
+                                <li *ngFor="let step of items" class="timeline-item bg-white rounded ml-3 p-4 shadow">
+                                    <div class="timeline-arrow"></div>
+                                    <h2 class="h5 mb-0">{{ step.label }}</h2>
+                                    <div class="ml-3">
+                                        <div *ngIf="step.data.quizz">
+                                            <p class="text-small mt-2 font-weight-light">
+                                                <span class="font-weight-bold"> - Quiz: </span>{{ step.data.quizz.label
+                                                }}
+                                            </p>
+                                        </div>
+                                        <div *ngIf="step.data.challenge">
+                                            <p *ngIf="step.data.challenge.label"
+                                                class="text-small mt-2 font-weight-light">
+                                                <span class="font-weight-bold">- Challenge: </span> {{
+                                                step.data.challenge.label }}
+                                            </p>
+
+                                            <p *ngIf="step.data.description" class="text-small mt-2 font-weight-light">
+                                                <span class="font-weight-bold">Description: </span>{{
+                                                step.data.challenge.description }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <p-button type="button" class="btn btn-secondary" [disabled]="true"
+                                        (click)="duplicate(step.data.id)">Dupliquer l'étape</p-button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div *ngIf="showDuplicate" class="stepDuplicate">
+                            <p>
+                                <span> Étape dupliquée : {{ stageDuplicate.label }} </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="flex justify-content-start align-items-center">
+                        <p-button icon="pi pi-save" label="Sauvegarder" (click)="save()" id="save-entity"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary btnStyle ml-1">
+                        </p-button>
+                        <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+                            (click)="eraseModification()">
+                        </p-button>
+                        <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save"
+                            class="btn btn-secondary btnStyle ml-1" (click)="previousState()">
+                        </p-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <p-dialog header="Selectionner les étapes" [(visible)]="displayBasic" [style]="{ width: '50vw' }"
+        [baseZIndex]="10000">
+        <div *ngIf="stages" class="picklistPanel">
+            <p-pickList [source]="eventService.initialSteps" [target]="eventService.selectedSteps"
+                sourceHeader="Liste des étapes disponibles" targetHeader="Liste des étapes selectionnées"
+                filterBy="title" sourceFilterPlaceholder="Recherche par titre"
+                targetFilterPlaceholder="Recherche par titre" #pl>
+                <ng-template let-step pTemplate="item">
+                    <div>
+                        <div style="font-size: 14px; float: left">{{ step.id }}- {{ step.title }}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-check" (click)="saveChoices()" label="Valider" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-times" (click)="displayBasic = false" label="Annuler"></p-button>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog header="-" [(visible)]="eventService.displayStagePanel" [style]="{ width: '50vw' }" [baseZIndex]="10000">
+        <app-step-create (stepListUpdated)="loadStages()"></app-step-create>
+    </p-dialog>
+
+
+</p-card>

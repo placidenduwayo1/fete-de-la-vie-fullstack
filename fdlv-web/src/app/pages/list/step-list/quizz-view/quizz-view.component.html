@@ -1,0 +1,52 @@
+<p-card header="Consultation quizz" class="m-3">
+  <div class="grid justify-content-center">
+    <div class="col-8">
+      <div *ngIf="quizz">
+        <dl class="form-row entity-details">
+          <dt><span class="font-bold">ID</span></dt>
+          <dd>
+            <span>{{ quizz.id }}</span>
+          </dd>
+          <dt><span class="font-bold">Titre</span></dt>
+          <dd>
+            <span>{{ quizz.label }}</span>
+          </dd>
+        </dl>
+
+
+
+        <div class="formgrid grid">
+          <div class="field col-3" *ngFor="let question of quizz.questions">
+            <div class="card flex justify-content-center">
+              <!--span class="position-absolute rounded-pill badge bg-secondary right"
+                style="top: 2%; left: 85%; background-color: yellow !important">
+                {{ question.order }}
+              </span-->
+
+
+              <div class="card flex justify-content-center">
+                <p-badge severity="warning" value="{{question.order}}" ></p-badge>
+              </div>
+
+              <p-panel header=" {{ question.label }}">
+
+
+                <div class="card-body" *ngFor="let answer of question.answers">
+                  <ul class="list-group">
+                    <li class="list-group-item"
+                      [ngStyle]="{ 'background-color': answer.isCorrect ? 'rgba(67, 250, 97, 0.671)' : 'transparent' }">
+                      {{ answer.reponse }}
+                    </li>
+                  </ul>
+                </div>
+              </p-panel>
+            </div>
+          </div>
+        </div>
+         <p-button icon="pi pi-arrow-left" label="Retour" (click)="previousState()" class="btn btn-secondary btnStyle">
+        </p-button>
+      </div>
+    </div>
+  </div>
+
+</p-card>

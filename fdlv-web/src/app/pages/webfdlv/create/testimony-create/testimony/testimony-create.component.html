@@ -1,0 +1,150 @@
+<p-card>
+  <section class="hautpage">
+    <div class="col-9 mx-auto">
+      <div class="flex flew-row justify-content-between">
+        <h2 *ngIf="!id">Créer un témoignage</h2>
+        <h2 *ngIf="id">Modifier un témoignage</h2>
+        <div class="flex justify-content-end align-items-center">
+          <p-button (click)="save()" icon="pi pi-save" label="Sauvegarder" id="save-entity"
+            [disabled]="editForm.invalid || isSaving" class="mr-2">
+          </p-button>
+          <p-button type="button" label="Effacer les modifications" id="erase" class="mr-2"
+            (click)="eraseModification()">
+          </p-button>
+          <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="mr-2" (click)="previousState()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="col-8 mx-auto">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <div class="formgrid grid">
+          <div class="field col-12 md:col-4">
+            <label class="form-control-label" for="field_tge_ordre_affichage">Ordre d'affichage
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <input type="number"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="ordreAffichage" id="field_tge_ordre_affichage" formControlName="ordreAffichage" />
+            <div *ngIf="editForm.get('ordreAffichage')!.invalid && (editForm.get('ordreAffichage')!.dirty || editForm.get('ordreAffichage')!.touched)">
+              <small class="font-bold text-xs text-red-500"
+                *ngIf="editForm.get('ordreAffichage')?.errors?.['required']"> {{ required }} </small>
+            </div>
+
+          </div>
+          <div class="field col-12 md:col-4">
+            <label class="form-control-label" for="field_tge_date_debut">Date de début de publication
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <div class="input-group">
+             <p-calendar dateFormat="dd/mm/yy"
+                class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                name="dateDebut" formControlName="dateDebut" id="field_tge_date_debut" [showIcon]="true"></p-calendar>
+              </div>
+            <div
+              *ngIf="editForm.get('dateDebut')!.invalid && (editForm.get('dateDebut')!.dirty || editForm.get('dateDebut')!.touched)">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('dateDebut')?.errors?.['required']"> {{ required
+                }} </small>
+            </div>
+          </div>
+          <div class="field col-12 md:col-4">
+            <label class="form-control-label" for="field_tge_date_fin">Date de fin de publication</label>
+            <div class="input-group">
+              <p-calendar dateFormat="dd/mm/yy"
+                class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                name="dateFin" formControlName="dateFin" id="field_tge_date_fin" [showIcon]="true"></p-calendar> 
+              </div>
+          </div>
+
+          <div class="field col-12 md:col-4">
+            <label class="form-control-label" for="field_tge_auteur">Auteur
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <input maxlength="50" type="text"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="auteur" id="field_tge_auteur" formControlName="auteur" />
+              <div *ngIf="editForm.get('auteur')!.invalid && (editForm.get('auteur')!.dirty || editForm.get('auteur')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('auteur')?.errors?.['required']"> {{ required }}
+                </small>
+              </div>
+          </div>
+
+          <div class="field col-12 md:col-4">
+            <label class="form-control-label" for="field_tge_domaine_metier">Domaine métier</label>
+            <input maxlength="50" type="text"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="domaineMetier" id="field_tge_domaine_metier" formControlName="domaineMetier" />
+          </div>
+
+          <div class="field col-12 md:col-4">
+            <label for="field_tge_compagnie">Organisme/Enreprise</label>
+            <input maxlength="50" type="text"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="compagnie" id="field_tge_compagnie" formControlName="compagnie" />
+          </div>
+
+
+          <div class="field col-12">
+            <label class="form-control-label" for="field_tge_texte_temoignage">Texte témoignage
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <textarea type="text" rows="5"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="texteTemoignage" id="field_tge_texte_temoignage" formControlName="texteTemoignage"></textarea>
+            <div *ngIf="
+                editForm.get('texteTemoignage')!.invalid &&
+                (editForm.get('texteTemoignage')!.dirty || editForm.get('texteTemoignage')!.touched)
+              ">
+              <small class="font-bold text-xs text-red-500"  *ngIf="editForm.get('texteTemoignage')?.errors?.['required']"> {{
+                required }} </small>
+            </div>
+          </div>
+
+          <div class="form-group field col-12 field d-flex flex-column">
+            <label class="form-control-label" for="field_tge_lien_image_auteur">Image de l'auteur:
+              <span *ngIf="id">
+                <b> {{ editForm.get('lienImageAuteur')?.value }} </b>
+              </span>
+            </label>
+            <input type="file"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="lienImageAuteur" id="field_tge_lien_image_auteur" (change)="handleFileInput($event.target!)" />
+          </div>
+
+          <div class="field col-12">
+            <label class="form-control-label" for="field_tge_commentaire">Commentaire FDLV
+            </label>
+            <textarea type="text" rows="5"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="commentaire" id="field_tge_commentaire" formControlName="commentaire"></textarea>
+              
+            </div>
+
+          <label class="form-group field col-9">
+            Voulez vous publier ce parcours ?
+            <input type="checkbox" id="field_tge_publie" formControlName="publie" [value]="editForm.get('publie')" />
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="col-4 d-flex flex-column align-items-stretch">
+      <label>Aperçu : </label>
+      <div class="card">
+        <div class="picture d-flex mt-3 m-auto">
+          <img class="img-fluid" [src]="url" [alt]="editForm.get('auteur')!.value" />
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ editForm.get('auteur')!.value }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ getSubtitle(editForm.get('domaineMetier')!.value, editForm.get('compagnie')!.value) }}
+          </h6>
+          <p class="card-text">{{ editForm.get('texteTemoignage')!.value }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</p-card>

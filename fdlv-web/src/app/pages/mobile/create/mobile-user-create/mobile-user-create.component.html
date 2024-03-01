@@ -1,0 +1,93 @@
+<p-card>
+    <section class="hautpage">
+        <div class="form-row">
+            <div class="col-10 mx-auto">
+                <div class="flex flew-row justify-content-between">
+                    <h2 *ngIf="!id">Créer un Utilisateur Mobile</h2>
+                    <h2 *ngIf="id">Modifier un Utilisateur Mobile</h2>
+                    <div class="flex justify-content-end align-items-center">
+                        <p-button id="save-entity" icon="pi pi-save" label="Sauvegarder" (click)="save()"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+                        </p-button>
+                        <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary ml-1"
+                            (click)="eraseModification()">
+                        </p-button>
+                        <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="btn btn-secondary ml-1"
+                            (click)="onCancelCreation()">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-row">
+        <div class="col-9 mx-auto">
+            <div class="card">
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                    <div class="formgrid grid">
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_id">ID</label>
+                            <input [readonly]="true" type="text" [disabled]="true"
+                            class="p-2 border-1 border-solid surface-border border-round w-full readonly-input"
+                            name="id" id="field_id" formControlName="id" />
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_mus_pseudo">Pseudo<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="pseudo" id="field_mus_pseudo" formControlName="pseudo" />
+                            <div
+                                *ngIf="editForm.get('pseudo')!.invalid && (editForm.get('pseudo')!.dirty || editForm.get('pseudo')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('pseudo')?.errors?.['required']"> {{ required
+                                    }} </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_mus_sexe">Sexe</label>
+                            <select
+                                class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                style="appearance: auto" name="sexe" formControlName="sexe" id="field_mus_sexe">
+                                <option *ngFor="let sex of sexesDropdown" value="{{ sex.enumName }}">{{ sex.ihmName }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_mus_tranche_age">Tranche d'âge</label>
+                            <select
+                                class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                style="appearance: auto" name="trancheAge" formControlName="trancheAge"
+                                id="field_mus_tranche_age">
+                                <option *ngFor="let age of agesDropdown" value="{{ age.enumName }}">{{ age.ihmName }}
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="row col-12">
+                            <div class="col col-4">
+                                <label class="form-control-label" for="field_dateFermeture">
+                                    <h4>Date de fermeture: {{ this.editForm.get(['dateFermeture'])!.value }}</h4>
+                                </label>
+                                <div class="input-group">
+                                    <p-calendar dateFormat="dd/mm/yy"
+                                        class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                        name="dateFermeture" formControlName="dateFermeture" id="field_dateFermeture"
+                                        [showIcon]="true"></p-calendar>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</p-card>

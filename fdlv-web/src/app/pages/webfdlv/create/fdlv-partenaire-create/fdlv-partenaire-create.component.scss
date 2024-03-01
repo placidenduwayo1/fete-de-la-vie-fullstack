@@ -1,0 +1,25 @@
+.card {
+  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+  padding: 1em;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.btnStyle {
+  box-sizing: border-box;
+}
+button {
+  border-radius: 0.15rem;
+}
+::ng-deep .p-button {
+  height: 2em;
+}
+
+::ng-deep .cdk-drag .p-picklist-item .p-ripple {
+  float: left;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}

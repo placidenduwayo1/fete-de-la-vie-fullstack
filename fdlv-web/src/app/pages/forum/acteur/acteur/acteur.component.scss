@@ -1,0 +1,14 @@
+:host ::ng-deep .row-acteur {
+    background-color: greenyellow!important;
+    color: black!important;
+}
+.status-tags {
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-tag {
+    margin-right: 5px;  
+    font-size: 12px;  
+  }
+  

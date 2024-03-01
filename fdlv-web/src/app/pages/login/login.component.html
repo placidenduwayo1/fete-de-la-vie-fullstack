@@ -1,0 +1,55 @@
+<div class="p-grid" style="display: flex;
+justify-content: center;
+align-items: center;
+height: 100%;
+background-image: url('/assets/img/background.png')
+" >
+  <p-card  [style]="{'width': '25rem', 'margin':'12em','background-color': '#BEBEBE','height': '100%'}">
+    <div class="p-grid p-mt-4">
+      <div class="p-col-12 p-sm-5">
+        <div class="center">
+        </div>
+      </div>
+      <div class="p-col-12 p-sm-6">
+        <div class="card">
+          <h1> <small class="font-18"></small></h1>
+
+          <h2>Backoffice Login <img src="./assets/logos/logo-fdlv.png" height="40" class="mr-2" /></h2>
+          <form #LogInForm="ngForm" (ngSubmit)="LogInForm.value"  class="forms">
+            <div class="p-fluid">
+              <div class="p-field p-grid">
+                <label for="username" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Username</label>
+                <div class="p-col-12 p-md-6">
+                  <input id="username" name="username" type="text" #username="ngModel" ngModel  pInputText required="required" >
+                </div>
+              </div>
+              <div class="p-field p-grid">
+                <label for="password" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Password</label>
+                <div class="p-col-12 p-md-6">
+                  <input id="password" name="password" type="password" autocomplete="on" #password="ngModel" ngModel pInputText required >
+                </div>
+              </div>
+              <div class="p-field p-grid">
+                <div class="p-col-12 p-md-6">
+                  <!--<input [disabled]="!LogInForm.form.valid" class="btn bg-customer1 txt-white" type="submit" value="Iniciar sesión" name="submit" />-->
+                  <!--<div *ngIf="loading"><p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner></div>-->
+                  <br>
+                  <button pButton type="button"  label="Login" type="submit" (click)="Login(LogInForm)" class="p-button-lg p-button-raised p-button-text p-button-info">
+                  </button>
+                  <br>
+                  <div class="p-col-12">
+                    <p-message *ngIf="messageerro" severity="error" text="Problème lors de la connexion Veuillez vérifier vos identifiants et recommencer"></p-message>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>

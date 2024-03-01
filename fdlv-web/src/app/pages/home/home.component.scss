@@ -1,0 +1,44 @@
+/* ==========================================================================
+Main page styles
+========================================================================== */
+
+.home-logo {
+    display: inline-block;
+    width: 347px;
+    height: 497px;
+    background: url('./../../../assets/logos/logo-gomydefi.jpeg') no-repeat center top;
+    background-size: contain;
+  }
+  .btn-store {
+    color: #777777;
+    min-width: 254px;
+    padding: 12px 20px !important;
+    border-color: #dddddd !important;
+  }
+  
+  .btn-store:focus,
+  .btn-store:hover {
+    color: #ffffff !important;
+    background-color: #168eea;
+    border-color: #168eea !important;
+  }
+  
+  .btn-store .btn-label,
+  .btn-store .btn-caption {
+    display: block;
+    text-align: left;
+    line-height: 1;
+  }
+  
+  /* wait autoprefixer update to allow simple generation of high pixel density media query */
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (-moz-min-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx) {
+    .home-logo {
+        background: url('./../../../assets/logos/logo-gomydefi.jpeg') no-repeat center top;
+       background-size: contain;
+    }
+  }
+  

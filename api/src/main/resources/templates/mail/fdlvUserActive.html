@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <div>
+        <img src="https://www.gomydefi.live/logos/Fetedelavie_Logo_bleu.png" width="100" alt="" class="d-inline-block align-top">
+    </div>
+    <div>
+        <p>Bonjour,</p>
+        <p>Suite à votre demande de création de compte pour accéder à l’espace Organisateur, nous avons le plaisir de vous confirmer son activation.</p>
+        <p>Vous pouvez dès maintenant y accéder en vous connectant sur le site de l’association avec votre identifiant <strong th:text="${user.login}"></strong>  :
+            <a th:with="url=(@{|${fdlvUrl}/home|})" th:href="${url}" th:text="${url}"></a> puis sur la rubrique « Espace Organisateur »</p>
+        <p>OU</p>
+        <p>en cliquant directement sur le lien suivant : <a th:with="url=(@{|${fdlvUrl}/organisateur|})" th:href="${url}" th:text="${url}"></a></p>
+        <p>Mail généré automatiquement par l’application FDLV / GMD. Merci de ne pas répondre à ce mail. </p>
+        <p>
+            Cordialement,<br>
+            Service Support FDLV
+        </p>
+        <div>
+            <img src="https://www.gomydefi.live/logos/logo_GoMyDefi%2001.png" width="100" alt="" class="d-inline-block align-top">
+        </div>
+    </div>
+</html>

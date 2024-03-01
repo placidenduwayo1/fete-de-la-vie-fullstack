@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <title>goMyDefi account activation is required</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" th:href="@{|${gmdUrl}/favicon.ico|}" />
+  </head>
+  <body>
+    <p th:text="|Dear ${user.login}|"></p>
+    <p>Your goMyDefi account has been created, please click on the URL below to access it:</p>
+    <p>
+      <a th:with="url=(@{|${gmdUrl}/account/reset/finish?key=${user.resetKey}|})" th:href="${url}" th:text="${url}"></a>
+    </p>
+    <p>
+      <span>Regards, </span>
+      <br />
+      <em>goMyDefi Team.</em>
+    </p>
+  </body>
+</html>

@@ -1,0 +1,214 @@
+<p-card header="Création Intervention Structure {{structureId}}" class="flex justify-content-center mt-3"
+    [style]="{width: '1700px'}">
+    <p-messages key="save-success"/><p-messages key="save-rejected"/>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: '20vw'}"></p-confirmDialog>
+    <ng-template pTemplate="header">
+        <div class="card-container my-5 mx-3">
+            <p-button label="Retour" (click)="onRetour()" icon="pi pi-arrow-left" [styleClass]="styleClass2"
+                class="mr-2" />
+
+            <p-button *ngIf="interventionStructureForm" (click)="onSave($event)" [disabled]="isInvalidInterventionStructureForum()
+        || conventionSigned===false" label="Sauvegarder" icon="pi pi-save" [styleClass]="styleClass1" class="mr-2" />
+
+            <p-button *ngIf="interventionStructureForm" label="Créer" icon="pi pi-save" (onClick)="onCreer()" [styleClass]="styleClass2" class="mr-2" 
+            [disabled]="isInvalidInterventionStructureForum()"/>
+
+            <p-button *ngIf="interventionStructureForm" label="Annuler" [styleClass]="styleClass3" (onClick)="onAnnuler()" 
+            [disabled]="isInvalidInterventionStructureForum()"/>
+
+        </div>
+    </ng-template>
+    <form *ngIf="interventionStructureForm" [formGroup]="interventionStructureForm" (ngSubmit)="onSave($event)">
+        <p-accordion [activeIndex]="activeIndex">
+            <p-accordionTab>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center">
+                        <i class="pi pi-calendar mr-2"></i>
+                        <span class="vertical-align-middle">
+                            Intervention Structure
+                            <ng-container *ngIf="isInvalidInterventionStructureForum(); else interventionForm">
+                                <p-tag class="m-2" severity="danger" value="X"></p-tag>
+                            </ng-container>
+                            <ng-template #interventionForm>
+                                <p-tag class="m-2" severity="success" value="✓"></p-tag>
+                            </ng-template>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+
+                    <div class="formgrid grid" style="align-items: baseline;">
+                        <!-- intervention reference -->
+                        <label for="fsnId" [hidden]="true">Référence de l'Intervention</label>
+                        <div class="field col-2 mr-4">
+                            <input [readOnly]="true" type="text" formControlName="fsnId" [class]="inputTextStyle1"
+                                [hidden]="true">
+                        </div>
+                    </div>
+
+                    <div formGroupName="structureForm">
+
+                        <div class="formgrid grid" style="align-items: baseline;">
+                            <label for="id">ID Structure</label>
+                            <div class="field col">
+                                <input [readOnly]="true" type="text" [class]="inputTextStyle1" formControlName="id"
+                                    [(ngModel)]="structure.id">
+                            </div>
+
+                            <label for="code">Code Structure</label>
+                            <div class="field col">
+                                <input [readOnly]="true" type="text" [class]="inputTextStyle1" formControlName="code"
+                                    [(ngModel)]="structure.code">
+                            </div>
+
+                            <label for="libelle">Nom Structure</label>
+                            <div class="field col">
+                                <input [readOnly]="true" type="text" [class]="inputTextStyle1" formControlName="libelle"
+                                    [(ngModel)]="structure.libelle">
+                            </div>
+                            <label for="reference">Référence Structure</label>
+                            <div class="field col">
+                                <input [readOnly]="true" type="text" [class]="inputTextStyle1"
+                                    formControlName="reference" [(ngModel)]="structure.reference">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formgrid grid">
+                        <!-- intervention forum -->
+                        <div class="field card col" [style]="containerStyle">
+                            <label for="forum">Forum <span [style]="warnColorStyle">{{asterix}}</span></label>
+                            <p-dropdown [filter]="true" filterBy="name" [styleClass]="inputTextStyle2"
+                                [showClear]="true" placeholder="Sélectionner un forum" formControlName="forum"
+                                [options]="forumsArray" optionLabel="libelle" (ngModelChange)="onForumSelect($event)" />
+                            <div *ngIf="interventionStructureForm.get('forum').touched 
+                      && interventionStructureForm.get('forum').invalid">
+                                <span [style]="warnColorStyle">{{fiedRequired}}</span>
+                            </div>
+                            <!-- reference forum -->
+                            <label for="referenceForum">Référence Forum</label>
+                            <input [readOnly]="true" type="text" [class]="inputTextStyle1"
+                                [value]="selectReferenceForum" placeholder="reference forum">
+                        </div>
+
+                        &nbsp;&nbsp;
+                        <!-- intervention stand -->
+                        <div class="field card col-3" [style]="containerStyle">
+                            <label for="stand">Stand</label>
+
+                            <p-dropdown [filter]="true" filterBy="name" [styleClass]="inputTextStyle2"
+                                formControlName="stand" placeholder="Sélectionner un stand" [options]="stands"
+                                optionLabel="libelle" [showClear]="true" (ngModelChange)="onStandSelect($event)" />
+                            <!-- reference stand -->
+                            <label for="referenceStand">Référence Stand</label>
+                            <input type="text" [class]="inputTextStyle1" [readOnly]="true"
+                                [value]="selectReferenceStand" placeholder="reference stand">
+                        </div>
+
+                        &nbsp;&nbsp;
+                        <!-- intervention banniere -->
+                        <div class="field card col" [style]="containerStyle">
+                            <label for="forum">Bannière</label>
+                            <p-dropdown [filter]="true" filterBy="name" [styleClass]="inputTextStyle2"
+                                formControlName="banniere" placeholder="Sélectionner une bannière" [options]="bannieres"
+                                optionLabel="libelle" [showClear]="true" (ngModelChange)="onBanniereSelect($event)" />
+
+                            <!-- reference bannière -->
+                            <label for="referenceStand">Référence Bannière</label>
+                            <input type="text" [class]="inputTextStyle1" [readOnly]="true"
+                                [value]="selectCodeBanniere">
+                        </div>
+                    </div>
+
+                    <!-- intervention description -->
+                    <div class="formgrid grid m-0">
+                        <div class="field col-3">
+                            <label for="fsnDescription">Description Intervention <span
+                                    [style]="warnColorStyle">{{asterix}}</span></label>
+                            <textarea [class]="inputTextStyle1" rows="3" formControlName="fsnDescription"></textarea>
+                            <div *ngIf="interventionStructureForm.get('fsnDescription').touched 
+                      && interventionStructureForm.get('fsnDescription').errors?.['required']">
+                                <span [style]="warnColorStyle">{{fiedRequired}}</span>
+                            </div>
+                            <div *ngIf="interventionStructureForm.get('fsnDescription').errors?.['minlength']">
+                                <span [style]="warnColorStyle">{{nbrCharMin3}} {{charMin}}</span>
+                            </div>
+                        </div>
+                        <!-- intervention structure role -->
+                        <div class="field col-3">
+                            <label for="roleIntervention">Rôle <span [style]="warnColorStyle">{{asterix}}</span> (id
+                                code nom
+                                rôle)</label>
+                            <p-dropdown [filter]="true" filterBy="name" [styleClass]="inputTextStyle2"
+                                formControlName="roleStructure" placeholder="Sélectionner un rôle"
+                                [options]="rolesStructure" optionLabel="froRole" [showClear]="true" />
+
+                            <div *ngIf="interventionStructureForm.touched 
+                      && interventionStructureForm.get('roleStructure').errors?.['required']">
+                                <span [style]="warnColorStyle">{{fiedRequired}}</span>
+                            </div>
+                        </div>
+
+                        <!-- intervention convention signée -->
+                        <div class="field col">
+                            <label for="fsnConventionSigne" class="block mb-3">Convention signée <span
+                                    [style]="warnColorStyle">{{asterix}}</span></label>
+                            <p-selectButton [options]="ouiNons" optionLabel="label" formControlName="fsnConventionSigne"
+                                (ngModelChange)="onConventionSigneeCheck($event)"/>
+                        </div>
+
+                        <!-- intervention convention data signature -->
+                        <div class="field col-2">
+                            <label for="fsnDateConventionSigne" class="block">Date de signature <span
+                                    [style]="warnColorStyle" *ngIf="conventionSigned">{{asterix}}</span> </label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [showIcon]="true"
+                                formControlName="fsnDateConventionSigne" [required]="conventionSigned"/>
+
+                            <div *ngIf="interventionStructureForm.get('fsnDateConventionSigne').errors?.['required']">
+                                <span [style]="warnColorStyle"> {{fiedRequired}} </span>
+                            </div>
+                        </div>
+                        <div class="field col">
+                            <label for="fsnCommentaire">Commentaire</label>
+                            <input pInputText formControlName="fsnCommentaire" [class]="inputTextStyle1" />
+
+                            <div *ngIf="interventionStructureForm.get('fsnCommentaire').errors?.['minlength']">
+                                <span [style]="warnColorStyle">{{nbrCharMin3}} {{charMin}} </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- intervention dates de relance -->
+                    <div class="formgrid grid m-0">
+                        <div class="field col">
+                            <label for="dateRelance" class="block">Dates relance 1</label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [styleClass]="inputTextStyle2"
+                                name="dateDebutValidite" [showIcon]="true" formControlName="fsnDateRelance01" />
+                        </div>
+                        <div class="field col">
+                            <label for="dateRelance" class="block">Dates relance 2</label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [styleClass]="inputTextStyle2"
+                                name="dateDebutValidite" [showIcon]="true" formControlName="fsnDateRelance02" />
+                        </div>
+                        <div class="field col">
+                            <label for="dateRelance" class="block">Dates relance 3</label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [styleClass]="inputTextStyle2"
+                                name="dateDebutValidite" [showIcon]="true" formControlName="fsnDateRelance03" />
+                        </div>
+                        <div class="field col">
+                            <label for="dateRelance" class="block">Dates relance 4</label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [styleClass]="inputTextStyle2"
+                                name="dateDebutValidite" [showIcon]="true" formControlName="fsnDateRelance04" />
+                        </div>
+                        <div class="field col">
+                            <label for="dateRelance" class="block">Dates relance 5</label>
+                            <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" [styleClass]="inputTextStyle2"
+                                name="dateDebutValidite" [showIcon]="true" formControlName="fsnDateRelance05" />
+                        </div>
+                    </div>
+                </ng-template>
+            </p-accordionTab>
+        </p-accordion>
+    </form>
+</p-card>

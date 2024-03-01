@@ -1,0 +1,26 @@
+<h2>Réponses</h2>
+
+<p-table [value]="answers" [tableStyle]="{ 'min-width': '20rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Réponse</th>
+            <th>Est correcte</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-answer let-i="rowIndex">
+        <tr>
+            <td><textarea rows="5" cols="30" pInputTextarea [(ngModel)]="answer.reponse" required="true"></textarea></td>
+            <td><p-checkbox [(ngModel)]="answer.isCorrect" [binary]="true" > </p-checkbox>
+            </td>
+            <td><p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                (click)="removeReponse(i)"></p-button></td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <tr>
+            <p-button icon="pi pi-plus" styleClass="custom-button p-button-rounded p-button-info"
+            (click)="add()"  ></p-button>
+        </tr>
+    </ng-template>
+</p-table>

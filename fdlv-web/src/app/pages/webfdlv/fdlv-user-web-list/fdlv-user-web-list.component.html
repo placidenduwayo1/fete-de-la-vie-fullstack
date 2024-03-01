@@ -1,0 +1,82 @@
+<p-card header="Liste des Organisateurs" class="m-3">
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
+    <p-table #idU [value]="fdlvUsers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche vidéo {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'structure', 'login', 'profil', 'prenom', 'nom']"
+    [scrollable]="true" scrollHeight="70vh">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh" (click)="loadAll()" [disabled]="isLoading"></p-button>
+          <p-button (onClick)="create()" label="Créer un Utilisateur fdlv" styleClass="p-button-raised p-button-text"
+            icon="pi pi-plus-circle"></p-button>
+          </div>
+            <input  class="p-input-icon-left ml-auto" pInputText type="search" (input)="idU.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche"
+            [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)" 
+             />  
+        
+      </div> 
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="structure">Structure<p-sortIcon field="structure"></p-sortIcon></th>
+                <th pSortableColumn="login">Login<p-sortIcon field="login"></p-sortIcon></th>
+                <th pSortableColumn="profil">Profil<p-sortIcon field="profil"></p-sortIcon></th>
+                <th pSortableColumn="prenom">Prenom<p-sortIcon field="prenom"></p-sortIcon></th>
+                <th pSortableColumn="nom">Nom<p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="actif">Actif<p-sortIcon field="actif"></p-sortIcon></th>
+                <th pSortableColumn="dateDebut">Commence<p-sortIcon field="dateDebut"></p-sortIcon></th>
+                <th pSortableColumn="dateFin">Expire<p-sortIcon field="dateFin"></p-sortIcon></th>
+                <th></th>
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+        <tr>
+            <td>{{ user.structure }}</td>
+            <td>{{ user.login }}</td>
+            <td>{{ user.profil?.ihmName }}</td>
+            <td>{{ user.prenom }}</td>
+            <td>{{ user.nom }}</td>
+            <td>
+              <p-button styleClass="custom-button p-button-danger" (click)="setActive(user, true)" *ngIf="!user.actif">Désactivé</p-button>
+              <p-button styleClass="custom-button p-button-success" (click)="setActive(user, false)" *ngIf="user.actif">Activé</p-button>
+            </td>
+            <td>{{ user.dateDebut?.toString() | date: 'dd/MM/yyyy' }}</td>
+  
+            <td>{{ user.dateFin?.toString() | date: 'dd/MM/yyyy' }}</td>
+  
+            <td class="text-right">
+              <div class="btn-group">
+                <p-button
+                  *ngIf="user.mdpHash == null"
+                  [ngClass]="{ 'btn btn-primary btn-sm': user.resetKey == null, 'btn btn-secondary btn-sm': user.resetKey != null }"
+                >
+                  Email
+                </p-button>
+                <p-button type="submit" 
+                icon="pi pi-user-edit"
+                styleClass="p-button-rounded p-button-sm p-button-info"
+                (click)="edit(user)">
+                </p-button>
+  
+                <p-button type="submit" 
+                icon="pi pi-trash"
+                (click)="openConfirmationDialog(user.id)" styleClass="custom-button p-button-rounded p-button-danger">
+                </p-button>
+              </div>
+            </td>
+          </tr>
+    </ng-template>     
+    </p-table>
+</p-card>
+
+  <!--confirmation suppression -->
+  <div *ngIf="showConfirmationDialog">
+    <app-dialog-delete [elementLabel]="'cet utilisateur organisateur fête de la vie '" [showConfirmationDialog]="showConfirmationDialog"
+      (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

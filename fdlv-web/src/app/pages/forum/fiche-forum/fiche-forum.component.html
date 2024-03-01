@@ -1,0 +1,63 @@
+<p-card header="Liste des Forums" class="m-3">
+  <p-toast></p-toast>
+  <p-confirmPopup></p-confirmPopup>
+  <p-table #dt1 [value]="forum$ | async" 
+    [paginator]="true" [rows]="10" 
+    [showCurrentPageReport]="true"
+    paginatorPosition="bottom"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche forum {first} à {last}"
+    [rowsPerPageOptions]="[10, 20, 50]"  (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'numForum', 'libelle', 'lieuForum', 'codePostal', 'commune', 'dateOuverture', 'dateFermeture']">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <div>
+          <p-button (onClick)="refreshFicheForum()" label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+            icon="pi pi-refresh"></p-button>
+          <p-button (onClick)="createFicheForum()" label="Créer un fiche forum"
+            styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"></p-button>
+        </div>
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="numForum">N° Forum <p-sortIcon field="numForum"></p-sortIcon></th>
+        <th pSortableColumn="libelle">Libellé <p-sortIcon field="libelle"></p-sortIcon> </th>
+        <th pSortableColumn="codePostal">CP <p-sortIcon field="codePostal"></p-sortIcon> </th>
+        <th pSortableColumn="commune">Commune <p-sortIcon field="commune"></p-sortIcon> </th>
+        <th pSortableColumn="isValid">Forum activé<p-sortIcon field="isValid"></p-sortIcon> </th>
+        <th pSortableColumn="dateOuverture">Date/Heure ouverture <p-sortIcon field="dateOuverture"></p-sortIcon> </th>
+        <th pSortableColumn="dateFermeture">Date/Heure fermeture <p-sortIcon field="dateFermeture"></p-sortIcon> </th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-forum>
+      <tr [ngClass]="{'row-forum' : forum.isValid=== '1'}">        
+        <td>{{ forum.id }}</td>
+        <td>{{ forum.numForum }}</td>
+        <td>{{ forum.libelle }}</td>
+        <td>{{ forum.codePostal }}</td>
+        <td>{{ forum.commune }}</td>
+        <td>{{ forum.isValid }}</td>
+        <td>{{ forum.dateOuverture | date : 'dd/MM/yyyy' }} {{ forum.heureOuverture }}</td>
+        <td>{{ forum.dateFermeture | date : 'dd/MM/yyyy' }} {{ forum.heureFermeture }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <p-button icon="pi pi-user-edit" styleClass="p-button-rounded p-button-sm p-button-info" (click)="editFicheForum(forum)"></p-button>
+            <p-button icon="pi pi pi-times" styleClass="p-button-rounded p-button-sm p-button-danger" (click)="onConfirmDelete($event, forum)"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+    </ng-template>
+  </p-table>
+</p-card>

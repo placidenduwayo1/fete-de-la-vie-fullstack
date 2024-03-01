@@ -1,0 +1,124 @@
+<p-card header="Liste des Rôles Acteur" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+    <p-toast></p-toast>
+    <p-table #myTab [value]="data" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" paginatorPosition="bottom" [tableStyle]="{ 'min-width': '100vh' }" currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche rôle acteur {first} à {last}"
+        [rowsPerPageOptions]="[10,20,50]"  (onPage)="onPageChange($event)" [first]="first"  [globalFilterFields]="['codeRoleActeur', 'roleActeur']">
+
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <div>
+                    <p-button (click)="reloadPage()" label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text" icon="pi pi-refresh"></p-button>
+                    <p-button (click)="openAddForm()" label="Créer un rôle Acteur" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="searchValue" (input)="onSearchInputChange($event)"
+            placeholder="Recherche" />
+        </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="id">
+                    <div>
+                        <span>ID</span>
+                        <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+
+                <th class="centered-row" pSortableColumn="login">
+                    <div>
+                        <span>Code rôle acteur</span>
+                        <p-sortIcon field="CodeRoleActeur"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="email">
+                    <div>
+                        <span>Rôle Acteur</span>
+                        <p-sortIcon field="roleActeur"></p-sortIcon>
+                    </div>
+                </th>
+
+                <th class="centered-row">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-datauser>
+            <tr>
+                <td class="centered-row">{{ datauser.id }}</td>
+                <td class="centered-row">{{ datauser.codeRoleActeur }}</td>
+                <td class="centered-row">{{ datauser.roleActeur }}</td>
+                <td>
+                    <div class="btn-group">
+                        <p-button icon="pi pi-pencil" styleClass="custom-button p-button-rounded p-button-info button-spacing" (click)="openEditForm(datauser.id, datauser.codeRoleActeur, datauser.roleActeur)">
+                        </p-button>
+                        <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger button-spacing" (click)="openDeleteForm(datauser.id)">
+                        </p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog class="custom-dialog" header="Créer un rôle acteur" [(visible)]="displayAddForm" [modal]="true">
+    <form #AddRoleActeurForm="ngForm" (ngSubmit)="AddRoleActeurForm.value">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="codeRoleActeur">Code rôle acteur</label>
+                <input type="text" pInputText id="codeRoleActeur" name="codeRoleActeur" #codeRoleActeur="ngModel" ngModel required placeholder="Entrez le code du rôle acteur" />
+            </div>
+            <div class="form-group">
+                <label for="roleActeur">Rôle acteur</label>
+                <input type="text" pInputText id="roleActeur" name="roleActeur" #roleActeur="ngModel" ngModel required placeholder="Entrez le rôle acteur" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <p-message *ngIf="errormessage" severity="error" class="error-message" text="{{ title }}">{{ title }}</p-message>
+            </div>
+        </div>
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton (click)="saveForm(AddRoleActeurForm.value)" label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeAddForm()" label="Cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="Modifier rôle acteur" [(visible)]="displayEditForm" [modal]="true" [resizable]="true">
+    <form #UpdateRoleActeurForm="ngForm" (ngSubmit)="editForm(UpdateRoleActeurForm.value)">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="idRoleActeur">ID</label>
+                <input type="text" pInputText id="idRoleActeur_editform" name="id" #id="ngModel" [(ngModel)]="datauser.idRoleActeur" ngModel readonly class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="codeRoleActeur">Code rôle acteur</label>
+                <input type="text" pInputText id="codeRoleActeur_editform" name="codeRoleActeur" #codeRoleActeur="ngModel" [(ngModel)]="datauser.codeRoleActeur" ngModel required />
+            </div>
+            <div class="form-group">
+                <label for="roleActeur">Rôle acteur</label>
+                <input type="text" pInputText id="roleActeur_editform" name="roleActeur" #roleActeur="ngModel" [(ngModel)]="datauser.roleActeur" ngModel required />
+            </div>
+        </div> 
+        <div class="form-row">
+            <p-message *ngIf="errormessage" severity="error" text="{{title}}">{{title}}</p-message>
+        </div>    
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeEditForm()" label="Cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="Confirmation" [(visible)]="displayDeleteForm" [modal]="true" [resizable]="true">
+    <ng-template pTemplate="body">
+        <div>Voulez-vous supprimer ce rôle acteur ?</div>
+        <div class="form-group button-container">
+            <button pButton type="button" class="button" class="element-with-margin custom-button save-button" label="Valider" (click)="deleteRoleActeur()"></button>
+            <button pButton type="button" class="button" class="element-with-margin custom-button cancel-button" label="Annuler" (click)="closeConfirmationDialog()"></button>
+        </div>
+        <div class="form-row">
+            <p-message *ngIf="errormessage" severity="error" text="{{title}}">{{title}}</p-message>
+        </div>
+    </ng-template>
+</p-dialog>

@@ -1,0 +1,78 @@
+
+.custom-textarea {
+    border-radius: 10px;
+    border: 2px solid #939384;
+    padding: 8px;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+.custom-button {
+    height: 40px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border-radius: 5px;
+}
+.error-message {
+    color: red; 
+    font-size: 12px;  
+  }
+  .error-asterisk {
+    color: red; 
+    font-size: 12px; 
+    padding-left: 4px; 
+  }
+
+/* Bouton Save en vert clair */
+.save-button {
+    background-color: #0aeb0a;
+    color: white;
+    transition: background-color 0.3s;
+    /* Animation de transition pour une transition en douceur */
+}
+/* Bouton Cancel en rouge clair */
+
+.cancel-button {
+    background-color: #f53e3e;
+    color: white;
+    transition: background-color 0.3s;
+}
+/* Au survol du bouton Save, changez la couleur en vert foncé */
+.save-button:hover {
+    background-color: #2ca72c;
+}
+/* Au survol du bouton Cancel, changez la couleur en rouge foncé */
+.cancel-button:hover {
+    background-color: #bb0f0f;
+}
+.readonly-input {
+    background-color: #f0f0f0;
+    /* Couleur de fond grise */
+    color: #333;
+    /* Couleur de texte sombre */
+    cursor: not-allowed;
+    /* Curseur en forme de cercle barré (indiquant que le champ est en lecture seule) */
+}
+
+input[type=file]::file-selector-button {
+    cursor: pointer;
+    border: 0;
+    padding: 8px;
+    background-color: rgb(91, 105, 194);
+    border-radius: 8px;
+    color: white;
+  }
+  
+  input[type=file]::file-selector-button:hover {
+    background-color: rgb(54, 61, 115);
+  }
+
+img{
+    max-width: 90%;
+}

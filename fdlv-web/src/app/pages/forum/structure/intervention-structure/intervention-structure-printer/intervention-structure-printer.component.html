@@ -1,0 +1,82 @@
+<p-card header="La liste des interventions des structures" class="flex justify-content-center mt-3" [style]="{width: '1890px'}">
+  <p-messages key="success-delete"/>
+  <p-messages key="rejected"/>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: '20vw'}"></p-confirmDialog>
+      <p-table #inteventionStructureTab [value]="interventionStructureList$ | async" [paginator]="true" [rows]="10" styleClass="p-datatable-striped"
+        [showCurrentPageReport]="true" paginatorPosition="bottom" currentPageReportTemplate="Page {currentPage} sur {totalPages}, intervention structure {first} à {last}"
+        [rowsPerPageOptions]="[10, 20, 50]" [globalFilterFields]="['fsnId', 'forum.id', 'forum.numForum', 'forum.libelle', 'forum.reference',
+        'forum.sloganForum', 'forum.typeForum','structure.id', 'structure.lbelle', 'structure.reference','structure.cp','structure.commune',
+         'roleStructure.froId', 'roleIntervention.froCode','rolesStructure.froRole','fsnDescription', 'fsnConventionSigne', 'fsnDateConventionSigne',
+         'fsnDateRelance01','fsnDateRelance02','fsnDateRelance03','fsnDateRelance04',
+        'fsnDateRelance05']" (onPage)="onPageChange($event)">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <p-button label="Retour" (onClick)="onRetour()" class="mr-2" styleClass="p-button-raised p-button-text"
+                icon="pi pi-arrow-left"></p-button>
+                
+              <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+                icon="pi pi-refresh" (onClick)="onRefresh()"></p-button>
+
+            <span class="p-input-icon-left ml-auto">
+              <input pInputText (input)="inteventionStructureTab.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Recherche" [class]="inputTextStyle1">
+            </span>
+      
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="fsnId">Id <p-sortIcon></p-sortIcon></th>
+            <th pSortableColumn="forum">Forum <p-sortIcon field="forum"></p-sortIcon></th>
+            <th pSortableColumn="structure">Structure <p-sortIcon field="structure"></p-sortIcon></th>
+            <th pSortableColumn="roleStructure"> Rôle<p-sortIcon field="roleStructure"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDescription">Description <p-sortIcon field="fsnDescription"></p-sortIcon> </th>
+            <th pSortableColumn="fsnConventionSigne">Signée <p-sortIcon field="fsnConventionSigne"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateConventionSigne">Date <p-sortIcon field="fsnDateConventionSigne"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateRelance01">Relance1 <p-sortIcon field="fsnDateRelance01"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateRelance02">Relance2<p-sortIcon field="fsnDateRelance02"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateRelance03">Relance3<p-sortIcon field="fsnDateRelance03"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateRelance04">Relance4<p-sortIcon field="fsnDateRelance04"></p-sortIcon> </th>
+            <th pSortableColumn="fsnDateRelance05">Relance5<p-sortIcon field="fsnDateRelance05"></p-sortIcon> </th>
+    
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-interventionsStructure>
+          <tr>
+            <td>{{ interventionsStructure.fsnId}}</td>
+            <td style="width: 300px;">{{ interventionsStructure.forum.id}} 
+              {{ interventionsStructure.forum.numForum}} {{ interventionsStructure.forum.libelle}}
+              {{ interventionsStructure.forum.reference}} {{ interventionsStructure.forum.typeForum}}
+              {{ interventionsStructure.forum.sloganForum}}</td> 
+            <td style="width: 250px;">{{ interventionsStructure.structure.id }}  {{ interventionsStructure.structure.code }}
+               {{ interventionsStructure.structure.libelle }}  {{ interventionsStructure.structure.reference }} 
+              {{ interventionsStructure.structure.cp }} {{ interventionsStructure.structure.commune }}</td>
+            <td style="width: 250px;">{{ interventionsStructure.roleStructure.froId }} {{ interventionsStructure.roleStructure.froCode }} 
+              {{ interventionsStructure.roleStructure.froRole }} </td>
+            <td>{{interventionsStructure.fsnDescription}} </td>
+            <td> {{interventionsStructure.fsnConventionSigne}} </td>
+            <td style="width: 50px;"> {{interventionsStructure.fsnDateConventionSigne}} </td>
+            <td style="width: 50px;"> {{interventionsStructure.fsnDateRelance01}} </td>
+            <td style="width: 40px;"> {{interventionsStructure.fsnDateRelance02}} </td>
+            <td style="width: 40px;"> {{interventionsStructure.fsnDateRelance03}} </td>
+            <td style="width: 40px;"> {{interventionsStructure.fsnDateRelance04}} </td>
+            <td style="width: 40px;"> {{interventionsStructure.fsnDateRelance05}} </td>
+            <td class="text-right">
+              <div class="status-tags">
+                <p-button class="status-tag mr-1" icon="pi pi-pencil" styleClass="p-button-rounded p-button-sm p-button-info"
+                 (click)="onEditInterventionStructure(interventionsStructure)" [pTooltip]="toolTip1" [tooltipPosition]="toolTipPos" />
+                <p-button class="status-tag" icon="pi pi pi-times"
+                  styleClass="p-button-rounded p-button-sm p-button-danger" 
+                  (click)="onDeleteInterventionStructure($event,interventionsStructure.fsnId)" [pTooltip]="toolTip2" [tooltipPosition]="toolTipPos"/>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+        </ng-template>
+      </p-table>
+    </p-card>

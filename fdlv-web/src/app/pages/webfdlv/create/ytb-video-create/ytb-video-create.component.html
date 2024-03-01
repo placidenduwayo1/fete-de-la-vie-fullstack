@@ -1,0 +1,103 @@
+<p-card>
+  <section class="hautpage">
+    <div class="row">
+      <div class="col-9 mx-auto">
+        <div class="flex flew-row justify-content-between">
+          <h2 *ngIf="!id">Créer une Vidéo</h2>
+          <h2 *ngIf="id">Modifier une Vidéo</h2>
+          <div class="flex justify-content-end align-items-center">
+            <p-button (click)="save()" icon="pi pi-save" label="Sauvegarder" id="save-entity"
+              [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+            </p-button>
+            <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+              (click)="eraseModification()">
+            </p-button>
+            <p-button id="cancel-save" icon="pi pi-arrow-left" label="Retour" class="btn btn-secondary ml-1"
+              (click)="previousState()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-row ">
+    <div class="col-9 mx-auto">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+
+        <div class="grid">
+          <div class="form-group col-12 md:col-4">
+            <label class="form-control-label" for="field_evo_ordre_affichage">Ordre d'affichage
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <input type="number"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary  w-full"
+              name="ordreAffichage" id="field_evo_ordre_affichage" formControlName="ordreAffichage" />
+            <div *ngIf="
+                  editForm.get('ordreAffichage')!.invalid &&
+                  (editForm.get('ordreAffichage')!.dirty || editForm.get('ordreAffichage')!.touched)
+                ">
+              <small class="font-bold text-xs text-red-500"
+                *ngIf="editForm.get('ordreAffichage')?.errors?.['required']"> {{ required }} </small>
+            </div>
+          </div>
+          <div class="form-group col-12 md:col-4">
+            <label class="form-control-label" for="field_evo_date_debut">Date de début de publication
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <div class="input-group">
+              <p-calendar dateFormat="dd/mm/yy"
+                class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                name="dateDebut" formControlName="dateDebut" [showIcon]="true"></p-calendar>
+            </div>
+
+            <div *ngIf="
+              editForm.get('dateDebut')!.invalid &&
+              (editForm.get('dateDebut')!.dirty || editForm.get('dateDebut')!.touched)
+            ">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('dateDebut')?.errors?.['required']"> {{
+                required }} </small>
+            </div>
+          </div>
+          <div class="form-group col-12 md:col-4">
+            <label class="form-control-label" for="field_evo_date_fin">Date de fin de publication</label>
+            <div class="input-group" style="height: 36px;">
+              <p-calendar dateFormat="dd/mm/yy"
+                class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                name="dateFin" formControlName="dateFin" [showIcon]="true"></p-calendar>
+            </div>
+          </div>
+
+          <div class="form-group col-12">
+            <label class="form-control-label" for="field_evo_lien_video">Lien vidéo YouTube
+              <span class="font-bold text-xs text-red-500">*</span>
+            </label>
+            <input type="text"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="urlVideo" id="field_evo_lien_video" formControlName="urlVideo" />
+            <div *ngIf="
+                  editForm.get('urlVideo')!.invalid &&
+                  (editForm.get('urlVideo')!.dirty || editForm.get('urlVideo')!.touched)
+                ">
+              <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('urlVideo')?.errors?.['required']"> {{
+                required }} </small>
+            </div>
+          </div>
+
+          <div class="form-group col-12">
+            <label class="form-control-label" for="field_evo_commentaire">Commentaire FDLV</label>
+            <textarea type="text" rows="5"
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              name="commentaire" id="field_evo_commentaire" formControlName="commentaire"></textarea>
+          </div>
+
+          <label class="form-group col-6">
+            Voulez vous publier cet évènement ?
+            <input type="checkbox" id="field_evo_publie" formControlName="publie" [value]="editForm.get('publie')" />
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</p-card>

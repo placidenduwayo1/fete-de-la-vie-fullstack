@@ -1,0 +1,92 @@
+<p-card header="Liste des bannières" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+    <p-toast></p-toast>
+    <p-table #myTab [value]="listBanniere" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche des bannières {first} à {last}"
+        [rowsPerPageOptions]="[10, 20, 50]" [globalFilterFields]="['code', 'libelle', 'theme']">
+
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <div>
+                    <p-button (click)="reloadPage()" label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text" icon="pi pi-refresh"></p-button>
+                    <p-button (click)="openAddForm()" label="Créer un bannière" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto"><i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="myTab.filterGlobal($any($event.target).value, 'contains')" placeholder="Recherche" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="id">
+                    <div>
+                        <span>Id</span>
+                        <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="code">
+                    <div>
+                        <span>Code</span>
+                        <p-sortIcon field="code"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="libelle">
+                    <div>
+                        <span>Libellé</span>
+                        <p-sortIcon field="libelle"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="forumTheme">
+                    <div>
+                        <span>Thème</span>
+                        <p-sortIcon field="forumTheme"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="fdlv">
+                    <div>
+                        <span>FDLV</span>
+                        <p-sortIcon field="fdlv"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="commentaire">
+                    <div>
+                        <span>Commentaire</span>
+                    </div>
+                </th>
+                <th class="centered-row">Action</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-bn>
+            <tr>
+                <td class="centered-row">{{ bn.id }}</td>
+                <td class="centered-row">{{ bn.code }}</td>
+                <td class="centered-row">{{ bn.libelle }}</td>
+                <td class="centered-row">{{ bn.forumTheme }}</td>
+                <td class="centered-row">{{ bn.fdlv }}</td>
+                <td class="centered-row">{{ bn.commentaire }}</td>
+                <td>
+                    <div class="btn-group">
+                        <p-button (click)="openFile(bn.url)" icon="pi pi-eye" styleClass="custom-button p-button-rounded p-button-raised" title="{{bn.url}}" ></p-button>
+                        <p-button (click)="openEditForm(bn)" icon="pi pi-pencil" styleClass="custom-button p-button-rounded p-button-info"></p-button>
+                        <p-button (click)="openDeleteForm(bn)" icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog class="custom-dialog" header="" [(visible)]="displayDeleteForm" [modal]="true" [resizable]="true">
+    <ng-template pTemplate="header">
+        <div class="custom-dialog-header">
+            <h2>Voulez-vous vraiment supprimer ce bannière ?</h2>
+        </div>
+    </ng-template>
+    <form>
+        <div class="form-group button-container">
+          <button pButton type="button" class="button" class="element-with-margin custom-button save-button" label="Valider" (click)="deleteBanniere()"></button>
+          <button pButton type="button" class="button" class="element-with-margin custom-button cancel-button" label="Annuler" (click)="closeConfirmationDialog()"></button>
+        </div>
+        <p-message *ngIf="errormessage" severity="error">Erreur</p-message>
+    </form>
+</p-dialog>

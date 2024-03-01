@@ -1,0 +1,56 @@
+
+<p-card header="Liste des Thèmes" class="m-3">
+    <p-table #myTab [value]="dataList" [paginator]="true" [rows]="10" 
+    [showCurrentPageReport]="true"
+      paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+     currentPageReportTemplate=" Affiche partenaire {first} à {last}"
+      [rowsPerPageOptions]="[10, 20, 50]"      (onPage)="onPageChange($event)" [first]="first" 
+      [globalFilterFields]="['id', 'label']"
+      [scrollable]="true" scrollHeight="70vh">
+      <ng-template pTemplate="caption">
+        <div class="flex">
+          <div>
+            <p-button  icon="pi pi-refresh"  label="Rafraîchir la liste" (click)="reloadPage()" class="mr-2" styleClass="p-button-raised p-button-text">
+            </p-button>
+            <p-button label="Créer un thème" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"
+            (click)="create()"></p-button>
+          </div>
+          <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input type="search" pInputText 
+            (input)="myTab.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Recherche" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)"/>
+           </span>
+          </div>
+      </ng-template>
+  
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="label">Nom<p-sortIcon field="label"></p-sortIcon></th>
+            <th></th> <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+            <td>{{ rowData.id }}</td>
+            <td>{{ rowData.label }}</td>
+        <td class="text-right">
+          <p-button icon="pi pi-pencil" size="small" styleClass="custom-button  p-button-rounded p-button-info"
+            (click)="edit(rowData)">
+        </p-button>
+        </td><td class="text-right" style="width: 1px;">
+        <p-button icon="pi pi-trash" size="small" styleClass="custom-button p-button-rounded p-button-danger"
+        (click)="openConfirmationDialog(rowData.id)"></p-button>
+        </td>
+      </tr>
+  
+      </ng-template>
+  
+  
+  </p-table>
+  </p-card>
+  <app-dialog-delete [elementLabel]="'ce thème'" [showConfirmationDialog]="showConfirmationDialog"
+  (closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>
+  
+  

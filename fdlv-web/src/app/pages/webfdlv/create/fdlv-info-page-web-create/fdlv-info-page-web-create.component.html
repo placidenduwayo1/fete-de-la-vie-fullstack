@@ -1,0 +1,171 @@
+<p-card>
+    <section class="hautpage">
+        <div class="form-row">
+          <div class="col-9 mx-auto">
+            <div class="flex flew-row justify-content-between">
+              <h2 *ngIf="!id">Créer une Information</h2>
+              <h2 *ngIf="id">Modifier une Information</h2>
+              <div class="flex justify-content-end align-items-center">
+                <p-button (click)="save()"
+                label="Sauvegarder"
+                icon="pi pi-save"
+
+                id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+                 </p-button>
+                <p-button id="erase" class="btn btn-secondary btnStyle ml-1" (click)="eraseModification()">
+                  <span>Effacer les modifications</span>
+                </p-button>
+                <p-button 
+                label="Retour"
+                icon="pi pi-arrow-left"
+                 id="cancel-save" class="btn btn-secondary ml-1" (click)="previousState()">
+                </p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <div class="form-row">
+        <div class="col-9 mx-auto">
+          <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+          
+              <div class="formgrid grid">
+                <div class="form-group field col-12 md:col-3">
+                  <label class="form-control-label" for="field_ipb_pageweb">Type page WEB<span
+                    class="font-bold text-xs text-red-500">*</span></label>
+                  <select  class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                   name="pageWeb" id="field_ipb_pageweb" formControlName="pageWeb">
+                    <option selected [value]="">Choisir</option>
+                    <option *ngFor="let pw of pagesWeb" [value]="pw">{{ pw }}</option>
+                  </select>
+                  <div *ngIf="editForm.get('pageWeb')!.invalid && (editForm.get('pageWeb')!.dirty || editForm.get('pageWeb')!.touched)">
+                    <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('pageWeb')?.errors?.['required']"> {{ required }} </small>
+                  </div>
+                </div>
+
+                <div class="form-group field col-12 md:col-3">
+                  <label class="form-control-label" for="field_ipb_pageweb">Rubrique<span
+                    class="font-bold text-xs text-red-500">*</span></label>
+                  <select  class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                   name="rubriquePageWeb" id="field_ipb_rubrique_pageweb" formControlName="rubriquePageWeb">
+                    <option selected [value]="">Choisir</option>
+                    <option *ngFor="let pw of rubrique" [value]="pw">{{ pw }}</option>
+                  </select>
+                  <div *ngIf="editForm.get('rubriquePageWeb')!.invalid && (editForm.get('rubriquePageWeb')!.dirty || editForm.get('rubriquePageWeb')!.touched)">
+                    <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('rubriquePageWeb')?.errors?.['nonNullOuEgalChoisir']"> {{ rubriqueRequired }} </small>
+                  </div>
+                </div>
+
+                <div class="form-group field col-12 md:col-3">
+                  <label class="form-control-label" for="field_ipb_ordre_affichage">Ordre d'affichage<span
+                    class="font-bold text-xs text-red-500">*</span></label>
+                  <input
+                    type="number"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    name="ordreAffichage"
+                    id="field_ipb_ordre_affichage"
+                    formControlName="ordreAffichage"
+                  />
+                  <div
+                    *ngIf="
+                      editForm.get('ordreAffichage')!.invalid &&
+                      (editForm.get('ordreAffichage')!.dirty || editForm.get('ordreAffichage')!.touched)
+                    "
+                  >
+                    <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('ordreAffichage')?.errors?.['required']"> {{ required }} </small>
+                  </div>
+                </div>
+                <div class="form-group field col-12 md:col-4">
+                  <label class="form-control-label" for="field_ipb_titre">Titre</label>
+                  <input maxlength="50" type="text" 
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                   name="titre" id="field_ipb_titre" formControlName="titre" />
+                  <div *ngIf="editForm.get('titre')!.invalid && (editForm.get('titre')!.dirty || editForm.get('titre')!.touched)">
+                    <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('titre')?.errors?.['required']"> {{ required }} </small>
+                  </div>
+                </div>
+
+                <div class="form-group field col-12 md:col-3">
+                  <label class="form-control-label" for="field_ipb_date_debut">Date début publication<span
+                    class="font-bold text-xs text-red-500">*</span></label>
+                  <div class="input-group">
+                    <p-calendar dateFormat="dd/mm/yy"
+                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                    name="dateDebut" formControlName="dateDebut" id="field_ipb_date_debut" [showIcon]="true"></p-calendar>
+              
+                  </div>
+                  <div *ngIf="editForm.get('dateDebut')!.invalid && (editForm.get('dateDebut')!.dirty || editForm.get('dateDebut')!.touched)">
+                    <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('dateDebut')?.errors?.['required']"> {{ required }} </small>
+                  </div>
+                </div>
+                <div class="form-group field col-12 md:col-3">
+                  <label class="form-control-label" for="field_ipb_date_fin">Date fin publication</label>
+                  <div class="input-group">
+                    <p-calendar dateFormat="dd/mm/yy"
+                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                    name="dateFin" formControlName="dateFin" id="field_ipb_date_fin" [showIcon]="true"></p-calendar>   
+                  </div>
+                </div>
+      
+
+
+
+              <div class="form-group field col-12">
+                <label class="form-control-label" for="field_ipb_texte">Texte</label>
+                 <div class="card">
+                  <angular-editor formControlName="texte" [config]="config"></angular-editor>
+                 </div>
+                <div *ngIf="editForm.get('texte')!.invalid && (editForm.get('texte')!.dirty || editForm.get('texte')!.touched)">
+                  <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('texte')?.errors?.['required']"> {{ required }} </small>
+                </div>
+              </div>
+      
+              <div class="form-group flex flex-column field">
+                <label class="form-control-label" for="field_ipb_url_media"
+                  >URL MEDIA
+                  <span *ngIf="id"
+                    >: <b> {{ editForm.get('urlMedia')?.value }} </b></span
+                  >
+                </label>
+                <input type="file" name="urlMedia" (change)="handleFileInput($event.target!)" />
+              </div>
+      
+              <div class="form-group field col-12">
+                <label class="form-control-label" for="field_ipb_commentaire">Commentaire FDLV</label>
+                <textarea
+                  type="text"
+                  rows="5"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                  name="commentaire"
+                  id="field_ipb_commentaire"
+                  formControlName="commentaire"
+                ></textarea>
+              </div>
+      
+              <div class="flex flew-row justify-content-between">
+                <label class="form-group col-6 ">
+                  Voulez vous publier cet parcours ?
+                  <input type="checkbox" id="field_ipb_publie" formControlName="publie" [value]="editForm.get('publie')" />
+                </label>
+                <p-button (click)="onShow()" class="btn btn-primary justify-content-end align-items-center">
+                  {{ isApercu }}
+                </p-button>
+              </div>
+         
+            </div>
+            </form>
+      
+          <div *ngIf="isShow" class="row flex" [ngStyle]="{ 'flex-direction': getStyle() }">
+            <div class="col-4 flex align-self-center">
+              <img [src]="url" [alt]="'Image de ' + editForm.get('titre')!.value" class="img-fluid" />
+            </div>
+            <div class="col-8 flex flex-column justify-content-center align-center">
+              <h2 style="color: #29b0e6 !important; font-weight: 700 !important">{{ editForm.get('titre')!.value }}</h2>
+              <p [innerHTML]="editForm.get('texte')!.value" ></p>
+              <p-button class="btn btn-oulined w-50 mx-auto" onclick="location.href='/contact'" >Nous contacter</p-button>
+            </div>
+          </div>
+        </div>
+      </div>
+</p-card>

@@ -1,0 +1,145 @@
+<p-card header="Liste des Secteurs Stands" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+    <p-toast></p-toast>
+    <p-table #myTab [value]="data" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        paginatorPosition="bottom" [tableStyle]="{ 'min-width': '100vh' }"
+        currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche list stands  par secteur{first} à {last}"
+        [rowsPerPageOptions]="[10,20, 50]" (onPage)="onPageChange($event)" [globalFilterFields]="['id', 'codeSecteur', 'libelle']">
+
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <div>
+                    <p-button (click)="reloadPage()" label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+                        icon="pi pi-refresh"></p-button>
+                    <p-button (click)="openAddForm()" label="Créer un secteur" styleClass="p-button-raised p-button-text"
+                        icon="pi pi-plus-circle"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onSearchInputChange($event)"
+                        placeholder="Recherche" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="id" scope="col">
+                    <div>
+                        <span>Id</span>
+                        <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="codeSecteur" scope="col">
+                    <div>
+                        <span>Code Secteur</span>
+                        <p-sortIcon field="codeSecteur"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="libelle" scope="col">
+                    <div>
+                        <span>Libelle</span>
+                        <p-sortIcon field="libelle"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" scope="col">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dataStandSecteur>
+            <tr>
+                <td class="centered-row">{{ dataStandSecteur.id }}</td>
+                <td class="centered-row">{{ dataStandSecteur.codeSecteur }}</td>
+                <td class="centered-row">{{ dataStandSecteur.libelle }}</td>
+                <td class="custom-td">
+                    <div class="btn-group">
+                        <p-button icon="pi pi-pencil" styleClass="custom-button p-button-rounded p-button-info"
+                            (click)="openEditForm(dataStandSecteur)">
+                        </p-button>
+                        <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                            (click)="openConfirmationDialog(dataStandSecteur)">
+                        </p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog class="custom-dialog" header="Créer un nouveau secteur" [(visible)]="displayAddForm" [modal]="true">
+    <form #AddSecteurForm="ngForm" (ngSubmit)="AddSecteurForm.value">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="codeSecteur">Code secteur</label>
+                <input type="text" pInputText id="codeSecteur" name="codeSecteur" #codeSecteur="ngModel" ngModel
+                    required placeholder="Entrez le code code secteur" />
+            </div>
+            <div class="form-group">
+                <label for="libelle">Libelle</label>
+                <input type="text" pInputText id="libelle" name="libelle" #libelle="ngModel" ngModel required
+                    placeholder="Entrez un libelle" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <p-message *ngIf="errormessage" severity="error" class="error-message" text="{{ title }}">{{title}}</p-message>
+            </div>
+        </div>
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton
+                (click)="saveForm(AddSecteurForm.value)" label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeAddForm()"
+                label="Cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="Modifier un secteur stand" [(visible)]="displayEditForm" [modal]="true">
+    <form #UpdateSecteurForm="ngForm" (ngSubmit)="editForm(UpdateSecteurForm.value)">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" pInputText id="id" name="id" #id="ngModel" [(ngModel)]="dataStandSecteur.id" ngModel
+                    readonly class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="codeSecteur">Code Secteur</label>
+                <input type="text" pInputText id="codeSecteur" name="codeSecteur" #codeSecteur="ngModel"
+                    [(ngModel)]="dataStandSecteur.codeSecteur" ngModel required />
+
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="libelle">Libelle</label>
+                <input type="text" pInputText id="libelle" name="libelle" #libelle="ngModel"
+                [(ngModel)]="dataStandSecteur.libelle" ngModel required />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <p-message *ngIf="errormessage" severity="error" text="{{title}}">{{title}}</p-message>
+            </div>
+        </div>
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton
+                (click)="closeEditForm()" label="Cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="Supprimer un secteur stand" [(visible)]="showConfirmationDialog" [modal]="true" [resizable]="true">
+    <div class="form-row">
+        <div class="form-group">
+            <p-message severity="info" text="Voulez-vous supprimer ce secteur stand ?"></p-message>
+        </div>
+    </div>
+    <div class="form-group button-container">
+        <button pButton type="button" class="button" class="element-with-margin custom-button save-button" label="Valider" (click)="confirmDeletion()"></button>
+        <button pButton type="button" class="button" class="element-with-margin custom-button cancel-button" label="Annuler" (click)="closeConfirmationDialog()"></button>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <p-message *ngIf="errormessage" severity="error" text="{{title}}">{{title}}</p-message>
+        </div>
+    </div>
+</p-dialog>

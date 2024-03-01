@@ -1,0 +1,318 @@
+<p-card header="Liste stands" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+    <p-toast></p-toast>
+    <p-table #myTab [value]="stands" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        paginatorPosition="bottom" [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche stands {first} à {last}"
+        [rowsPerPageOptions]="[ 10, 20, 50]" (onPage)="onPageChange($event)"
+        [globalFilterFields]="['id', 'standPhysique', 'forumStandSecteurLibelle', 'libelle', 'reference', 'materiel', 'observation', 'besoinElectricite', 'commentaire']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <div>
+                    <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+                        icon="pi pi-refresh"></p-button>
+                    <p-button (click)="openAddForm()" label="Créer un Stand" styleClass="p-button-raised p-button-text"
+                        icon="pi pi-plus-circle"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input id="libelle" name="libelle" pInputText type="text" [(ngModel)]="searchValue"
+                        (input)="onSearchInputChange($event)" placeholder="Recherche" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="id" id="standPhysiqueHeader">
+                    <div>
+                        <span>Id</span>
+                        <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="forumStandSecteurLibelle" id="forumStandSecteurLibelle">
+                    <div>
+                        <span>Stand Secteur</span>
+                        <p-sortIcon field="forumStandSecteurLibelle"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="standPhysique" id="standPhysique">
+                    <div>
+                        <span>Stand physique</span>
+                        <p-sortIcon field="standPhysique"></p-sortIcon>
+                    </div>
+                </th>
+
+                <th class="centered-row" pSortableColumn="libelle" id="libelle">
+                    <div>
+                        <span>Libelle</span>
+                        <p-sortIcon field="libelle"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="reference" id="reference">
+                    <div>
+                        <span>Reference</span>
+                        <p-sortIcon field="reference"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="materiel" id="materiel">
+                    <div>
+                        <span>Materiel</span>
+                        <p-sortIcon field="materiel"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="observation" id="observation">
+                    <div>
+                        <span>Observation</span>
+                        <p-sortIcon field="observation"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="besoinElectricite" id="besoinElectricite">
+                    <div>
+                        <span>Besoin Electricite</span>
+                        <p-sortIcon field="besoinElectricite"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="commentaire" id="commentaire">
+                    <div>
+                        <span>Commentaire</span>
+                        <p-sortIcon field="commentaire"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="action" id="action">Action</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-stand>
+            <tr>
+                <td class="centered-row">{{ stand.id }}</td>
+                <td class="centered-row">{{ stand.forumStandSecteurLibelle }}</td>
+                <td class="centered-row">{{ stand.standPhysique }}</td>
+                <td class="centered-row">{{ stand.libelle }}</td>
+                <td class="centered-row">{{ stand.reference }}</td>
+                <td class="centered-row">{{ stand.materiel }}</td>
+                <td class="centered-row">{{ stand.observation }}</td>
+                <td class="centered-row">{{ stand.besoinElectricite === '1' ? 'Oui' : 'Non'}}</td>
+                <td class="centered-row">{{ stand.commentaire }}</td>
+                <td>
+                    <div class="">
+                        <p-button icon="pi pi-pencil" styleClass="custom-button p-button-rounded p-button-info "
+                            (click)="openEditForm(stand)"></p-button>
+                        <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                            (click)="openConfirmationDialog(stand.id)"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+
+<p-dialog [style]="{
+  'width': 'auto',
+  'min-width': '22rem',
+  'max-width': '35rem',
+  'height': 'auto',
+  'min-height': '35rem',
+  'max-height': '70rem',
+  'margin': '5em'
+}" class="custom-dialog" header="" [(visible)]="displayAddForm" [modal]="true">
+    <ng-template pTemplate="header">
+        <div class="custom-dialog-header">
+            <h2>Créer une stand</h2>
+            <!-- Contenu de l'en-tête personnalisé -->
+        </div>
+    </ng-template>
+    <form #AddStandForm="ngForm" (ngSubmit)="AddStandForm.value">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="id">Id:</label>
+                <input type="text" pInputText id="id" name="id" ngModel readonly class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="forumStandSecteur">Stand secteur :</label>
+                <p-dropdown id="forumStandSecteur" name="forumStandSecteur" [options]="standSecteurOptions"
+                    [(ngModel)]="datauser.forumStandSecteur" [style]="{ width: '100%' }"></p-dropdown>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="standPhysique">Stand physique:</label>
+                <div class="d-flex align-items-center" style="display: flex !important;">
+                    <div class="custom-control custom-radio custom-control-inline" style="padding-right: 50px;">
+                        <input type="radio" id="standPhysiqueOui" name="standPhysique" value="Oui"
+                            [(ngModel)]="datauser.standPhysique" required class="custom-control-input">
+                        <label class="custom-control-label" for="standPhysiqueOui">Oui</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="standPhysiqueNon" name="standPhysique" value="Non"
+                            [(ngModel)]="datauser.standPhysique" required class="custom-control-input">
+                        <label class="custom-control-label" for="standPhysiqueNon">Non</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="libelle">Libelle:</label>
+                <input type="text" pInputText id="libelle" name="libelle" #libelle="ngModel" ngModel required />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="reference">Réfèrence:</label>
+
+                <input type="text" pInputText id="reference" name="reference" #reference="ngModel" ngModel readonly
+                    class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="materiel">materiel:</label>
+                <input type="text" pInputText id="materiel" name="materiel" #materiel="ngModel" ngModel required />
+
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="observation">Observation:</label>
+
+                <input type="text" pInputText id="observation" name="observation" #observation="ngModel" ngModel
+                    required />
+            </div>
+            <div class="form-group">
+                <label for="besoinElectricite">Besoin Électricité:</label>
+                <div class="d-flex align-items-center" style="display: flex !important;">
+                    <div class="custom-control custom-radio mr-3" style="padding-right: 50px;">
+                        <input type="radio" id="besoinElectriciteOui" name="besoinElectricite" value="1"
+                            [(ngModel)]="datauser.besoinElectricite" required class="custom-control-input">
+                        <label class="custom-control-label" for="besoinElectriciteOui">Oui</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="besoinElectriciteNon" name="besoinElectricite" value="0"
+                            [(ngModel)]="datauser.besoinElectricite" required class="custom-control-input">
+                        <label class="custom-control-label" for="besoinElectriciteNon">Non</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="commentaire">Commentaire:</label>
+                <input type="text" pInputText id="commentaire" name="commentaire" #commentaire="ngModel" ngModel
+                    required />
+            </div>
+        </div>
+        <p-message *ngIf="errormessage" severity="error" text="Erreur"></p-message>
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton
+                (click)="saveForm(AddStandForm.value)" label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton (click)="closeAddForm()"
+                label="Cancel"></button>
+        </div>
+
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="Modifier stand" [(visible)]="displayEditForm" [modal]="true" [resizable]="true">
+    <form #updateStandForm="ngForm" (ngSubmit)="EditForm(datauser)">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="id">Id:</label>
+                <input type="text" pInputText id="id" name="id" [(ngModel)]="datauser.id" ngModel readonly
+                    class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="forumStandSecteur">Stand secteur :</label>
+                <p-dropdown id="forumStandSecteur" name="forumStandSecteur" [options]="standSecteurOptions"
+                    [(ngModel)]="selectedStandSecteurId" [optionLabel]="'label'"
+                    [style]="{ width: '100%', 'height': '40px' , 'border-color': 'black'}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="standPhysique">Stand physique:</label>
+                <div class="d-flex align-items-center" style="display: flex !important;">
+                    <div class="custom-control custom-radio mr-3" style="padding-right: 50px;">
+                        <input type="radio" id="standPhysiqueOui" name="standPhysique" value="Oui"
+                            [(ngModel)]="datauser.standPhysique" required class="custom-control-input">
+                        <label class="custom-control-label" for="standPhysiqueOui">Oui</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="standPhysiqueNon" name="standPhysique" value="Non"
+                            [(ngModel)]="datauser.standPhysique" required class="custom-control-input">
+                        <label class="custom-control-label" for="standPhysiqueNon">Non</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="libelle">Libelle:</label>
+                <input type="text" pInputText id="libelle" name="libelle" [(ngModel)]="datauser.libelle" ngModel
+                    required />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="reference">Réfèrence:</label>
+                <input type="text" pInputText id="reference" name="reference" [(ngModel)]="datauser.reference" ngModel
+                    class="readonly-input" />
+            </div>
+            <div class="form-group">
+                <label for="materiel">Materiel:</label>
+                <input type="text" pInputText id="materiel" name="materiel" [(ngModel)]="datauser.materiel" ngModel
+                    required />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="observation">Observation:</label>
+                <input type="text" pInputText id="observation" name="observation" [(ngModel)]="datauser.observation"
+                    ngModel required />
+            </div>
+            <div class="form-group">
+                <div style="display: flex; margin-bottom: -0.8rem;">
+                    <label for="besoinElectricite">Besoin Électricité:</label>
+                </div>
+                <div class="d-flex align-radio-buttons" style="display: flex !important;">
+                    <div class="custom-control custom-radio" style="padding-right: 50px;">
+                        <input type="radio" id="besoinElectriciteOui" name="besoinElectricite" value="1"
+                            [(ngModel)]="datauser.besoinElectricite" required class="custom-control-input">
+                        <label class="custom-control-label" for="besoinElectriciteOui">Oui</label>
+                    </div>
+                    <div class="custom-control custom-radio ml-3">
+                        <input type="radio" id="besoinElectriciteNon" name="besoinElectricite" value="0"
+                            [(ngModel)]="datauser.besoinElectricite" required class="custom-control-input">
+                        <label class="custom-control-label" for="besoinElectriciteNon">Non</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="commentaire">Commentaire:</label>
+                <input type="text" pInputText id="commentaire" name="commentaire" [(ngModel)]="datauser.commentaire"
+                    ngModel required />
+            </div>
+        </div>
+        <p-message *ngIf="errormessage" severity="error" text="Erreur"></p-message>
+        <div class="form-group button-container">
+            <button class="element-with-margin custom-button save-button" type="submit" pButton label="Save"></button>
+            <button class="element-with-margin custom-button cancel-button" type="button" pButton
+                (click)="closeEditForm()" label="Cancel"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog class="custom-dialog" header="" [(visible)]="showConfirmationDialog" [modal]="true" [resizable]="true">
+      <ng-template pTemplate="header">
+          <div class="custom-dialog-header">
+              <h2>Voulez-vous vraiment supprimer ce stand ?</h2>
+          </div>
+      </ng-template>
+      <form>
+          <div class="form-group button-container">
+            <button pButton type="button" class="button" class="element-with-margin custom-button save-button" label="Valider" (click)="deleteStand()"></button>
+            <button pButton type="button" class="button" class="element-with-margin custom-button cancel-button" label="Annuler" (click)="closeConfirmationDialog()"></button>
+          </div>
+          <p-message *ngIf="errormessage" severity="error">Erreur</p-message>
+      </form>
+  </p-dialog>

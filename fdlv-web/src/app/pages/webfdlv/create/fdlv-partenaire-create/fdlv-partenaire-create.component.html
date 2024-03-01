@@ -1,0 +1,120 @@
+<p-card>
+  <section class="hautpage">
+    <div class="formgrid grid">
+      <div class="col-10 mx-auto">
+        <div class="flex flew-row justify-content-between">
+          <h2 *ngIf="!id">Créer un partenaire FDLV</h2>
+          <h2 *ngIf="id">Modifier un partenaire FDLV</h2>
+          <div class="card-container my-5 mx-3">
+            <p-button id="save-entity" icon="pi pi-save" (click)="save()" [disabled]="editForm.invalid || isSaving"
+              class="btn btn-primary ml-1" label="Sauvegarder">
+            </p-button>
+            <p-button type="button" id="erase" class="btn btn-secondary btnStyle ml-1" (click)="eraseModification()"
+              label="Effacer les modifications">
+            </p-button>
+            <p-button type="button" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary btnStyle ml-1" label="Retour"
+              (click)="onCancelCreation()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-row">
+    <div class="col-10 mx-auto">
+      <div class="card">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+
+          <div class="formgrid grid">
+            <div class="field col-12 md:col-6">
+              <label class="form-control-label" for="field_id">ID</label>
+              <input [readonly]="true" type="text" [disabled]="true"
+                class="p-2 border-1 border-solid surface-border border-round w-full readonly-input"
+                name="id" id="field_id" formControlName="id" />
+            </div>
+            <div class="field col-12 md:col-6">
+              <label class="form-control-label" for="field_image">Image
+                <span
+                    class="font-bold text-xs text-red-500">*</span>
+              </label>
+              <div class="custom-file">
+                <input type="file"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                  id="field_image" name="image" (change)="handleFileInput($event.target!)" />
+                <label class="custom-file-label" for="field_image">
+                  {{ editForm.get('image')?.value }}
+                </label>
+              </div>
+              <div
+              *ngIf="editForm.get('image')!.invalid && editForm.get('image')?.hasError('required') && (editForm.get('image')!.dirty || editForm.get('image')!.touched)">
+                <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('image')?.errors?.['required']">
+                  {{required }} </small>
+              </div>
+
+            </div>
+            <div class="field col-12 md:col-6">
+              <div class="field">
+                <label class="form-control-label" for="field_num_ordre">Numéro d'ordre <span
+                    class="font-bold text-xs text-red-500">*</span></label>
+                <input type="number" name="num_ordre" id="field_num_ordre" formControlName="num_ordre"
+                  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary  w-full"
+                  [ngClass]="editForm.get('num_ordre')!.invalid?
+                                'border-red-500 surface-overlay p-2 appearance-none w-full' :
+                                 'surface-overlay p-2 appearance-none w-full'" />
+                <div
+                  *ngIf="editForm.get('num_ordre')!.invalid && editForm.get('num_ordre')?.hasError('required') && (editForm.get('num_ordre')!.dirty || editForm.get('num_ordre')!.touched)">
+                  <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('num_ordre')?.errors?.['required']">
+                    {{required }} </small>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="form-control-label" for="field_priorite">Priorité
+                  <span
+                    class="font-bold text-xs text-red-500">*</span>
+                </label>
+                <select
+                  class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                  style="appearance: auto" name="priorite" formControlName="priorite" id="field_priorite">
+                  <option *ngFor="let pr of priorites" value="{{ pr.enumName }}">{{ pr.ihmName }}</option>
+                </select>
+                <div
+                  *ngIf="editForm.get('priorite')!.invalid && (editForm.get('priorite')!.dirty || editForm.get('priorite')!.touched)">
+                  <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('priorite')?.errors?.['required']"> {{
+                    required }} </small>
+                </div>
+              </div>
+
+              <div class="field ">
+                <label class="form-control-label" for="field_module">Module
+                  <span
+                    class="font-bold text-xs text-red-500">*</span>
+                </label>
+                <select
+                  class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                  style="appearance: auto" name="module" formControlName="module" id="field_module">
+                  <option *ngFor="let mp of modulepartenaires" value="{{ mp.enumName }}">{{ mp.ihmName }}</option>
+                </select>
+                <div
+                  *ngIf="editForm.get('module')!.invalid && (editForm.get('module')!.dirty || editForm.get('module')!.touched)">
+                  <small class="font-bold text-xs text-red-500" *ngIf="editForm.get('module')?.errors?.['required']"> {{
+                    required }} </small>
+                </div>
+              </div>
+            </div>
+            <div class="field col-12 md:col-4 flex flex-column align-items-stretch">
+              <label>Aperçu : </label>
+              <div class="card">
+                <div class="picture flex mt-3 m-auto">
+                  <img class="img-fluid" [src]="url" [alt]="editForm.get('image')!.value" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</p-card>

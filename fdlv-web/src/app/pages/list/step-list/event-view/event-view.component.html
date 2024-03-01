@@ -1,0 +1,297 @@
+<p-card header="Consultation Parcours" class="col-9 mx-auto">
+        <div class="form-row" #eventForm>
+            <div class="col-9 mx-auto">
+                <div class="card">
+                    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                        <!--div class="formgrid grid"-->
+                        <div class="grid">
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_id">
+                                    <h4>ID</h4>
+                                </label>
+                                <input
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="id" id="field_id" formControlName="id" />
+
+                                <!--select
+                                    class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                    id="field_theme" name="theme" formControlName="theme">
+                                    <option [value]="null"></option>
+                                    <option
+                                        [value]="themeOption.id === editForm.get('theme')!.value?.id ? editForm.get('theme')!.value : themeOption"
+                                        *ngFor="let themeOption of themesSharedCollection">
+                                        {{ themeOption.id }}
+                                    </option>
+                                </select-->
+                            </div>
+                        </div>
+                        <div>
+                            <!--gmd-alert-error></gmd-alert-error-->
+                            <div class="grid">
+                                <div class="field col-12 md:col-9">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="field_label">
+                                            <h4>Titre du parcours</h4>
+                                        </label>
+                                        <div class="input-group">
+                                            <input maxlength="45" type="text"
+                                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                                name="label" id="field_label" formControlName="label" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text notice"> Maximum 45 car.</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            *ngIf="editForm.get('label')!.invalid && (editForm.get('label')!.dirty || editForm.get('label')!.touched)">
+                                            <small class="form-text text-danger"
+                                                *ngIf="editForm.get('label')?.errors?.['required']"> {{ required }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field col-12 md:col-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="field_numParcours">
+                                            <h4>Numéro de Parcours</h4>
+                                        </label>
+                                        <input type="number"
+                                            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                            name="numParcours" id="field_numParcours" formControlName="numParcours" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="form-group field col-12 ">
+                                    <label class="form-control-label" for="field_description">
+                                        <h4>Description</h4>
+                                    </label>
+                                    <div class="input-group">
+                                        <textarea
+                                            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                            name="description" id="field_description" rows="3"
+                                            formControlName="description"> </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="form-group field col-12 md:col-2">
+                                    <label class="form-control-label" for="field_description">
+                                        <h4>Thème</h4>
+                                    </label>
+                                    <select
+                                        class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                        id="field_theme" name="theme" formControlName="theme">
+                                        <option *ngFor="let themeOption of themesSharedCollection"
+                                            [value]="themeOption.id === editForm.get('theme')!.value?.id ? editForm.get('theme')!.value : null">
+                                            {{ themeOption.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_address">
+                                        <h4>Adresse</h4>
+                                    </label>
+                                    <input type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="address" id="field_address" formControlName="address" />
+                                    <div
+                                        *ngIf="editForm.get('address')!.invalid && (editForm.get('address')!.dirty || editForm.get('address')!.touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('address')?.errors?.['required']"> {{ required
+                                            }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_zipCode">
+                                        <h4>Code Postal</h4>
+                                    </label>
+                                    <input type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="zipCode" id="field_zipCode" formControlName="zipCode" />
+                                    <div
+                                        *ngIf="editForm.get('zipCode')!.invalid && (editForm.get('zipCode')!.dirty || editForm.get('zipCode')!.touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('zipCode')?.errors?.['required']"> {{ required }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_city">
+                                        <h4>Ville</h4>
+                                    </label>
+                                    <input type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="city" id="field_city" formControlName="city" />
+                                    <div
+                                        *ngIf="editForm.get('city')!.invalid && (editForm.get('city')!.dirty || editForm.get('city')!.touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('city')?.errors?.['required']"> {{ required }} </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid">
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_cityLogoUrl">
+                                        <h4>Logo de la ville</h4>
+                                    </label>
+                                    <input type="text" placeholder="exemple : www.mairie.fr/logo.png"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="cityLogoUrl" id="field_cityLogoUrl" formControlName="cityLogoUrl" />
+                                </div>
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_eventTeaserUrl">
+                                        <h4>Teaser de la ville</h4>
+                                    </label>
+                                    <input type="text" placeholder="exemple : https://www.gomydefi.live/.../video.mp4"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="eventTeaserUrl" id="field_eventTeaserUrl"
+                                        formControlName="eventTeaserUrl" />
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="form-group field col-12 ">
+                                    <label class="form-control-label" for="field_usefulInformation">
+                                        <h4>Information pratique</h4>
+                                    </label>
+                                    <div class="input-group">
+                                        <textarea
+                                            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                            name="usefulInformation" id="field_usefulInformation"
+                                            formControlName="usefulInformation"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid">
+                                <div class="field col-12 md:col-6">
+                                    <label class="form-control-label" for="field_startAt">
+                                        <h4>Date de début</h4>
+                                    </label>
+                                    <div class="input-group">
+                                        <p-calendar dateFormat="dd/mm/yy"
+                                            class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                            name="startAt" formControlName="startAt" id="field_startAt"
+                                            [showIcon]="true"></p-calendar>
+                                    </div>
+
+                                    <div
+                                        *ngIf="editForm.get('startAt')!.invalid && (editForm.get('startAt')!.dirty || editForm.get('startAt')!.touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('startAt')?.errors?.['required']"> {{ required }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <label class="form-control-label" for="field_endAt">
+                                        <h4>Date de fin</h4>
+                                    </label>
+                                    <div class="input-group">
+                                        <p-calendar dateFormat="dd/mm/yy"
+                                            class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                            name="endAt" formControlName="endAt" id="field_endAt"
+                                            [showIcon]="true"></p-calendar>
+
+                                    </div>
+                                    <div
+                                        *ngIf="editForm.get('endAt')!.invalid && (editForm.get('endAt')!.dirty || editForm.get('endAt')!.touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('endAt')?.errors?.['required']"> {{ required }} </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="field col-12 md:col-4">
+                                    <label class="form-control-label" for="field_endAt">
+                                        <h4>Titre document fin de parcours</h4>
+                                    </label>
+                                    <input type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="labelFinParcours" formControlName="labelFinParcours" />
+                                </div>
+                                <div class="field col-12 md:col-8">
+                                    <label class="form-control-label" for="field_endAt">
+                                        <h4>Lien PDF à afficher en fin du parcours</h4>
+                                    </label>
+                                    <input type="text"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                        name="finParcoursPdf" formControlName="finParcoursPdf" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="grid">
+                                <div class="field col-12 md:col-4">
+                                    Autres parcours GoMyDefi ?
+                                    <input type="checkbox" formControlName="otherEvent"
+                                        [checked]="editForm.get('otherEvent')" />
+                                </div>
+                                <div class="field col-12 md:col-4">
+                                    Étapes ?
+                                    <div class="row">
+                                        <div class="step-radio">
+                                            <input type="radio" id="fix" name="fixOrder" formControlName="fixOrder"
+                                                [value]="true" [checked]="editForm.get('fixOrder')" />
+                                            <label for="fix">Fixes</label>
+                                        </div>
+                                        <div class="step-radio">
+
+                                            <input type="radio" id="random" name="fixOrder" [value]="false"
+                                                [checked]="editForm.get('fixOrder')">
+                                            <label for="random">Aléatoires</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+
+                            <div class="grid">
+                                <div class="field col-12 md:col-7">
+                                    <!-- Timeline -->
+
+                                    <ul class="timeline">
+                                        <li *ngFor="let step of items"
+                                            class="timeline-item bg-white rounded ml-3 p-4 shadow">
+                                            <div class="timeline-arrow"></div>
+                                            <h2 class="h5 mb-0">{{ step.label }}</h2>
+                                            <div class="ml-3">
+                                                <div *ngIf="step.data.quizz">
+                                                    <p class="text-small mt-2 font-weight-light">
+                                                        <span class="font-weight-bold"> - Quiz: </span>{{
+                                                        step.data.quizz.label }}
+                                                    </p>
+                                                </div>
+                                                <div *ngIf="step.data.challenge">
+                                                    <p *ngIf="step.data.challenge.label"
+                                                        class="text-small mt-2 font-weight-light">
+                                                        <span class="font-weight-bold">- Challenge: </span> {{
+                                                        step.data.challenge.label }}
+                                                    </p>
+
+                                                    <p *ngIf="step.data.description"
+                                                        class="text-small mt-2 font-weight-light">
+                                                        <span class="font-weight-bold">Description: </span>{{
+                                                        step.data.challenge.description }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <!-- End -->
+                                </div>
+                            </div>
+                        </div>
+                        <div></div>
+                        <br />
+                        <!--/div-->
+                    </form>
+                </div>
+                <p-button icon="pi pi-arrow-left" label="Retour" (click)="previousState()"
+                    class="btn btn-secondary btnStyle" styleClass="margin-top: 1rem">
+                </p-button>
+            </div>
+        </div>
+ 
+</p-card>

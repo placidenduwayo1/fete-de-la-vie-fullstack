@@ -1,0 +1,123 @@
+<!--p-dialog [style]="{
+    'width': 'auto',
+    'min-width': '35rem',
+    'max-width': '40rem',
+    'height': 'auto',
+    'margin': '5em'
+  }" class="custom-dialog" header="" [(visible)]="displayModal" [modal]="true">
+  <p-toast></p-toast>
+    <ng-template pTemplate="header">
+        <div class="custom-dialog-header">
+            <h2>{{title}} un Thème</h2>
+        </div>
+    </ng-template>
+    <form #createThemeForm="ngForm" (ngSubmit)="save()">
+
+        <div *ngIf="data.id" class="form-row">
+            <div class="form-group">
+                <label for="id">ID :</label>
+
+                <input type="text" pInputText id="id" name="id" #id="ngModel" ngModel
+                    [(ngModel)]="data.id" required readonly class="readonly-input" />
+
+                <small class="form-text text-danger" *ngIf="id.errors?.['required']"> ID requis.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="CP">Nom :</label>
+
+                <input type="text" pInputText id="create_label" name="create_label" #label="ngModel" ngModel
+                    [(ngModel)]="data.label" required />
+
+                <small class="form-text text-danger" *ngIf="label.errors?.['required']"> Le nom est requis.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group button-container ">
+            <button class="element-with-margin custom-button save-button " type="submit" pButton label="Sauvegarder"
+                [disabled]="createThemeForm.invalid"></button>
+            <button class="element-with-margin custom-button cancel-button " type="button" pButton
+                (click)="close() " label="Retour "></button>
+        </div>
+    </form>
+</p-dialog-->
+
+
+<p-card>
+    <!--section class="hautpage">
+        <div class="row">
+          <div class="col-9 mx-auto">
+            <div class="flex flew-row justify-content-between">
+              <h2 *ngIf="!id">Créer un Thème</h2>
+              <h2 *ngIf="id">Modifier un Thème</h2>
+              <div class="flex justify-content-end align-items-center">
+               <p-button id="save-entity" icon="pi pi-save" (click)="save()" [disabled]="editForm.invalid || isSaving"
+                class="btn btn-primary ml-1" label="Sauvegarder">
+              </p-button>
+              <p-button type="button" id="erase" class="btn btn-secondary btnStyle ml-1" (click)="eraseModification()"
+                label="Effacer les modifications">
+              </p-button>
+              <p-button type="button" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary btnStyle ml-1" label="Retour"
+                (click)="onCancelCreation()">
+              </p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section-->
+      <section class="hautpage">
+        <div class="formgrid grid">
+          <div class="col-9 mx-auto">
+            <div class="flex flew-row justify-content-between">
+              <h2 *ngIf="!id">Créer un Thème</h2>
+              <h2 *ngIf="id">Modifier un Thème</h2>
+              <div class="card-container my-5 mx-3">
+                <p-button id="save-entity" icon="pi pi-save" (click)="save()" [disabled]="editForm.invalid || isSaving"
+                  class="btn btn-primary ml-1" label="Sauvegarder">
+                </p-button>
+                <p-button type="button" id="erase" class="btn btn-secondary btnStyle ml-1" (click)="eraseModification()"
+                  label="Effacer les modifications">
+                </p-button>
+                <p-button type="button" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary btnStyle ml-1" label="Retour"
+                  (click)="onCancelCreation()">
+                </p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <div class="row">
+        <div class="col-9 mx-auto">
+          <div class="card">
+            <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+              <div>
+                <div class="row form-group">
+                  <div class="col-md-1" *ngIf="id">
+                    <label for="id" class="form-control-label"> ID</label>
+                 
+                    <input [readonly]="true" type="text"
+                    class="p-2 border-1 border-solid surface-border border-round w-full readonly-input"
+                    name="id" id="id" formControlName="id" />
+                  </div>
+                  <div class="col-md-11">
+                    <label class="form-control-label" for="field_label">Titre <span
+                        class="font-bold text-xs text-red-500">*</span></label>
+                    <input type="text"  class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    name="label" id="field_label" formControlName="label" />
+                  </div>
+                  <div *ngIf="editForm.get('label')!.invalid && (editForm.get('label')!.dirty || editForm.get('label')!.touched)">
+                    <small class="form-text text-danger" *ngIf="editForm.get('label')?.errors?.['required']"> Champs obligatoire ! </small>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+</p-card>

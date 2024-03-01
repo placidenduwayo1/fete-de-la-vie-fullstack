@@ -1,0 +1,458 @@
+<p-card header="Liste des Utilisateurs" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+
+  <p-table #myTab [value]="data" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" paginatorPosition="bottom"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche utilisateur {first} à {last}"
+    [rowsPerPageOptions]="[10,20, 50]"  (onPage)="onPageChange($event)" [first]="first" 
+    [globalFilterFields]="['id', 'login', 'email', 'authorities', 'createdDate','activated']">
+
+
+    <ng-template pTemplate="caption">
+      <p-button label="Rafraîchir la liste" class="bouton" styleClass="p-button-raised p-button-text"
+        icon="pi pi-refresh"  (click)="reloadPage()"></p-button>
+      <p-button (click)="openForm()" label="Créer un utilisateur" styleClass="p-button-raised p-button-text"
+        icon="pi pi-plus-circle"></p-button>
+
+
+      <input class="search" pInputText type="text" [(ngModel)]="searchValue" (input)="onSearchInputChange($event)"
+        placeholder="Recherche" />
+      <i class="pi pi-search"></i>
+
+    </ng-template>
+
+    <ng-template pTemplate="header" class="centered-row">
+      <tr class="centered-row">
+        <th class="centered-row" pSortableColumn="id">
+          <div>
+            <span>Id</span>
+            <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+          </div>
+        </th>
+
+        <th class="centered-row" pSortableColumn="login">
+          <div>
+            <span>Login</span>
+            <p-sortIcon field="login"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row" pSortableColumn="email">
+          <div>
+            <span>Email</span>
+            <p-sortIcon field="email"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row" pSortableColumn="authorities">
+          <div>
+            <span>Role</span>
+            <p-sortIcon field="authorities"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row" pSortableColumn="createdDate">
+          <div>
+            <span>Created Date</span>
+            <p-sortIcon field="createdDate"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row" pSortableColumn="lastModifiedBy">
+          <div>
+            <span>Last Edit By</span>
+            <p-sortIcon field="lastModifiedBy"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row" pSortableColumn="activated">
+          <div>
+            <span>Status</span>
+            <p-sortIcon field="activated"></p-sortIcon>
+          </div>
+        </th>
+        <th class="centered-row">Action</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData>
+
+      <tr>
+        <td class="centered-row">{{ rowData.id }}</td>
+        <td class="centered-row">{{ rowData.login }}</td>
+        <td class="centered-row">{{ rowData.email }}</td>
+
+
+        <td class="centered-row">{{ rowData.authorities }}</td>
+
+
+
+
+
+        <td class="centered-row">
+          {{ rowData.createdDate}}
+        </td>
+        <td class="centered-row">{{ rowData.lastModifiedBy}}</td>
+
+        <td style="text-align: center;">
+          <button pButton pRipple [class]="getStatusClass(rowData.activated) + ' custom-button status-button'"
+            [style]="{'width': '0.5rem', 'height': '2.5rem', 'table-layout': 'fixed'}"
+            (click)="setActive(rowData, true)" *ngIf="!rowData.activated">
+          </button>
+
+          <button pButton pRipple [class]="getStatusClass(rowData.activated) + ' custom-button status-button'"
+            [style]="{'width': '0.5rem', 'height': '2.5rem', 'table-layout': 'fixed'}"
+            (click)="setActive(rowData, false)" *ngIf="rowData.activated">
+          </button>
+        </td>
+        <td class="custom-td">
+          <div class="btn-group">
+            <p-button icon="pi pi-pencil" styleClass="custom-button  p-button-rounded p-button-info"
+              (click)="openEditForm(rowData.id,rowData.login,rowData.firstName,rowData.lastName,rowData.email,rowData.activated)">
+            </p-button>
+            <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+              (click)="openConfirmationDialog(rowData.login)">
+            </p-button>
+
+          </div>
+        </td>
+
+
+        <div *ngIf="showConfirmationDialog">
+          <p-dialog class="confirmation-dialog" header="Confirmation" [(visible)]="showConfirmationDialog"
+            [modal]="true">
+
+            <p>Voulez-vous vraiment supprimer cet utilisateur {{loginToDelete}}?</p>
+
+            <div class="form-group button-container">
+              <button pButton type="button" class="element-with-margin custom-button save-button" label="Valider"
+                (click)="deleteUser()"></button>
+              <button pButton type="button" class="element-with-margin custom-button cancel-button" label="Annuler"
+                (click)="closeConfirmationDialog()"></button>
+            </div>
+          </p-dialog>
+        </div>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
+
+
+<p-dialog [style]="{
+    'width': 'auto',
+    'min-width': '22rem',
+    'max-width': '35rem',
+    'height': 'auto',
+    'min-height': '28rem',
+    'max-height': '70rem',
+    'margin': '5em'
+  }" class="custom-dialog" header="" [(visible)]="display" [modal]="true">
+  <ng-template pTemplate="header">
+    <div class="custom-dialog-header">
+      <h2>Créer un utilisteur</h2>
+      <!-- Contenu de l'en-tête personnalisé -->
+    </div>
+  </ng-template>
+  <form #AddUserForm="ngForm" (ngSubmit)="AddUserForm.value">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="login">identifiant:</label>
+
+        <input type="text" pInputText id="login" name="login" #login_create="ngModel" ngModel required />
+
+        <small class="form-text text-danger" *ngIf="login_create.errors?.['required']"> Le login est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="login_create.errors?.['minlength']">
+          Le login doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="login_create.errors?.['maxlength']">
+          Le login ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="firstName">Prénom:</label>
+
+        <input type="text" pInputText id="firstName" name="firstName" #firstName_create="ngModel" ngModel required />
+        <small class="form-text text-danger" *ngIf="firstName_create.errors?.['required']"> Le prénom est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="firstName_create.errors?.['minlength']">
+          Le prénom doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="firstName_create.errors?.['maxlength']">
+          Le prénom ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="lastName">Nom:</label>
+
+        <input type="text" pInputText id="lastName" name="lastName" #lastName_create="ngModel" ngModel required />
+        <small class="form-text text-danger" *ngIf="lastName_create.errors?.['required']"> Le nom est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="lastName_create.errors?.['minlength']">
+          Le nom doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="lastName_create.errors?.['maxlength']">
+          Le nom ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+
+        <input type="email" pInputText id="email" name="email" #email_create="ngModel" ngModel required email />
+        <small class="form-text text-danger" *ngIf="email_create.errors?.['required']"> L'email est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="email_create.errors?.['email']"> L'email est invalide. </small>
+
+        <small class="form-text text-danger" *ngIf="email_create.errors?.['minlength']">
+          L'email doit comporter au moins 5 caractères.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="email_create.errors?.['maxlength']">
+          L'email ne peut pas dépasser 100 caractères.
+        </small>
+
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="Profil" style="margin-bottom: 0.5rem;">Profil:</label>
+
+        <div class="form-group" style="display: flex; align-items: center;margin-top:0.8rem">
+          <div style="display: flex; margin-right: 10px;">
+            <label for="ROLE_ADMIN"
+              style="margin-bottom: -0.5rem;font-size: 14px;margin-right:0.3rem">ROLE_ADMIN:</label>
+            <p-checkbox name="authorities" value="ROLE_ADMIN" [(ngModel)]="selectedValues"></p-checkbox>
+          </div>
+
+          <div style="display: flex;">
+            <label for="ROLE_USER" style="margin-bottom: -0.5rem;font-size: 14px;margin-right:0.3rem">ROLE_USER:</label>
+            <p-checkbox name="authorities" value="ROLE_USER" [(ngModel)]="selectedValues"></p-checkbox>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input style="
+margin-top: -1.5rem;" type="text" pInputText id="password" name="password" #password_create="ngModel"
+          (keydown.space)="$event.preventDefault()" [(ngModel)]="generatedPassword" ngModel required />
+
+        <small class="form-text text-danger" *ngIf="password_create.errors?.['required']"> Le password est requis.
+        </small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="StatusCompt">Status :</label>
+
+      <div class="form-group" style="display: flex; align-items: center; height: 40px; margin-top: -10px">
+        <div style="display: flex; margin-right: 50px;">
+          <input type="radio" id="statusOui" name="activated" #activated="ngModel" value="true"
+            [(ngModel)]="datauser.activated" required [checked]="datauser.activated === true">
+          <label for="statusOui" style="margin-left: 6px; margin-top: 15px; font-size: 17px">Activer</label>
+        </div>
+        <div style="display: flex;">
+          <input type="radio" id="statusNon" name="activated" #activated="ngModel" value="false"
+            [(ngModel)]="datauser.activated" required [checked]="datauser.activated === false">
+          <label for="statusNon" style="margin-left: 6px; margin-top: 15px; font-size: 17px">Désactiver</label>
+        </div>
+      </div>
+    </div>
+
+
+
+    <p-message *ngIf="errormessage" severity="error" class="error-message">{{ title }}</p-message>
+
+    <div class="form-group button-container">
+      <button class="element-with-margin custom-button save-button" type="submit" pButton
+        (click)="saveForm(AddUserForm.value)" label="Save" [disabled]="AddUserForm.invalid"></button>
+      <button class="element-with-margin custom-button cancel-button" pButton (click)="closeForm()"
+        label="Cancel"></button>
+      <button class="element-with-margin info-button info-button" type="button" pButton (click)="randompwd()"
+        label="generate Password"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog [style]="{
+    'width': 'auto',
+    'min-width': '35rem',
+    'max-width': '70rem',
+    'height': 'auto',
+    'min-height': '32rem',
+    'max-height': '50rem',
+    'margin': '5em'
+  }" class="custom-dialog" header="" [(visible)]="displayEditForm" [modal]="true" [resizable]="true">
+  <ng-template pTemplate="header">
+    <div class="custom-dialog-header">
+      <h2>Modifier un utilisateur</h2>
+      <!-- Contenu de l'en-tête personnalisé -->
+    </div>
+  </ng-template>
+  <!-- Contenu du dialogue -->
+  <form #UpdateUserForm="ngForm" (ngSubmit)="EditUser(UpdateUserForm.value)">
+
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id">id:</label>
+        <input type="text" pInputText id="id_editform" name="id" #id="ngModel" [(ngModel)]="datauser.id" ngModel
+          required readonly class="readonly-input" />
+      </div>
+      <div class="form-group">
+        <label for="login">Identifiant:</label>
+
+        <input type="text" pInputText id="login_editform" name="login" #login_edit="ngModel"
+          [(ngModel)]="datauser.login" ngModel required class="custom-input" />
+
+        <small class="form-text text-danger" *ngIf="login_edit.errors?.['required']"> Le login est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="login_edit.errors?.['minlength']">
+          Le login doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="login_edit.errors?.['maxlength']">
+          Le login ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="EditfirstName">Prénom:</label>
+
+        <input type="text" pInputText id="firstName_editform" name="firstName" #firstName_edit="ngModel"
+          [(ngModel)]="datauser.firstName" ngModel required class="custom-input" />
+
+        <small class="form-text text-danger" *ngIf="firstName_edit.errors?.['required']"> Le prénom est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="firstName_edit.errors?.['minlength']">
+          Le prénom doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="firstName_edit.errors?.['maxlength']">
+          Le prénom ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="EditlastName">Nom:</label>
+
+        <input type="text" pInputText id="lastName_editform" name="lastName" #lastName_edit="ngModel"
+          [(ngModel)]="datauser.lastName" ngModel required class="custom-input" />
+
+        <small class="form-text text-danger" *ngIf="lastName_edit.errors?.['required']"> Le nom est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="lastName_edit.errors?.['minlength']">
+          Le nom doit comporter au moins 1 caractère.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="lastName_edit.errors?.['maxlength']">
+          Le nom ne peut pas dépasser 50 caractères.
+        </small>
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="Editemail" class="custom-label">Email:</label>
+
+        <input type="email" pInputText id="email_editform" name="email" #email_edit="ngModel"
+          [(ngModel)]="datauser.email" ngModel required class="custom-input" email />
+
+        <small class="form-text text-danger" *ngIf="email_edit.errors?.['required']"> L'email est requis.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="email_edit.errors?.['email']"> L'email est invalide. </small>
+
+        <small class="form-text text-danger" *ngIf="email_edit.errors?.['minlength']">
+          L'email doit comporter au moins 5 caractères.
+        </small>
+
+        <small class="form-text text-danger" *ngIf="email_edit.errors?.['maxlength']">
+          L'email ne peut pas dépasser 100 caractères.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="EditProfil" class="custom-label" style="margin-bottom: -0.5rem;">Profil:</label>
+        <div class="form-group" style="display: flex; align-items: center;margin-top:2rem">
+
+          <div style="display: flex; margin-right: 10px;">
+            <label for="EditROLE_ADMIN" style="margin-bottom: -0.5rem;font-size: 14px;margin-right:0.5rem"
+              class="custom-label">ROLE_ADMIN:</label>
+            <p-checkbox name="authorities" value="ROLE_ADMIN" [(ngModel)]="selectedValues"
+              class="custom-checkbox"></p-checkbox>
+
+          </div>
+          <div style="display: flex;">
+            <label for="EditROLE_USER" style="margin-bottom: -0.5rem;;font-size: 14px;margin-right:0.3rem"
+              class="custom-label">ROLE_USER:</label>
+            <p-checkbox name="authorities" value="ROLE_USER" [(ngModel)]="selectedValues"
+              class="custom-checkbox"></p-checkbox>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="StatusCompt">Status :
+          <span [style.color]="datauser.activated ? 'green' : 'red'">
+            {{ datauser.activated ? 'Activer' : 'Désactiver' }}
+          </span>
+        </label>
+        <div class="form-group" style="display: flex; align-items: center;height:40px;margin-top:-10px">
+          <div style="display: flex; margin-right: 50px;">
+            <input type="radio" id="statusOui" name="activated" value="true" [(ngModel)]="datauser.activated" required
+              [checked]="datauser.activated === true">
+            <label for="statusOui" style="margin-left: 6px; margin-top: 15px; font-size: 17px">Activer</label>
+          </div>
+          <div style="display: flex;">
+            <input type="radio" id="statusNon" name="activated" value="false" [(ngModel)]="datauser.activated" required
+              [checked]="datauser.activated === false">
+            <label for="statusNon" style="margin-left: 6px; margin-top: 15px; font-size: 17px">Désactiver</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Editpassword" style="margin-bottom: 0.5rem; margin-top: 0.5rem;"
+          class="custom-label">Password:</label>
+        <input type="text" style="margin-bottom: 1rem; width: 100%;" pInputText id="password_editform" name="password"
+          #password_edit="ngModel" [(ngModel)]="datauser.password" ngModel required class="custom-input" />
+
+        <small class="form-text text-danger" *ngIf="password_edit.errors?.['required']"> Le password est requis.
+        </small>
+      </div>
+    </div>
+
+
+
+    <div class="form-group">
+      <label for="password">Mot de passe fraîchement généré</label>
+      <input style="
+margin-top: -1.5rem;" type="text" pInputText id="password" name="password" #password="ngModel"
+        (keydown.space)="$event.preventDefault()" [(ngModel)]="random_password" ngModel required />
+    </div>
+
+
+     <div class="form-group button-container ">
+      <button class="element-with-margin custom-button save-button " type="submit" pButton label="Save "
+        [disabled]="UpdateUserForm.invalid"></button>
+      <button class="element-with-margin custom-button cancel-button " type="button" pButton (click)="closeEditForm() "
+        label="Cancel "></button>
+      <button class="element-with-margin info-button info-button" type="button" pButton (click)="randompwd()"
+        label="generate Password"></button>
+    </div>
+  </form>
+</p-dialog>

@@ -1,0 +1,77 @@
+<p-card class="flex justify-content-center mt-3" [style]="{width: '1450px'}">
+<p-toast></p-toast>
+<section class="hautpage">
+  <div class="formgrid grid">
+    <div class="col-12 mx-auto">
+      <div class="flex flew-row justify-content-between">
+        <h2 *ngIf="!modifMode"><b>Créer un nouveau bannière</b></h2>
+        <h2 *ngIf="modifMode"><b>Modifier bannière {{banniereForm.get('code').value}}</b></h2>
+        <div class="card-container my-5 mx-3">
+          <p-button id="save-entity" icon="pi pi-save" class="btn btn-secondary ml-1"
+          (click)="saveOrEditBanniere(banniereForm.value)" label="Sauvegarder">
+          </p-button>
+          <p-button type="button" class="btn btn-secondary ml-1" (click)="eraseModification()"
+            label="Effacer les modifications">
+          </p-button>
+          <p-button type="button" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary ml-1" label="Retour"
+          (click)="closeForm()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<form [formGroup]="banniereForm" (ngSubmit)="(banniereForm.value)">
+    <div class="formgrid grid m-0">
+      <div class="field col-1" style="display: flex;flex-direction :column">
+        <label for="ID">ID</label>
+        <input type="text" pInputText formControlName="id" readonly class="readonly-input"/>
+      </div>
+      <div class="field col-2" style="display: flex;flex-direction :column">
+        <label for="code">Code Bannière*</label>
+        <input type="text" pInputText id="code" formControlName="code" />
+        <div *ngIf="banniereForm.get('code').hasError('codeBanniereError')" class="error-message">
+          Ce champ est obligatoire (moins de 20 caractères).</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="libelle">Libellé*</label>
+        <input type="text" pInputText id="libelle" formControlName="libelle" />
+        <div *ngIf="banniereForm.get('libelle').hasError('libelleBanniereError')" class="error-message">
+          Ce champ est obligatoire.</div>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="forumThemeId">Thème associé*</label>
+        <p-dropdown formControlName="forumThemeId" [options]="themeForumOptions" 
+        optionLabel="label" optionValue="value" [style]="{ width: '100%' }"></p-dropdown>
+      </div>
+      <div class="field col-3" style="display: flex;flex-direction :column">
+        <label for="fdlv">FDLV</label>
+        <input type="text" pInputText id="fdlv" formControlName="fdlv"/>
+      </div>
+    </div>
+    <div class="formgrid grid m-0">
+      <div class="field col-6" style="display: flex;flex-direction :column">
+        <div class="field col-10" style="display: flex;flex-direction :column">
+          <label for="url">Photo URL</label>
+          <input type="text" pInputText formControlName="url" readonly class="readonly-input"/>
+        </div>
+        <div class="field col-10" style="display: flex;flex-direction :column">
+          <label for="commentaire">Commentaire</label>
+          <textarea pInputTextarea id="commentaire" formControlName="commentaire"
+            class="form-control custom-textarea"></textarea>
+        </div>
+      </div>
+      <div class="field col-6" style="display: flex;flex-direction :column">
+        <label for="url">Photo bannière:  
+          <span *ngIf='!banniereForm.get("url")?.value'>Aucune photo téléchargée.</span>
+          <a *ngIf='banniereForm.get("url")?.value' [href]='banniereForm.get("url")?.value'>Consulter le bannière.</a>
+        </label>
+        <div class="card" style="padding: 10px;">
+          <img class="img-fluid" [src]='displayPhoto'/>
+        </div>
+        <input id="fileBanniere" type="file" (change)="previewDocument($event.target)" label="Télécharger une nouveau bannière"/>
+      </div>
+    </div>
+  </form>
+</p-card>

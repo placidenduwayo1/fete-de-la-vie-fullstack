@@ -1,0 +1,209 @@
+<p-card [style]="{ 'background-color': '#f5f5f5' }"> 
+    <section class="hautpage">
+        <div class="form-row">
+            <div class="col-9 mx-auto">
+                <div class="flex flew-row justify-content-between">
+                    <h2 *ngIf="!id">Créer une étape</h2>
+                    <h2 *ngIf="id">Modifier une étape</h2>
+
+                    <div class="flex justify-content-end align-items-center">
+                        <p-button (click)="save()" label="Sauvegarder" icon="pi pi-save" id="save-entity"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+                        </p-button>
+                        <p-button icon="pi pi-clone" label="Dupliquer" icon="pi pi-clone" *ngIf="id" [disabled]="true"
+                            id="duplicate-entity" (click)="duplicate()" class="btn btn-info ml-1">
+                        </p-button>
+                        <p-button id="erase" class="btn btn-secondary btnStyle ml-1" (click)="eraseModification()">
+                            <span>Effacer les modifications</span>
+                        </p-button>
+                        <p-button label="Retour" icon="pi pi-arrow-left" id="cancel-save" class="btn btn-secondary ml-1"
+                            (click)="onCancelCreation()">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-row">
+        <div class="col-12 mx-auto">
+            <div class="card">
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                    <div class="formgrid grid">
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_id">ID</label>
+                            <input [readonly]="true" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="id" id="field_id" formControlName="id" />
+                        </div>
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_label">Titre<span
+                                class="font-bold text-xs text-red-500">*</span></label>
+                            <input type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="label" id="field_label" formControlName="label" />
+                            <div
+                                *ngIf="editForm.get('label')!.invalid && (editForm.get('label')!.dirty || editForm.get('label')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('label')?.errors?.['required']"> Champs Obligatoire ! </small>
+                            </div>
+                        </div>
+
+                            <!--row1-->
+                            <div class="form-group field col-12 md:col-4">
+                                <div></div>
+                                Géolocation en DMnS ?
+                                <input type="checkbox" (click)="conversionLocalisation($event)" />
+                            </div>
+
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_latitude">Latitude<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+
+                                <input type="string"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="latitude" id="field_latitude" formControlName="latitude"
+                                    placeholder="{{ placeHolder }}" [(ngModel)]="latitude" />
+                                <!-- pattern="{{ customPattern }}" -->
+                                <div
+                                    *ngIf="editForm.get('latitude')!.invalid && (editForm.get('latitude')!.dirty || editForm.get('latitude')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('latitude')?.errors?.['required']"> Champs Obligatoire !
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_longitude">Longitude<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                                <input type="string"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="longitude" id="field_longitude" formControlName="longitude"
+                                    placeholder="{{ placeHolder }}" [(ngModel)]="longitude" />
+
+                                <div
+                                    *ngIf="editForm.get('longitude')!.invalid && (editForm.get('longitude')!.dirty || editForm.get('longitude')!.touched)">
+                                    <small class="font-bold text-xs text-red-500"
+                                        *ngIf="editForm.get('longitude')?.errors?.['required']"> Champs Obligatoire !
+                                    </small>
+                                </div>
+                            </div>
+
+
+                            <!--row2-->
+                            <div class="form-group field col-12 md:col-1">
+                                <label class="form-control-label" for="field_videoUrl">Url:</label>
+
+                                <input  type="checkbox" checked
+                                     name="videoUrl" (click)="changeBoolUrl()" id="field_videoUrl" >
+                            </div>
+
+                            <div class="form-group field col-12 md:col-2">
+                                <label class="form-control-label" for="field_typeMedia">Type Média</label>
+                                <select
+                                class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                                name="typeMedia" id="field_typeMedia" formControlName="typeMedia"
+                                    [(ngModel)]="typeMedia" (change)="onTypeMediaChange()">
+                                    <option [ngValue]="typeMedia" *ngFor="let typeMedia of typeOfMedias">{{ typeMedia }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group field col-12 md:col-9" *ngIf="url">
+                                <label class="form-control-label" for="field_videoUrl">Choisir le média:</label>
+                                <div class="file-upload-container">
+                                    <input type="file" id="field_videoUrl" (change)="getFile($event)" accept="image/*,video/*"
+                                      formControlName="videoUrl" 
+                                      class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    />
+                                  </div>
+                                <!--input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="videoUrl" id="field_videoUrl" formControlName="videoUrl" accept="video/*"
+                                    [(ngModel)]="fileName" (change)="getFile($event)" /-->
+                            </div>
+
+                            <div class="form-group field col-12 md:col-9" *ngIf="!url">
+                                <label class="form-control-label" for="field_videoUrl">Média Url</label>
+                                <p-dropdown [options]="videosSatisfyingTypeMediaSharedCollection"
+                                    placeholder="{{ this.selectedURL }}" formControlName="video"
+                                    styleClass="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                    optionLabel="urlVideo" [showClear]="true" [filter]="true"
+                                    (onChange)="onChangeSelectedMedia($event.value)" filterBy="typeMedia"
+                                    dataKey="urlVideo">
+                                    <ng-template let-videoOption pTemplate="selectedItem">
+                                        {{ videoOption.urlVideo }}
+                                    </ng-template>
+
+                                    <ng-template let-videoOption pTemplate="item">
+                                        <div class="ui-helper-clearfix">
+                                            <ng-container> {{ videoOption.theme?.label }} - {{ videoOption.urlVideo }}
+                                            </ng-container>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+
+
+                            <!--row3-->
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_quizz">Quizz</label>
+                                <p-dropdown [options]="currentVideoQuizzesSharedCollection"
+                                    placeholder="Sélectionner un quizz" formControlName="quizz"
+                                    styleclass="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    optionLabel="label" [showClear]="true" [filter]="true" filterBy="label"
+                                    dataKey="id"></p-dropdown>
+                            </div>
+
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_stage_defi_video">Défi</label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="stage_defi_video" id="field_stage_defi_video"
+                                    formControlName="stage_defi_video" />
+                            </div>
+                            <div class="form-group field col-12 md:col-4">
+                                <label class="form-control-label" for="field_stage_defi_partage">Défi à partager</label>
+                                <input type="text"
+                                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                    name="stage_defi_partage" id="field_stage_defi_partage"
+                                    formControlName="stage_defi_partage" />
+                            </div>
+
+                        <!--row4-->
+                        <div class="field col-12 md:col-7">
+                            <!-- Timeline -->
+                          <ul class="timeline">
+                                <li class="timeline-item bg-white rounded ml-3 p-4 shadow">
+                                    <div class="timeline-arrow"></div>
+                                    <h2 class="h5 mb-0">{{ editForm.get('label')!.value }}</h2>
+                                    <div class="ml-3">
+                                        <div *ngIf="editForm.get('quizz')!.value?.label">
+                                            <p class="text-small mt-2 font-weight-light">
+                                                <span class="font-weight-bold"> - Quiz: </span>
+                                                {{ editForm.get('quizz')!.value?.label }}
+                                            </p>
+                                        </div>
+
+                                        <div *ngIf="editForm.get('challenge')!.value?.label">
+                                            <p class="text-small mt-2 font-weight-light">
+                                                <span class="font-weight-bold">- Challenge: </span> {{
+                                                editForm.get('challenge')!.value?.label }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            
+
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</p-card>

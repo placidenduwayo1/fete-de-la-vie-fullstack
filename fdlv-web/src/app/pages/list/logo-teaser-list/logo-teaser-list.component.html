@@ -1,0 +1,103 @@
+<p-card header="Liste des Médias" class="m-3" [style]="{'width': '80wh', 'margin':'1rem'}">
+
+    <p-table #myTabM [value]="logoteasers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        paginatorPosition="bottom" [tableStyle]="{'min-width': '50rem'}"
+        currentPageReportTemplate="Page {currentPage} sur {totalPages}, Affiche média {first} à {last}"
+        [rowsPerPageOptions]="[10,20, 50]"  (onPage)="onPageChange($event)" [first]="first"
+        [globalFilterFields]="['id', 'zipCode', 'city', 'typeMedia', 'label', 'url']"
+        [scrollable]="true" scrollHeight="80vh"
+        >
+
+        <ng-template pTemplate="caption">
+            <div class="grid">
+            <div>
+            <p-button label="Rafraîchir la liste" class="mr-2" styleClass="p-button-raised p-button-text"
+                icon="pi pi-refresh" (click)="reloadPage()"></p-button>
+            <p-button label="Créer un média" class="mr-2" styleClass="p-button-raised p-button-text" icon="pi pi-plus-circle"
+                (click)="openCreateForm()"></p-button>
+                </div>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+            <input class="ml-auto" pInputText type="search" placeholder="Recherche" 
+            (input)="myTabM.filterGlobal($any($event.target).value, 'contains')" [(ngModel)]="storedSearchValue" (change)="onSearchChange($event)"/>
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" class="centered-row">
+            <tr class="centered-row">
+                <th class="centered-row" pSortableColumn="id" id="id">
+                    <div>
+                        <span>Id</span>
+                        <p-sortIcon field="id" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="rltFusId" id="Organisateur">
+                    <div>
+                        <span>Organisateur</span>
+                        <p-sortIcon field="rltFusId" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="zipCode" id="CP">
+                    <div>
+                        <span>CP</span>
+                        <p-sortIcon field="zipCode" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="city" id="Ville">
+                    <div>
+                        <span>Ville</span>
+                        <p-sortIcon field="city" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+
+                <th class="centered-row" pSortableColumn="typeMedia" id="type">
+                    <div>
+                        <span>Type</span>
+                        <p-sortIcon field="typeMedia" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="label" id="nom">
+                    <div>
+                        <span>Nom</span>
+                        <p-sortIcon field="label" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th class="centered-row" pSortableColumn="url" id="url">
+                    <div>
+                        <span>Url</span>
+                        <p-sortIcon field="url" style="display: inline-block;"></p-sortIcon>
+                    </div>
+                </th>
+                <th></th><th></th>
+
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+            <tr>
+                <td>{{ rowData.id }}</td>
+                <td>{{ rowData.rltFusId}} {{rowData.userLogin }}</td>
+                <td>{{ rowData.zipCode }}</td>
+                <td>{{ rowData.city }}</td>
+                <td>{{ rowData.typeMedia }}</td>
+                <td>{{ rowData.label }}</td>
+                <td>{{ rowData.url }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" styleClass="custom-button  p-button-rounded p-button-info"
+                        (click)="openEditForm(rowData.id)">
+                    </p-button>
+                    </td><td>
+                    <p-button icon="pi pi-trash" styleClass="custom-button p-button-rounded p-button-danger"
+                    (click)="openConfirmationDialog(rowData.id)"></p-button>
+         
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<app-logo-teaser-modal></app-logo-teaser-modal>
+
+<app-dialog-delete [elementLabel]="'cette référence'" [showConfirmationDialog]="showConfirmationDialog"
+(closeConfirmationDialog)="closeConfirmationDialog()" (delete)="delete(idToDelete)"></app-dialog-delete>

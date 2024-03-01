@@ -1,0 +1,2 @@
+<img class="img-fluid" [src]="url" *ngIf="url&&fileIsImage() && !error" />
+<video controls width="250" *ngIf="url&&fileIsVideo() && !error" [src]="url"> </video>

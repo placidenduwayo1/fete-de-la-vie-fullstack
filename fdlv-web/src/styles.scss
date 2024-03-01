@@ -1,0 +1,95 @@
+/* You can add global styles to this file, and also import other style files */
+
+// PRIMENG IMPORTS
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+// PRIMEFLEX IMPORT
+@import "primeflex/primeflex.css";
+// FONT-FAMILY FOR THEMING
+body {
+    font-family: var(--font-family);
+    padding: 0;
+    margin: 0;
+    background-color: beige;
+}
+
+
+/*** NAVBAR STYLE ***/
+
+.p-menubar {
+    background: linear-gradient(170deg, rgba(236, 239, 242, 0.95), #abd1f1) !important;
+    border-radius: 0;
+}
+
+// SET COLOR OF NAVBAR ITEMS
+.p-element.light>a>span {
+    color: white !important;
+}
+
+.p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-link .p-submenu-icon {
+    color: white !important;
+}
+
+// SET THE NAVBAR ITEMS TO THE RIGHT
+p-menubarsub {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+// SET THE NAVBAR BURGER BUTTON TO THE RIGHT
+a.p-menubar-button {
+    order: 3;
+    color: white !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0;
+    padding: 0.25rem 0.25rem;
+}
+
+body, h1, h2, h3, h4 {
+    font-weight: 300;
+}
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 1rem;
+    background-color: #e4e5e6;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: #3B82F6;
+    background: #3B82F6;
+}
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: #4CAF50;
+    background: #4CAF50;
+}
+.p-checkbox .p-checkbox-box {
+    border: 3px solid;
+    background: #ffffff;
+    width: 22px;
+    height: 22px;
+    color: #495057;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+ 
+.p-button.p-button-icon-only.p-button-rounded {
+    border-radius: 50%;
+    height: 2rem; 
+    width: 2rem;
+}
+.pi {
+    font-size: 0.75rem;
+}
+
+.p-tooltip .p-tooltip-text {
+    background-color: grey;
+    width: max-content;
+}

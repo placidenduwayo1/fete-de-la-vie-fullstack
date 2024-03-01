@@ -1,0 +1,238 @@
+<p-card>
+    <section class="hautpage">
+        <div class="form-row">
+            <div class="col-9 mx-auto">
+                <div class="flex flew-row justify-content-between">
+                    <h2 *ngIf="!id">Créer un Utilisateur FDLV</h2>
+                    <h2 *ngIf="id">Modifier un Utilisateur FDLV</h2>
+                    <div class="flex justify-content-end align-items-center">
+                        <p-button id="save-entity" icon="pi pi-save" label="Sauvegarder" (click)="save()"
+                            [disabled]="editForm.invalid || isSaving" class="btn btn-primary ml-1">
+                        </p-button>
+                        <p-button label="Effacer les modifications" id="erase" class="btn btn-secondary btnStyle ml-1"
+                            (click)="eraseModification()">
+                        </p-button>
+                        <p-button icon="pi pi-arrow-left" label="Retour" id="cancel-save" class="btn btn-secondary ml-1"
+                            (click)="onCancelCreation()">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-row">
+        <div class="col-9 mx-auto">
+            <div class="card">
+                <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+                    <div class="formgrid grid">
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_fus_login">Identifiant</label>
+                            <input type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="login" id="field_fus_login" formControlName="login"
+                                (blur)="uniqueIdentifiant($event)" />
+                            <div *ngIf="ident">
+                                <small class="font-bold text-xs text-red-500" *ngIf="ident"> {{ identiantError }}
+                                </small>
+                            </div>
+                            <div
+                                *ngIf="editForm.get('login')!.invalid && (editForm.get('login')!.dirty || editForm.get('login')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('login')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+                        <div class="form-group field col-12 md:col-6">
+                            <label class="form-control-label" for="field_fus_password_hash">Mot de passe</label>
+                            <input type="password"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="mdpHash" id="field_fus_password_hash" formControlName="mdpHash" />
+                            <div
+                                *ngIf="editForm.get('mdpHash')!.invalid && (editForm.get('mdpHash')!.dirty || editForm.get('mdpHash')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('mdpHash')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                            <div [ngClass]="
+                        editForm.controls['mdpHash'].hasError('required') || editForm.controls['mdpHash'].hasError('minlength')
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      ">
+                                <small>Doit contenir au moins 8 caractères</small>
+                            </div>
+                            <div [ngClass]="
+                        editForm.controls['mdpHash'].hasError('required') || editForm.controls['mdpHash'].hasError('hasNumber')
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      ">
+                                <small> Doit contenir au moins 1 nombre</small>
+                            </div>
+                            <div [ngClass]="
+                        editForm.controls['mdpHash'].hasError('required') || editForm.controls['mdpHash'].hasError('hasCapitalCase')
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      ">
+                                <small>Doit contenir au moins une majuscule</small>
+                            </div>
+                            <div [ngClass]="
+                        editForm.controls['mdpHash'].hasError('required') || editForm.controls['mdpHash'].hasError('hasSmallCase')
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      ">
+                                <small>Doit contenir au moins une minuscule </small>
+                            </div>
+                            <div [ngClass]="
+                        editForm.controls['mdpHash'].hasError('required') || editForm.controls['mdpHash'].hasError('hasSpecialCharacters')
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      ">
+                                <small>Doit contenir au moins un caractères spécial </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_profil">Profil<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <select
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="profil" formControlName="profil" id="field_fus_profil">
+                                <option *ngFor="let pr of profils" value="{{ pr.enumName }}">{{ pr.ihmName }}</option>
+                            </select>
+                            <div
+                                *ngIf="editForm.get('profil')!.invalid && (editForm.get('profil')!.dirty || editForm.get('profil')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('profil')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_structure">Structure<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="structure" id="field_fus_structure" formControlName="structure" />
+                            <div
+                                *ngIf="editForm.get('structure')!.invalid && (editForm.get('structure')!.dirty || editForm.get('structure')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('structure')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_service">Service</label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="service" id="field_fus_service" formControlName="service" />
+                        </div>
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_first_name">Prénom<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="prenom" id="field_fus_first_name" formControlName="prenom" />
+                            <div
+                                *ngIf="editForm.get('prenom')!.invalid && (editForm.get('prenom')!.dirty || editForm.get('prenom')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('prenom')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_last_name">Nom<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="nom" id="field_fus_last_name" formControlName="nom" />
+                            <div
+                                *ngIf="editForm.get('nom')!.invalid && (editForm.get('nom')!.dirty || editForm.get('nom')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('nom')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_email">Email<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="email"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="email" id="field_fus_email" formControlName="email" />
+                            <div
+                                *ngIf="editForm.get('email')!.invalid && (editForm.get('email')!.dirty || editForm.get('email')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('email')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                            <div *ngIf="editForm.controls['email'].hasError('email')">
+                                <small class="font-bold text-xs text-red-500">Entrez une adresse mail valide</small>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_num_tel">Téléphone<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <input maxlength="50" type="text"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                                name="numTel" id="field_fus_num_tel" formControlName="numTel" />
+                            <div
+                                *ngIf="editForm.get('numTel')!.invalid && (editForm.get('numTel')!.dirty || editForm.get('numTel')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('numTel')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_date_debut">Date de début <span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <div class="input-group">
+                                <p-calendar dateFormat="dd/mm/yy"
+                                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                    name="dateDebut" formControlName="dateDebut" id="field_fus_date_debut"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <div
+                                *ngIf="editForm.get('dateDebut')!.invalid && (editForm.get('dateDebut')!.dirty || editForm.get('dateDebut')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('dateDebut')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!editForm.get('permanent')?.value" class="form-group field col-12 md:col-4">
+                            <label class="form-control-label" for="field_fus_date_fin">Date d'expiration<span
+                                    class="font-bold text-xs text-red-500">*</span></label>
+                            <div class="input-group">
+                                <p-calendar dateFormat="dd/mm/yy"
+                                    class="text-base text-color surface-overlay appearance-none outline-none focus:border-primary w-full"
+                                    name="dateFin" formControlName="dateFin" id="field_fus_date_fin"
+                                    [showIcon]="true"></p-calendar>
+
+                            </div>
+                            <div
+                                *ngIf="editForm.get('dateFin')!.invalid && (editForm.get('dateFin')!.dirty || editForm.get('dateFin')!.touched)">
+                                <small class="font-bold text-xs text-red-500"
+                                    *ngIf="editForm.get('dateFin')?.errors?.['required']"> {{ required }} </small>
+                            </div>
+                            <div>
+                                <small class="font-bold text-xs text-red-500" *ngIf="editForm.hasError('fromToDate')">
+                                    La date de fin doit être supérieur à la date de début
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group field col-12 md:col-4">
+                        <label class="form-group">
+                            Compte permanent ?
+                            <input type="checkbox" id="field_fus_compte_permanent" name="permanent"
+                                formControlName="permanent" [value]="editForm.get('permanent')" />
+                        </label>
+                    </div>
+                    <div class="form-group field col-12 md:col-4">
+                        <label class="form-group">
+                            Activer ?
+                            <input type="checkbox" id="field_fus_activated" name="actif" formControlName="actif"
+                                [value]="editForm.get('actif')" />
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</p-card>

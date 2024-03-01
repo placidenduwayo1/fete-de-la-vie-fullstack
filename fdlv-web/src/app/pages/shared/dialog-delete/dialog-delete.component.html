@@ -1,0 +1,12 @@
+<div *ngIf="showConfirmationDialog">
+    <p-dialog class="confirmation-dialog" header="Confirmation" [(visible)]="showConfirmationDialog"
+      [modal]="true">
+      <p>Voulez-vous vraiment supprimer {{elementLabel}} ?</p>
+      <div class="form-group button-container">
+        <button pButton type="button" class="element-with-margin custom-button save-button" label="Valider"
+          (click)="deleteEl()"></button>
+        <button pButton type="button" class="element-with-margin custom-button cancel-button" label="Annuler"
+          (click)="close()"></button>
+      </div>
+    </p-dialog>
+  </div>
